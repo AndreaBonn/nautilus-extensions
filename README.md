@@ -27,6 +27,7 @@ Le estensioni Nautilus sono script Python che aggiungono nuove voci al menu che 
 - Analizzare Dockerfile
 - Trovare file duplicati
 - Visualizzare README direttamente da Nautilus
+- Integrare Git direttamente in Nautilus (blame, diff, status, graph)
 
 ---
 
@@ -133,6 +134,50 @@ Mostra il README della cartella corrente:
 
 📖 **[Leggi la guida completa →](readme-viewer/README.md)**
 
+### 10. ⎇ **Git Blame** (`git-blame`)
+Aggiunge colonne Git nella vista lista di Nautilus:
+- Autore dell'ultimo commit per ogni file
+- Data relativa del commit (es. "3 hours ago")
+- Messaggio del commit (troncato a 55 caratteri)
+- Cache dei risultati e caricamento asincrono
+
+**Utilizzo:** Vista Lista (`Ctrl+2`) → clic destro intestazione colonne → spunta le colonne Git
+
+📖 **[Leggi la guida completa →](git-blame/README.md)**
+
+### 11. ⎇ **Git Diff** (`git-diff`)
+Visualizza le modifiche di un file con diff visuale:
+- Vista side-by-side con righe affiancate
+- Vista unificata con toggle
+- Colorazione verde/rosso per aggiunte/rimozioni
+- Supporto diff staged e working tree
+
+**Utilizzo:** Clic destro su file modificato → "⎇ Mostra Diff Git"
+
+📖 **[Leggi la guida completa →](git-diff/README.md)**
+
+### 12. ⎇ **Git Graph** (`git-graph`)
+Visualizza il grafo dei commit Git:
+- Grafo visuale con nodi e curve Bézier
+- Palette colori per branch distinti
+- Badge branch e marcatore HEAD dorato
+- Legenda interattiva e barra di stato
+
+**Utilizzo:** Clic destro sullo sfondo → "⎇ Mostra Git Graph…"
+
+📖 **[Leggi la guida completa →](git-graph/README.md)**
+
+### 13. ⎇ **Git Status** (`git-status`)
+Pannello di stato Git con aggiornamento automatico:
+- Branch corrente con indicatore ahead/behind
+- File staged, modificati e untracked con icone colorate
+- Ultimi 10 commit con hash, autore e data
+- Conteggio stash e auto-refresh ogni 3 secondi
+
+**Utilizzo:** Clic destro sullo sfondo → "⎇ Stato Git…"
+
+📖 **[Leggi la guida completa →](git-status/README.md)**
+
 ---
 
 ## 🚀 Installazione
@@ -208,6 +253,9 @@ sudo apt install python3-markdown gir1.2-webkit2-4.1  # opzionale, per rendering
 **Dockerfile Analyzer e Duplicate Finder:**
 Nessuna dipendenza aggiuntiva (usano solo librerie standard)
 
+**Git Blame, Git Diff, Git Graph e Git Status:**
+Nessuna dipendenza aggiuntiva (richiedono solo `git` installato nel sistema)
+
 ### Passo 4: Copia le estensioni
 
 Copia i file `.py` delle estensioni che vuoi usare nella cartella creata:
@@ -223,6 +271,10 @@ cp pdf-splitter/pdf_splitter.py ~/.local/share/nautilus-python/extensions/
 cp dockerfile-analyzer/dockerfile_analyzer.py ~/.local/share/nautilus-python/extensions/
 cp duplicate-finder/duplicate-finder.py ~/.local/share/nautilus-python/extensions/
 cp readme-viewer/readme_preview.py ~/.local/share/nautilus-python/extensions/
+cp git-blame/git_blame.py ~/.local/share/nautilus-python/extensions/
+cp git-diff/git_diff.py ~/.local/share/nautilus-python/extensions/
+cp git-graph/git_graph.py ~/.local/share/nautilus-python/extensions/
+cp git-status/git_status.py ~/.local/share/nautilus-python/extensions/
 ```
 
 **Oppure installa solo quelle che ti servono**, ad esempio solo CSV e PDF:

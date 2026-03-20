@@ -27,6 +27,7 @@ Nautilus extensions are Python scripts that add new entries to the menu that app
 - Analyze Dockerfiles
 - Find duplicate files
 - View README files directly from Nautilus
+- Integrate Git directly into Nautilus (blame, diff, status, graph)
 
 ---
 
@@ -133,6 +134,50 @@ Show the current folder's README:
 
 📖 **[Read the complete guide →](readme-viewer/README_EN.md)**
 
+### 10. ⎇ **Git Blame** (`git-blame`)
+Adds Git columns to Nautilus list view:
+- Last commit author for each file
+- Relative commit date (e.g., "3 hours ago")
+- Commit message (truncated to 55 characters)
+- Result caching and async loading
+
+**Usage:** List View (`Ctrl+2`) → right-click column headers → enable Git columns
+
+📖 **[Read the complete guide →](git-blame/README.md)**
+
+### 11. ⎇ **Git Diff** (`git-diff`)
+Visual diff viewer for modified files:
+- Side-by-side view with aligned lines
+- Unified view with toggle
+- Green/red coloring for additions/removals
+- Support for staged and working tree diffs
+
+**Usage:** Right-click on modified file → "⎇ Mostra Diff Git"
+
+📖 **[Read the complete guide →](git-diff/README.md)**
+
+### 12. ⎇ **Git Graph** (`git-graph`)
+Visualize the Git commit graph:
+- Visual graph with nodes and Bézier curves
+- Color palette for distinct branches
+- Branch badges and golden HEAD marker
+- Interactive legend and status bar
+
+**Usage:** Right-click on background → "⎇ Mostra Git Graph…"
+
+📖 **[Read the complete guide →](git-graph/README.md)**
+
+### 13. ⎇ **Git Status** (`git-status`)
+Git status panel with automatic refresh:
+- Current branch with ahead/behind indicator
+- Staged, modified and untracked files with colored icons
+- Last 10 commits with hash, author and date
+- Stash count and 3-second auto-refresh
+
+**Usage:** Right-click on background → "⎇ Stato Git…"
+
+📖 **[Read the complete guide →](git-status/README.md)**
+
 ---
 
 ## 🚀 Installation
@@ -208,6 +253,9 @@ sudo apt install python3-markdown gir1.2-webkit2-4.1  # optional, for Markdown r
 **Dockerfile Analyzer and Duplicate Finder:**
 No additional dependencies (use only standard libraries)
 
+**Git Blame, Git Diff, Git Graph and Git Status:**
+No additional dependencies (only require `git` installed on the system)
+
 ### Step 4: Copy the extensions
 
 Copy the `.py` files of the extensions you want to use to the created folder:
@@ -223,6 +271,10 @@ cp pdf-splitter/pdf_splitter.py ~/.local/share/nautilus-python/extensions/
 cp dockerfile-analyzer/dockerfile_analyzer.py ~/.local/share/nautilus-python/extensions/
 cp duplicate-finder/duplicate-finder.py ~/.local/share/nautilus-python/extensions/
 cp readme-viewer/readme_preview.py ~/.local/share/nautilus-python/extensions/
+cp git-blame/git_blame.py ~/.local/share/nautilus-python/extensions/
+cp git-diff/git_diff.py ~/.local/share/nautilus-python/extensions/
+cp git-graph/git_graph.py ~/.local/share/nautilus-python/extensions/
+cp git-status/git_status.py ~/.local/share/nautilus-python/extensions/
 ```
 
 **Or install only the ones you need**, for example only CSV and PDF:
