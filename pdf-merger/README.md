@@ -1,68 +1,40 @@
-# 🔗 Unisci PDF - Estensione Nautilus
+# 🔗 Merge PDF - Nautilus Extension
 
-**Lingua:** **🇮🇹 Italiano** | [🇬🇧 English](README_EN.md)
+**Language:** [🇮🇹 Italiano](README_IT.md) | **🇬🇧 English**
 
 ---
 
-Estensione per Nautilus che permette di unire più file PDF in uno solo con interfaccia grafica.
+Nautilus extension that allows merging multiple PDF files into one with a graphical interface.
 
-## 🎯 Funzionalità
+## 🎯 Features
 
-- **Selezione multipla** di file PDF
-- **Riordino tramite drag & drop** o pulsanti ⬆⬇
-- **Rimozione file** dalla lista
-- **Anteprima numero pagine** per ogni PDF
-- **Conteggio pagine totali** del file risultante
-- **Scelta nome file output**
-- **Apertura automatica** della cartella di destinazione
+- **Multiple PDF selection**
+- **Reorder via drag & drop** or ⬆⬇ buttons
+- **Remove files** from the list
+- **Page count preview** for each PDF
+- **Total page count** of the resulting file
+- **Choose output filename**
+- **Automatic opening** of destination folder
 
-## 🚀 Installazione
-
-### Passo 1: Installa nautilus-python
+## 🚀 Installation
 
 ```bash
 sudo apt update
-sudo apt install python3-nautilus
-```
-
-### Passo 2: Installa le dipendenze
-
-```bash
-sudo apt install python3-pypdf
-```
-
-### Passo 3: Crea la cartella delle estensioni
-
-```bash
+sudo apt install python3-nautilus python3-pypdf
 mkdir -p ~/.local/share/nautilus-python/extensions
-```
-
-### Passo 4: Copia il file dell'estensione
-
-```bash
 cp pdf_merger.py ~/.local/share/nautilus-python/extensions/
-```
-
-### Passo 5: Riavvia Nautilus
-
-```bash
 nautilus -q
 ```
 
-## 📖 Come usare
+## 📖 How to use
 
-1. **Seleziona 2 o più file PDF** (tieni premuto `Ctrl` mentre clicchi)
-2. **Clic destro** sulla selezione
-3. Seleziona **"Unisci [N] PDF"**
-4. Nella finestra:
-   - Riordina i file trascinandoli o con ⬆⬇
-   - Rimuovi file con ✕
-   - Modifica il nome output
-   - Clicca **"🔗 Unisci PDF"**
+1. **Select 2 or more PDF files** (hold `Ctrl` while clicking)
+2. **Right-click** on the selection
+3. Select **"Merge [N] PDFs"**
+4. Reorder, remove files, edit output name
+5. Click **"🔗 Merge PDF"**
 
-Il file unito verrà salvato nella cartella del primo PDF.
-
-## 🗑️ Disinstallazione
+## 🗑️ Uninstallation
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/pdf_merger.py
@@ -71,4 +43,4 @@ nautilus -q
 
 ---
 
-**Torna al [README principale](../README.md)**
+**Back to [Main README](../README.md)**

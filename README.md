@@ -1,223 +1,223 @@
-# 🐚 Estensioni Nautilus - Guida Completa
+# 🐚 Nautilus Extensions - Complete Guide
 
-**Lingua:** **🇮🇹 Italiano** | [🇬🇧 English](README_EN.md)
-
----
-
-Raccolta di estensioni per Nautilus (il file manager di Ubuntu/GNOME) che aggiungono funzionalità avanzate di anteprima e gestione file direttamente dal menu contestuale.
-
-## 📋 Indice
-
-- [Cosa sono le estensioni Nautilus](#cosa-sono-le-estensioni-nautilus)
-- [Estensioni disponibili](#estensioni-disponibili)
-- [Installazione](#installazione)
-- [Configurazione](#configurazione)
-- [Utilizzo](#utilizzo)
-- [Risoluzione problemi](#risoluzione-problemi)
-- [Disinstallazione](#disinstallazione)
+**Language:** [🇮🇹 Italiano](README_IT.md) | **🇬🇧 English**
 
 ---
 
-## 🎯 Cosa sono le estensioni Nautilus
+Collection of extensions for Nautilus (Ubuntu/GNOME file manager) that add advanced preview and file management features directly from the context menu.
 
-Le estensioni Nautilus sono script Python che aggiungono nuove voci al menu che appare quando fai clic destro su un file o cartella. Queste estensioni ti permettono di:
+## 📋 Table of Contents
 
-- Visualizzare anteprime avanzate di file dati (CSV, Excel, JSON, Parquet)
-- Unire o dividere file PDF
-- Analizzare Dockerfile
-- Trovare file duplicati
-- Visualizzare README direttamente da Nautilus
-- Integrare Git direttamente in Nautilus (blame, diff, status, graph)
+- [What are Nautilus extensions](#what-are-nautilus-extensions)
+- [Available extensions](#available-extensions)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [Troubleshooting](#troubleshooting)
+- [Uninstallation](#uninstallation)
 
 ---
 
-## 📦 Estensioni disponibili
+## 🎯 What are Nautilus extensions
 
-### 1. 📊 **Anteprima CSV** (`csv-preview`)
-Visualizza file CSV con:
-- Tabella formattata delle prime 100 righe
-- Statistiche descrittive (con pandas)
-- Rilevamento automatico del delimitatore
-- Informazioni su colonne numeriche e valori nulli
+Nautilus extensions are Python scripts that add new entries to the menu that appears when you right-click on a file or folder. These extensions allow you to:
 
-**Formati supportati:** `.csv`, `.tsv`
+- View advanced previews of data files (CSV, Excel, JSON, Parquet)
+- Merge or split PDF files
+- Analyze Dockerfiles
+- Find duplicate files
+- View README files directly from Nautilus
+- Integrate Git directly into Nautilus (blame, diff, status, graph)
 
-📖 **[Leggi la guida completa →](csv-preview/README.md)**
+---
 
-### 2. 📗 **Anteprima Excel** (`excel-preview`)
-Visualizza file Excel/LibreOffice con:
-- Tutti i fogli del documento
-- Dati tabulari con tipi di colonna
-- Statistiche descrittive per colonne numeriche
-- Metadati del documento (autore, data creazione)
+## 📦 Available extensions
 
-**Formati supportati:** `.xlsx`, `.xlsm`, `.xltx`, `.xltm`, `.ods`
+### 1. 📊 **CSV Preview** (`csv-preview`)
+View CSV files with:
+- Formatted table of the first 100 rows
+- Descriptive statistics (with pandas)
+- Automatic delimiter detection
+- Information on numeric columns and null values
 
-📖 **[Leggi la guida completa →](excel-preview/README.md)**
+**Supported formats:** `.csv`, `.tsv`
 
-### 3. 🗂️ **Anteprima JSON** (`json-preview`)
-Visualizza file JSON e JSONL con:
-- Struttura ad albero navigabile
-- Schema inferito automaticamente
-- Anteprima dati per array/JSONL
-- Statistiche per file JSONL
-- Supporto file compressi gzip
+📖 **[Read the complete guide →](csv-preview/README.md)**
 
-**Formati supportati:** `.json`, `.jsonl`, `.ndjson`, `.json.gz`, `.jsonl.gz`
+### 2. 📗 **Excel Preview** (`excel-preview`)
+View Excel/LibreOffice files with:
+- All document sheets
+- Tabular data with column types
+- Descriptive statistics for numeric columns
+- Document metadata (author, creation date)
 
-📖 **[Leggi la guida completa →](json-preview/README.md)**
+**Supported formats:** `.xlsx`, `.xlsm`, `.xltx`, `.xltm`, `.ods`
 
-### 4. 📦 **Anteprima Parquet** (`parquet-preview`)
-Visualizza file Parquet con:
-- Schema completo con tipi di dato
-- Metadati e row groups
-- Anteprima dati
-- Statistiche descrittive
-- Informazioni su compressione
+📖 **[Read the complete guide →](excel-preview/README.md)**
 
-**Formati supportati:** `.parquet`
+### 3. 🗂️ **JSON Preview** (`json-preview`)
+View JSON and JSONL files with:
+- Navigable tree structure
+- Automatically inferred schema
+- Data preview for arrays/JSONL
+- Statistics for JSONL files
+- Gzip compressed file support
 
-📖 **[Leggi la guida completa →](parquet-preview/README.md)**
+**Supported formats:** `.json`, `.jsonl`, `.ndjson`, `.json.gz`, `.jsonl.gz`
 
-### 5. 🔗 **Unisci PDF** (`pdf-merger`)
-Unisce più file PDF in uno solo:
-- Selezione multipla di PDF
-- Riordino tramite drag & drop
-- Anteprima numero pagine
-- Scelta nome file output
+📖 **[Read the complete guide →](json-preview/README.md)**
 
-**Utilizzo:** Seleziona 2 o più PDF → clic destro → "Unisci PDF"
+### 4. 📦 **Parquet Preview** (`parquet-preview`)
+View Parquet files with:
+- Complete schema with data types
+- Metadata and row groups
+- Data preview
+- Descriptive statistics
+- Compression information
 
-📖 **[Leggi la guida completa →](pdf-merger/README.md)**
+**Supported formats:** `.parquet`
 
-### 6. ✂️ **Dividi PDF** (`pdf-splitter`)
-Divide un PDF in più file con 4 modalità:
-- **Intervalli personalizzati** (es. 1-3, 5-7, 9)
-- **Ogni N pagine** (es. ogni 5 pagine)
-- **Una pagina per file**
-- **Per segnalibri/capitoli**
+📖 **[Read the complete guide →](parquet-preview/README.md)**
 
-**Utilizzo:** Clic destro su PDF → "Dividi PDF"
+### 5. 🔗 **Merge PDF** (`pdf-merger`)
+Merge multiple PDF files into one:
+- Multiple PDF selection
+- Reorder via drag & drop
+- Page count preview
+- Choose output filename
 
-� **[Leggi la guida ciompleta →](pdf-splitter/README.md)**
+**Usage:** Select 2 or more PDFs → right-click → "Merge PDF"
 
-### 7. 🐳 **Analizza Dockerfile** (`dockerfile-analyzer`)
-Analizza Dockerfile con:
-- Struttura e istruzioni
+📖 **[Read the complete guide →](pdf-merger/README.md)**
+
+### 6. ✂️ **Split PDF** (`pdf-splitter`)
+Split a PDF into multiple files with 4 modes:
+- **Custom ranges** (e.g., 1-3, 5-7, 9)
+- **Every N pages** (e.g., every 5 pages)
+- **One page per file**
+- **By bookmarks/chapters**
+
+**Usage:** Right-click on PDF → "Split PDF"
+
+📖 **[Read the complete guide →](pdf-splitter/README.md)**
+
+### 7. 🐳 **Analyze Dockerfile** (`dockerfile-analyzer`)
+Analyze Dockerfiles with:
+- Structure and instructions
 - Multi-stage builds
-- Variabili d'ambiente e argomenti
-- **Best practice e suggerimenti di sicurezza**
-- Rilevamento problemi comuni
+- Environment variables and arguments
+- **Best practices and security suggestions**
+- Common issue detection
 
-**Utilizzo:** Clic destro su Dockerfile → "Analizza Dockerfile"
+**Usage:** Right-click on Dockerfile → "Analyze Dockerfile"
 
-📖 **[Leggi la guida completa →](dockerfile-analyzer/README.md)**
+📖 **[Read the complete guide →](dockerfile-analyzer/README.md)**
 
-### 8. 🔍 **Trova Duplicati** (`duplicate-finder`)
-Trova file duplicati in una cartella:
-- Scansione ricorsiva con hash MD5
-- Raggruppamento per contenuto identico
-- Selezione intelligente (mantiene il primo)
-- Spostamento nel cestino con un clic
+### 8. 🔍 **Find Duplicates** (`duplicate-finder`)
+Find duplicate files in a folder:
+- Recursive scan with MD5 hash
+- Grouping by identical content
+- Smart selection (keeps the first)
+- Move to trash with one click
 
-**Utilizzo:** Clic destro su cartella → "🔍 Trova duplicati"
+**Usage:** Right-click on folder → "🔍 Find duplicates"
 
-📖 **[Leggi la guida completa →](duplicate-finder/README.md)**
+📖 **[Read the complete guide →](duplicate-finder/README.md)**
 
-### 9. 📖 **Visualizza README** (`readme-viewer`)
-Mostra il README della cartella corrente:
-- Rendering Markdown (se disponibile)
-- Supporto README.md, README.txt, README.rst
-- Apertura rapida nell'editor
+### 9. 📖 **View README** (`readme-viewer`)
+Show the current folder's README:
+- Markdown rendering (if available)
+- Support for README.md, README.txt, README.rst
+- Quick open in editor
 
-**Utilizzo:** Clic destro sullo sfondo della cartella → "Mostra README.md"
+**Usage:** Right-click on folder background → "Show README.md"
 
-📖 **[Leggi la guida completa →](readme-viewer/README.md)**
+📖 **[Read the complete guide →](readme-viewer/README.md)**
 
 ### 10. ⎇ **Git Blame** (`git-blame`)
-Aggiunge colonne Git nella vista lista di Nautilus:
-- Autore dell'ultimo commit per ogni file
-- Data relativa del commit (es. "3 hours ago")
-- Messaggio del commit (troncato a 55 caratteri)
-- Cache dei risultati e caricamento asincrono
+Adds Git columns to Nautilus list view:
+- Last commit author for each file
+- Relative commit date (e.g., "3 hours ago")
+- Commit message (truncated to 55 characters)
+- Result caching and async loading
 
-**Utilizzo:** Vista Lista (`Ctrl+2`) → clic destro intestazione colonne → spunta le colonne Git
+**Usage:** List View (`Ctrl+2`) → right-click column headers → enable Git columns
 
-📖 **[Leggi la guida completa →](git-blame/README.md)**
+📖 **[Read the complete guide →](git-blame/README.md)**
 
 ### 11. ⎇ **Git Diff** (`git-diff`)
-Visualizza le modifiche di un file con diff visuale:
-- Vista side-by-side con righe affiancate
-- Vista unificata con toggle
-- Colorazione verde/rosso per aggiunte/rimozioni
-- Supporto diff staged e working tree
+Visual diff viewer for modified files:
+- Side-by-side view with aligned lines
+- Unified view with toggle
+- Green/red coloring for additions/removals
+- Support for staged and working tree diffs
 
-**Utilizzo:** Clic destro su file modificato → "⎇ Mostra Diff Git"
+**Usage:** Right-click on modified file → "⎇ Mostra Diff Git"
 
-📖 **[Leggi la guida completa →](git-diff/README.md)**
+📖 **[Read the complete guide →](git-diff/README.md)**
 
 ### 12. ⎇ **Git Graph** (`git-graph`)
-Visualizza il grafo dei commit Git:
-- Grafo visuale con nodi e curve Bézier
-- Palette colori per branch distinti
-- Badge branch e marcatore HEAD dorato
-- Legenda interattiva e barra di stato
+Visualize the Git commit graph:
+- Visual graph with nodes and Bézier curves
+- Color palette for distinct branches
+- Branch badges and golden HEAD marker
+- Interactive legend and status bar
 
-**Utilizzo:** Clic destro sullo sfondo → "⎇ Mostra Git Graph…"
+**Usage:** Right-click on background → "⎇ Mostra Git Graph…"
 
-📖 **[Leggi la guida completa →](git-graph/README.md)**
+📖 **[Read the complete guide →](git-graph/README.md)**
 
 ### 13. ⎇ **Git Status** (`git-status`)
-Pannello di stato Git con aggiornamento automatico:
-- Branch corrente con indicatore ahead/behind
-- File staged, modificati e untracked con icone colorate
-- Ultimi 10 commit con hash, autore e data
-- Conteggio stash e auto-refresh ogni 3 secondi
+Git status panel with automatic refresh:
+- Current branch with ahead/behind indicator
+- Staged, modified and untracked files with colored icons
+- Last 10 commits with hash, author and date
+- Stash count and 3-second auto-refresh
 
-**Utilizzo:** Clic destro sullo sfondo → "⎇ Stato Git…"
+**Usage:** Right-click on background → "⎇ Stato Git…"
 
-📖 **[Leggi la guida completa →](git-status/README.md)**
+📖 **[Read the complete guide →](git-status/README.md)**
 
 ---
 
-## 🚀 Installazione
+## 🚀 Installation
 
-### Prerequisiti
+### Prerequisites
 
-Prima di installare le estensioni, assicurati di avere:
+Before installing the extensions, make sure you have:
 
-1. **Ubuntu/GNOME** (o altra distribuzione con Nautilus)
-2. **Python 3** (già installato su Ubuntu)
-3. **nautilus-python** (il bridge tra Nautilus e Python)
+1. **Ubuntu/GNOME** (or another distribution with Nautilus)
+2. **Python 3** (already installed on Ubuntu)
+3. **nautilus-python** (the bridge between Nautilus and Python)
 
-### Passo 1: Installa nautilus-python
+### Step 1: Install nautilus-python
 
-Apri il terminale (premi `Ctrl+Alt+T`) e digita:
+Open the terminal (press `Ctrl+Alt+T`) and type:
 
 ```bash
 sudo apt update
 sudo apt install python3-nautilus
 ```
 
-### Passo 2: Crea la cartella delle estensioni
+### Step 2: Create the extensions folder
 
-Se non esiste già, crea la cartella dove Nautilus cerca le estensioni:
+If it doesn't already exist, create the folder where Nautilus looks for extensions:
 
 ```bash
 mkdir -p ~/.local/share/nautilus-python/extensions
 ```
 
-### Passo 3: Installa le dipendenze Python
+### Step 3: Install Python dependencies
 
-Alcune estensioni richiedono librerie Python aggiuntive. Installa quelle che ti servono:
+Some extensions require additional Python libraries. Install the ones you need:
 
-#### Per TUTTE le estensioni (consigliato):
+#### For ALL extensions (recommended):
 ```bash
 sudo apt install python3-pandas python3-openpyxl python3-pypdf python3-markdown
 pip install pyarrow --break-system-packages
 ```
 
-#### Oppure solo per estensioni specifiche:
+#### Or only for specific extensions:
 
 **CSV Preview:**
 ```bash
@@ -231,7 +231,7 @@ sudo apt install python3-pandas python3-openpyxl
 
 **JSON Preview:**
 ```bash
-sudo apt install python3-pandas  # opzionale, per statistiche JSONL
+sudo apt install python3-pandas  # optional, for JSONL statistics
 ```
 
 **Parquet Preview:**
@@ -247,21 +247,21 @@ sudo apt install python3-pypdf
 
 **README Viewer:**
 ```bash
-sudo apt install python3-markdown gir1.2-webkit2-4.1  # opzionale, per rendering Markdown
+sudo apt install python3-markdown gir1.2-webkit2-4.1  # optional, for Markdown rendering
 ```
 
-**Dockerfile Analyzer e Duplicate Finder:**
-Nessuna dipendenza aggiuntiva (usano solo librerie standard)
+**Dockerfile Analyzer and Duplicate Finder:**
+No additional dependencies (use only standard libraries)
 
-**Git Blame, Git Diff, Git Graph e Git Status:**
-Nessuna dipendenza aggiuntiva (richiedono solo `git` installato nel sistema)
+**Git Blame, Git Diff, Git Graph and Git Status:**
+No additional dependencies (only require `git` installed on the system)
 
-### Passo 4: Copia le estensioni
+### Step 4: Copy the extensions
 
-Copia i file `.py` delle estensioni che vuoi usare nella cartella creata:
+Copy the `.py` files of the extensions you want to use to the created folder:
 
 ```bash
-# Esempio: installa tutte le estensioni
+# Example: install all extensions
 cp csv-preview/csv_preview.py ~/.local/share/nautilus-python/extensions/
 cp excel-preview/excel_preview.py ~/.local/share/nautilus-python/extensions/
 cp json-preview/json_preview.py ~/.local/share/nautilus-python/extensions/
@@ -277,222 +277,222 @@ cp git-graph/git_graph.py ~/.local/share/nautilus-python/extensions/
 cp git-status/git_status.py ~/.local/share/nautilus-python/extensions/
 ```
 
-**Oppure installa solo quelle che ti servono**, ad esempio solo CSV e PDF:
+**Or install only the ones you need**, for example only CSV and PDF:
 ```bash
 cp csv-preview/csv_preview.py ~/.local/share/nautilus-python/extensions/
 cp pdf-merger/pdf_merger.py ~/.local/share/nautilus-python/extensions/
 ```
 
-### Passo 5: Riavvia Nautilus
+### Step 5: Restart Nautilus
 
-Per attivare le estensioni, riavvia Nautilus:
+To activate the extensions, restart Nautilus:
 
 ```bash
 nautilus -q
 ```
 
-Poi riapri Nautilus normalmente (clicca sull'icona "File" nel dock o premi `Super+E`).
+Then reopen Nautilus normally (click the "Files" icon in the dock or press `Super+E`).
 
 ---
 
-## ⚙️ Configurazione
+## ⚙️ Configuration
 
-### Verifica installazione
+### Verify installation
 
-Per verificare che le estensioni siano state caricate correttamente:
+To verify that the extensions have been loaded correctly:
 
-1. Apri Nautilus
-2. Vai in una cartella con file CSV, PDF, JSON, ecc.
-3. Fai clic destro su un file supportato
-4. Dovresti vedere le nuove voci nel menu (es. "Anteprima CSV", "Dividi PDF")
+1. Open Nautilus
+2. Go to a folder with CSV, PDF, JSON files, etc.
+3. Right-click on a supported file
+4. You should see the new entries in the menu (e.g., "CSV Preview", "Split PDF")
 
-### Risolvi problemi di caricamento
+### Troubleshoot loading issues
 
-Se le estensioni non appaiono:
+If the extensions don't appear:
 
-1. **Controlla i log di Nautilus:**
+1. **Check Nautilus logs:**
    ```bash
    nautilus -q
    nautilus 2>&1 | grep -i python
    ```
 
-2. **Verifica che nautilus-python sia installato:**
+2. **Verify that nautilus-python is installed:**
    ```bash
    dpkg -l | grep nautilus-python
    ```
 
-3. **Controlla i permessi dei file:**
+3. **Check file permissions:**
    ```bash
    ls -la ~/.local/share/nautilus-python/extensions/
    ```
-   I file devono essere leggibili (permessi `644` o `755`)
+   Files must be readable (permissions `644` or `755`)
 
-4. **Rendi eseguibili i file (se necessario):**
+4. **Make files executable (if necessary):**
    ```bash
    chmod +x ~/.local/share/nautilus-python/extensions/*.py
    ```
 
 ---
 
-## 📖 Utilizzo
+## 📖 Usage
 
-### Anteprima file dati (CSV, Excel, JSON, Parquet)
+### Preview data files (CSV, Excel, JSON, Parquet)
 
-1. Naviga fino al file che vuoi visualizzare
-2. **Clic destro** sul file
-3. Seleziona **"Anteprima [tipo file]"** (es. "Anteprima CSV")
-4. Si aprirà una finestra con:
-   - Tab "Dati": tabella con i dati
-   - Tab "Schema/Colonne": informazioni sulle colonne
-   - Tab "Statistiche": statistiche descrittive (se disponibili)
-   - Tab "Metadati": informazioni sul file
+1. Navigate to the file you want to view
+2. **Right-click** on the file
+3. Select **"Preview [file type]"** (e.g., "CSV Preview")
+4. A window will open with:
+   - "Data" tab: table with data
+   - "Schema/Columns" tab: column information
+   - "Statistics" tab: descriptive statistics (if available)
+   - "Metadata" tab: file information
 
-### Unire PDF
+### Merge PDFs
 
-1. **Seleziona 2 o più file PDF** (tieni premuto `Ctrl` mentre clicchi)
-2. **Clic destro** sulla selezione
-3. Seleziona **"Unisci [N] PDF"**
-4. Nella finestra che si apre:
-   - Riordina i file trascinandoli o usando i pulsanti ⬆⬇
-   - Rimuovi file indesiderati con il pulsante ✕
-   - Modifica il nome del file output
-   - Clicca **"🔗 Unisci PDF"**
-5. Il file unito verrà salvato nella stessa cartella del primo PDF
+1. **Select 2 or more PDF files** (hold `Ctrl` while clicking)
+2. **Right-click** on the selection
+3. Select **"Merge [N] PDFs"**
+4. In the window that opens:
+   - Reorder files by dragging or using ⬆⬇ buttons
+   - Remove unwanted files with ✕ button
+   - Edit the output filename
+   - Click **"🔗 Merge PDF"**
+5. The merged file will be saved in the same folder as the first PDF
 
-### Dividere PDF
+### Split PDF
 
-1. **Clic destro** su un file PDF
-2. Seleziona **"Dividi PDF"**
-3. Scegli una delle 4 modalità:
-   - **Intervalli**: inserisci "1-3, 5, 7-9" per creare 3 file
-   - **Ogni N pagine**: dividi ogni 5 pagine
-   - **Una per file**: ogni pagina diventa un PDF
-   - **Segnalibri**: un file per ogni capitolo
-4. Scegli la cartella di output
-5. Clicca **"✂ Dividi PDF"**
+1. **Right-click** on a PDF file
+2. Select **"Split PDF"**
+3. Choose one of 4 modes:
+   - **Ranges**: enter "1-3, 5, 7-9" to create 3 files
+   - **Every N pages**: split every 5 pages
+   - **One per file**: each page becomes a PDF
+   - **Bookmarks**: one file per chapter
+4. Choose the output folder
+5. Click **"✂ Split PDF"**
 
-### Analizzare Dockerfile
+### Analyze Dockerfile
 
-1. **Clic destro** su un file Dockerfile
-2. Seleziona **"Analizza Dockerfile"**
-3. Esplora i tab:
-   - **Overview**: immagini base, porte, variabili
-   - **Best Practice**: suggerimenti di sicurezza e ottimizzazione
-   - **Istruzioni**: lista completa delle istruzioni
-   - **Sorgente**: codice con syntax highlighting
+1. **Right-click** on a Dockerfile
+2. Select **"Analyze Dockerfile"**
+3. Explore the tabs:
+   - **Overview**: base images, ports, variables
+   - **Best Practices**: security and optimization suggestions
+   - **Instructions**: complete instruction list
+   - **Source**: code with syntax highlighting
 
-### Trovare duplicati
+### Find duplicates
 
-1. **Clic destro** su una cartella
-2. Seleziona **"🔍 Trova duplicati"**
-3. Attendi la scansione (può richiedere tempo per cartelle grandi)
-4. Nella finestra dei risultati:
-   - I file sono raggruppati per contenuto identico
-   - Il primo file di ogni gruppo NON è selezionato (verrà mantenuto)
-   - Puoi modificare la selezione manualmente
-   - Clicca **"Seleziona duplicati automaticamente"** per selezionare tutti tranne il primo
-   - Clicca **"🗑 Sposta nel Cestino"** per eliminare i duplicati selezionati
+1. **Right-click** on a folder
+2. Select **"🔍 Find duplicates"**
+3. Wait for the scan (may take time for large folders)
+4. In the results window:
+   - Files are grouped by identical content
+   - The first file in each group is NOT selected (will be kept)
+   - You can modify the selection manually
+   - Click **"Select duplicates automatically"** to select all except the first
+   - Click **"🗑 Move to Trash"** to delete selected duplicates
 
-### Visualizzare README
+### View README
 
-1. Apri una cartella che contiene un file README
-2. **Clic destro sullo sfondo** (non su un file)
-3. Seleziona **"Mostra README.md"** (o README.txt, ecc.)
-4. Il README verrà visualizzato con rendering Markdown (se disponibile)
+1. Open a folder containing a README file
+2. **Right-click on the background** (not on a file)
+3. Select **"Show README.md"** (or README.txt, etc.)
+4. The README will be displayed with Markdown rendering (if available)
 
 ---
 
-## 🔧 Risoluzione problemi
+## 🔧 Troubleshooting
 
-### Le estensioni non appaiono nel menu
+### Extensions don't appear in the menu
 
-**Causa:** nautilus-python non è installato o Nautilus non è stato riavviato
+**Cause:** nautilus-python is not installed or Nautilus hasn't been restarted
 
-**Soluzione:**
+**Solution:**
 ```bash
 sudo apt install python3-nautilus
 nautilus -q
 ```
 
-### Errore "ModuleNotFoundError: No module named 'pandas'"
+### Error "ModuleNotFoundError: No module named 'pandas'"
 
-**Causa:** Manca la libreria pandas
+**Cause:** Missing pandas library
 
-**Soluzione:**
+**Solution:**
 ```bash
 sudo apt install python3-pandas
 ```
 
-### Errore "ModuleNotFoundError: No module named 'pypdf'"
+### Error "ModuleNotFoundError: No module named 'pypdf'"
 
-**Causa:** Manca la libreria pypdf per gestire PDF
+**Cause:** Missing pypdf library for PDF handling
 
-**Soluzione:**
+**Solution:**
 ```bash
 sudo apt install python3-pypdf
 ```
 
-### Errore "ModuleNotFoundError: No module named 'pyarrow'"
+### Error "ModuleNotFoundError: No module named 'pyarrow'"
 
-**Causa:** Manca pyarrow per file Parquet
+**Cause:** Missing pyarrow for Parquet files
 
-**Soluzione:**
+**Solution:**
 ```bash
 pip install pyarrow --break-system-packages
 ```
 
-### L'anteprima CSV/Excel è lenta
+### CSV/Excel preview is slow
 
-**Causa:** File molto grande
+**Cause:** Very large file
 
-**Soluzione:** Le estensioni caricano solo le prime 100 righe per velocità. Per file enormi, considera di usare strumenti dedicati come LibreOffice Calc o DBeaver.
+**Solution:** Extensions load only the first 100 rows for speed. For huge files, consider using dedicated tools like LibreOffice Calc or DBeaver.
 
-### Il rendering Markdown non funziona
+### Markdown rendering doesn't work
 
-**Causa:** Manca WebKit o python3-markdown
+**Cause:** Missing WebKit or python3-markdown
 
-**Soluzione:**
+**Solution:**
 ```bash
 sudo apt install python3-markdown gir1.2-webkit2-4.1
 ```
 
-### Nautilus si blocca o va in crash
+### Nautilus freezes or crashes
 
-**Causa:** Estensione con bug o file corrotto
+**Cause:** Buggy extension or corrupted file
 
-**Soluzione:**
-1. Rimuovi temporaneamente tutte le estensioni:
+**Solution:**
+1. Temporarily remove all extensions:
    ```bash
    mv ~/.local/share/nautilus-python/extensions ~/.local/share/nautilus-python/extensions.backup
    nautilus -q
    ```
-2. Reinstalla le estensioni una alla volta per identificare quella problematica
+2. Reinstall extensions one at a time to identify the problematic one
 
 ---
 
-## 🗑️ Disinstallazione
+## 🗑️ Uninstallation
 
-### Rimuovere una singola estensione
+### Remove a single extension
 
 ```bash
-rm ~/.local/share/nautilus-python/extensions/[nome_estensione].py
+rm ~/.local/share/nautilus-python/extensions/[extension_name].py
 nautilus -q
 ```
 
-Esempio per rimuovere l'anteprima CSV:
+Example to remove CSV preview:
 ```bash
 rm ~/.local/share/nautilus-python/extensions/csv_preview.py
 nautilus -q
 ```
 
-### Rimuovere tutte le estensioni
+### Remove all extensions
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/*.py
 nautilus -q
 ```
 
-### Disinstallare nautilus-python (rimuove TUTTE le estensioni Python)
+### Uninstall nautilus-python (removes ALL Python extensions)
 
 ```bash
 sudo apt remove python3-nautilus
@@ -501,50 +501,69 @@ nautilus -q
 
 ---
 
-## 💡 Suggerimenti
+## 💡 Tips
 
-### Prestazioni
+### Performance
 
-- Le estensioni di anteprima caricano solo una parte dei file (prime 100 righe) per velocità
-- Per file molto grandi (>100MB), l'apertura potrebbe richiedere qualche secondo
-- La ricerca duplicati può essere lenta su cartelle con migliaia di file
+- Preview extensions load only part of files (first 100 rows) for speed
+- For very large files (>100MB), opening may take a few seconds
+- Duplicate search can be slow on folders with thousands of files
 
-### Sicurezza
+### Security
 
-- L'analizzatore Dockerfile evidenzia problemi di sicurezza comuni
-- Non mettere mai password o segreti in variabili ENV nei Dockerfile
-- Usa sempre tag specifici per le immagini Docker (non `:latest`)
+- The Dockerfile analyzer highlights common security issues
+- Never put passwords or secrets in ENV variables in Dockerfiles
+- Always use specific tags for Docker images (not `:latest`)
 
-### Personalizzazione
+### Customization
 
-Puoi modificare i file `.py` per personalizzare:
-- Numero di righe visualizzate (cambia `PREVIEW_ROWS`)
-- Dimensioni finestre (cambia `WINDOW_W` e `WINDOW_H`)
-- Colori e stili CSS (modifica la variabile `CSS`)
-
----
-
-## 📝 Note tecniche
-
-- **Versione Nautilus:** Queste estensioni sono progettate per Nautilus 43+ (GNOME 43+) con GTK 4
-- **Python:** Richiede Python 3.8 o superiore
-- **Thread:** Le operazioni pesanti (lettura file, calcolo hash) vengono eseguite in thread separati per non bloccare l'interfaccia
+You can modify the `.py` files to customize:
+- Number of rows displayed (change `PREVIEW_ROWS`)
+- Window sizes (change `WINDOW_W` and `WINDOW_H`)
+- Colors and CSS styles (modify the `CSS` variable)
 
 ---
 
-## ❓ Domande frequenti (FAQ)
+## 📝 Technical notes
 
-**D: Posso usare queste estensioni su altre distribuzioni Linux?**  
-R: Sì, funzionano su qualsiasi distribuzione con Nautilus e nautilus-python (Fedora, Debian, Arch, ecc.)
+- **Nautilus version:** These extensions are designed for Nautilus 43+ (GNOME 43+) with GTK 4
+- **Python:** Requires Python 3.8 or higher
+- **Threads:** Heavy operations (file reading, hash calculation) are executed in separate threads to avoid blocking the interface
 
-**D: Funzionano con altri file manager?**  
-R: No, sono specifiche per Nautilus. Per altri file manager (Dolphin, Thunar, ecc.) servono estensioni diverse.
+---
 
-**D: Posso modificare il codice?**  
-R: Assolutamente sì! I file sono script Python leggibili e modificabili.
+## 🤝 Contributions
 
-**D: Le estensioni rallentano Nautilus?**  
-R: No, vengono caricate solo quando necessario e le operazioni pesanti sono in thread separati.
+Found a bug or want to add a feature? Feel free to:
+- Open an issue
+- Submit a pull request
+- Suggest improvements
 
-**D: Dove vengono salvati i file uniti/divisi?**  
-R: Nella stessa cartella del file originale, o nella cartella che scegli nella finestra di dialogo.
+---
+
+## 📄 License
+
+These extensions are provided "as is" without warranties. Use at your own risk.
+
+---
+
+## ❓ Frequently Asked Questions (FAQ)
+
+**Q: Can I use these extensions on other Linux distributions?**  
+A: Yes, they work on any distribution with Nautilus and nautilus-python (Fedora, Debian, Arch, etc.)
+
+**Q: Do they work with other file managers?**  
+A: No, they are specific to Nautilus. For other file managers (Dolphin, Thunar, etc.) you need different extensions.
+
+**Q: Can I modify the code?**  
+A: Absolutely yes! The files are readable and modifiable Python scripts.
+
+**Q: Do extensions slow down Nautilus?**  
+A: No, they are loaded only when needed and heavy operations are in separate threads.
+
+**Q: Where are merged/split files saved?**  
+A: In the same folder as the original file, or in the folder you choose in the dialog window.
+
+---
+
+**Happy working with Nautilus! 🚀**

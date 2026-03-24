@@ -1,68 +1,41 @@
-# ✂️ Dividi PDF - Estensione Nautilus
+# ✂️ Split PDF - Nautilus Extension
 
-**Lingua:** **🇮🇹 Italiano** | [🇬🇧 English](README_EN.md)
+**Language:** [🇮🇹 Italiano](README_IT.md) | **🇬🇧 English**
 
 ---
 
-Estensione per Nautilus che permette di dividere un file PDF in più file con 4 modalità diverse.
+Nautilus extension that allows splitting a PDF file into multiple files with 4 different modes.
 
-## 🎯 Funzionalità
+## 🎯 Features
 
-- **4 modalità di divisione:**
-  1. Intervalli personalizzati (es. 1-3, 5-7, 9)
-  2. Ogni N pagine
-  3. Una pagina per file
-  4. Per segnalibri/capitoli
-- **Anteprima file** che verranno creati
-- **Scelta cartella output**
-- **Progress bar** durante la divisione
+- **4 split modes:**
+  1. Custom ranges (e.g., 1-3, 5-7, 9)
+  2. Every N pages
+  3. One page per file
+  4. By bookmarks/chapters
+- **Preview of files** to be created
+- **Choose output folder**
+- **Progress bar** during splitting
 
-## 🚀 Installazione
-
-### Passo 1: Installa nautilus-python
+## 🚀 Installation
 
 ```bash
 sudo apt update
-sudo apt install python3-nautilus
-```
-
-### Passo 2: Installa le dipendenze
-
-```bash
-sudo apt install python3-pypdf
-```
-
-### Passo 3: Crea la cartella delle estensioni
-
-```bash
+sudo apt install python3-nautilus python3-pypdf
 mkdir -p ~/.local/share/nautilus-python/extensions
-```
-
-### Passo 4: Copia il file dell'estensione
-
-```bash
 cp pdf_splitter.py ~/.local/share/nautilus-python/extensions/
-```
-
-### Passo 5: Riavvia Nautilus
-
-```bash
 nautilus -q
 ```
 
-## 📖 Come usare
+## 📖 How to use
 
-1. **Clic destro** su un file PDF
-2. Seleziona **"Dividi PDF"**
-3. Scegli una modalità:
-   - **Intervalli**: inserisci "1-3, 5, 7-9"
-   - **Ogni N pagine**: scegli il numero
-   - **Una per file**: automatico
-   - **Segnalibri**: automatico (se presenti)
-4. Scegli la cartella output
-5. Clicca **"✂ Dividi PDF"**
+1. **Right-click** on a PDF file
+2. Select **"Split PDF"**
+3. Choose a mode and configure
+4. Choose output folder
+5. Click **"✂ Split PDF"**
 
-## 🗑️ Disinstallazione
+## 🗑️ Uninstallation
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/pdf_splitter.py
@@ -71,4 +44,4 @@ nautilus -q
 
 ---
 
-**Torna al [README principale](../README.md)**
+**Back to [Main README](../README.md)**

@@ -1,60 +1,37 @@
-# 📖 Visualizza README - Estensione Nautilus
+# 📖 View README - Nautilus Extension
 
-**Lingua:** **🇮🇹 Italiano** | [🇬🇧 English](README_EN.md)
+**Language:** [🇮🇹 Italiano](README_IT.md) | **🇬🇧 English**
 
 ---
 
-Estensione per Nautilus che mostra il file README della cartella corrente con rendering Markdown.
+Nautilus extension that shows the current folder's README file with Markdown rendering.
 
-## 🎯 Funzionalità
+## 🎯 Features
 
-- **Rilevamento automatico** di README.md, README.txt, README.rst
-- **Rendering Markdown** (se WebKit è disponibile)
-- **Apertura rapida** nell'editor
-- **Supporto formati** multipli
+- **Automatic detection** of README.md, README.txt, README.rst
+- **Markdown rendering** (if WebKit is available)
+- **Quick open** in editor
+- **Multiple format support**
 
-## 🚀 Installazione
-
-### Passo 1: Installa nautilus-python
+## 🚀 Installation
 
 ```bash
 sudo apt update
 sudo apt install python3-nautilus
-```
-
-### Passo 2: Installa le dipendenze (opzionali)
-
-Per il rendering Markdown:
-```bash
-sudo apt install python3-markdown gir1.2-webkit2-4.1
-```
-
-### Passo 3: Crea la cartella delle estensioni
-
-```bash
+sudo apt install python3-markdown gir1.2-webkit2-4.1  # optional, for Markdown rendering
 mkdir -p ~/.local/share/nautilus-python/extensions
-```
-
-### Passo 4: Copia il file dell'estensione
-
-```bash
 cp readme_preview.py ~/.local/share/nautilus-python/extensions/
-```
-
-### Passo 5: Riavvia Nautilus
-
-```bash
 nautilus -q
 ```
 
-## 📖 Come usare
+## 📖 How to use
 
-1. Apri una cartella con un README
-2. **Clic destro sullo sfondo** (non su un file)
-3. Seleziona **"Mostra README.md"**
-4. Il README verrà visualizzato
+1. Open a folder with a README
+2. **Right-click on the background** (not on a file)
+3. Select **"Show README.md"**
+4. The README will be displayed
 
-## 🗑️ Disinstallazione
+## 🗑️ Uninstallation
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/readme_preview.py
@@ -63,4 +40,4 @@ nautilus -q
 
 ---
 
-**Torna al [README principale](../README.md)**
+**Back to [Main README](../README.md)**

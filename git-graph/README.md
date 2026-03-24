@@ -1,95 +1,95 @@
-# ⎇ Git Graph - Estensione Nautilus
+# ⎇ Git Graph - Nautilus Extension
 
-**Lingua:** **🇮🇹 Italiano** | [🇬🇧 English](README_EN.md)
+**Language:** [🇮🇹 Italiano](README_IT.md) | **🇬🇧 English**
 
 ---
 
-Estensione per Nautilus che visualizza il grafo dei commit Git con branch, merge e legenda colorata in una finestra grafica interattiva.
+Nautilus extension that displays the Git commit graph with branches, merges, and a colored legend in an interactive graphical window.
 
-## 🎯 Funzionalità
+## 🎯 Features
 
-- **Grafo visuale dei commit** disegnato con Cairo su DrawingArea GTK 4
-- **Palette colori per branch** — ogni branch ha un colore distinto dalla palette
-- **Marcatore HEAD** con anello dorato sul commit corrente
-- **Badge branch** con sfondo colorato accanto ai commit con ref
-- **Legenda interattiva** nella parte superiore con tutti i branch
-- **Curve Bézier** per connessioni tra commit di branch diversi
-- **Fino a 60 commit** visualizzati con hash, autore, data e messaggio
-- **Barra di stato** con conteggio commit e branch
-- **Caricamento asincrono** con spinner durante il caricamento
+- **Visual commit graph** drawn with Cairo on GTK 4 DrawingArea
+- **Branch color palette** — each branch has a distinct color from the palette
+- **HEAD marker** with a golden ring on the current commit
+- **Branch badges** with colored background next to commits with refs
+- **Interactive legend** at the top with all branches
+- **Bezier curves** for connections between commits on different branches
+- **Up to 60 commits** displayed with hash, author, date, and message
+- **Status bar** with commit and branch count
+- **Async loading** with a spinner during loading
 
-## 🚀 Installazione
+## 🚀 Installation
 
-### Passo 1: Installa nautilus-python
+### Step 1: Install nautilus-python
 
 ```bash
 sudo apt update
 sudo apt install python3-nautilus
 ```
 
-### Passo 2: Crea la cartella delle estensioni
+### Step 2: Create the extensions folder
 
 ```bash
 mkdir -p ~/.local/share/nautilus-python/extensions
 ```
 
-### Passo 3: Copia il file dell'estensione
+### Step 3: Copy the extension file
 
 ```bash
 cp git_graph.py ~/.local/share/nautilus-python/extensions/
 ```
 
-### Passo 4: Riavvia Nautilus
+### Step 4: Restart Nautilus
 
 ```bash
 nautilus -q
 ```
 
-**Nota:** Questa estensione non richiede dipendenze aggiuntive (solo `git` installato nel sistema).
+**Note:** This extension requires no additional dependencies (only `git` installed on the system).
 
-## 📖 Come usare
+## 📖 How to use
 
-1. Apri Nautilus e naviga in una cartella all'interno di un repository Git
-2. **Clic destro** sullo sfondo della cartella
-3. Seleziona **"⎇ Mostra Git Graph…"**
-4. Nella finestra vedrai:
-   - **Legenda** in alto con i branch e i rispettivi colori
-   - **Grafo** con nodi commit collegati da linee/curve
-   - **Badge** colorati per branch associati ai commit
-   - **Hash + messaggio** per ogni commit
-   - **Autore e data** allineati a destra
-   - **Barra di stato** con il conteggio totale di commit e branch
+1. Open Nautilus and navigate to a folder inside a Git repository
+2. **Right-click** on the folder background
+3. Select **"⎇ Mostra Git Graph…"**
+4. In the window you will see:
+   - **Legend** at the top with branches and their respective colors
+   - **Graph** with commit nodes connected by lines/curves
+   - **Colored badges** for branches associated with commits
+   - **Hash + message** for each commit
+   - **Author and date** aligned to the right
+   - **Status bar** with the total count of commits and branches
 
-Puoi anche fare clic destro su una **cartella** per aprire il grafo del repository contenuto.
+You can also right-click on a **folder** to open the graph for the contained repository.
 
-## 🔧 Configurazione
+## 🔧 Configuration
 
-Puoi personalizzare l'estensione modificando le costanti nel file `git_graph.py`:
+You can customize the extension by editing the constants in the `git_graph.py` file:
 
 ```python
-BRANCH_COLORS = [...]    # Palette colori per i branch
-HEAD_COLOR = "#FFD700"    # Colore del marcatore HEAD
-MERGE_COLOR = "#FF6B9D"   # Colore per merge commits
-max_commits = 60           # Numero massimo di commit visualizzati
+BRANCH_COLORS = [...]    # Branch color palette
+HEAD_COLOR = "#FFD700"    # HEAD marker color
+MERGE_COLOR = "#FF6B9D"   # Color for merge commits
+max_commits = 60           # Maximum number of commits displayed
 ```
 
-Nella classe `GitGraphWidget`:
+In the `GitGraphWidget` class:
 ```python
-ROW_H = 52     # Altezza di ogni riga commit
-COL_W = 22     # Larghezza colonna per branch paralleli
-NODE_R = 7     # Raggio del nodo commit
-LEFT_PAD = 16  # Padding sinistro
+ROW_H = 52     # Height of each commit row
+COL_W = 22     # Column width for parallel branches
+NODE_R = 7     # Commit node radius
+LEFT_PAD = 16  # Left padding
 ```
 
-## 🔍 Dettagli tecnici
+## 🔍 Technical details
 
-- **Versione Nautilus:** 43+ (GNOME 43+) con GTK 4
+- **Nautilus version:** 43+ (GNOME 43+) with GTK 4
 - **API:** `MenuProvider`
-- **Rendering:** Cairo drawing su `Gtk.DrawingArea` con `set_draw_func`
-- **Thread:** Il caricamento dei dati git avviene in un thread separato per non bloccare l'interfaccia
-- **Layout:** Euristica di assegnazione colonne basata su branch attivi per evitare sovrapposizioni
+- **Rendering:** Cairo drawing on `Gtk.DrawingArea` with `set_draw_func`
+- **Threads:** Git data loading happens in a separate thread to avoid blocking the interface
+- **Layout:** Column assignment heuristic based on active branches to avoid overlaps
 
-## 🗑️ Disinstallazione
+## 🗑️ Uninstallation
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/git_graph.py
@@ -98,4 +98,4 @@ nautilus -q
 
 ---
 
-**Torna al [README principale](../README.md)**
+**Back to [Main README](../README.md)**

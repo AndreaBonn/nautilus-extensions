@@ -1,69 +1,69 @@
-# ⎇ Git Diff - Estensione Nautilus
+# ⎇ Git Diff - Nautilus Extension
 
-**Lingua:** **🇮🇹 Italiano** | [🇬🇧 English](README_EN.md)
+**Language:** [🇮🇹 Italiano](README_IT.md) | **🇬🇧 English**
 
 ---
 
-Estensione per Nautilus che aggiunge una vista diff visuale side-by-side dal menu contestuale per file in repository Git.
+Nautilus extension that adds a visual side-by-side diff view from the context menu for files in Git repositories.
 
-## 🎯 Funzionalità
+## 🎯 Features
 
-- **Diff side-by-side** con righe affiancate vecchio/nuovo
-- **Diff unificato** con toggle per passare tra le due viste
-- **Colorazione sintassi** — verde per aggiunte, rosso per rimozioni
-- **Numeri di riga** per entrambi i lati
-- **Supporto diff staged e working tree** — mostra prima le modifiche non staged, poi quelle staged
-- **Caricamento asincrono** con spinner durante il caricamento
-- **Disponibile su file e cartelle** dal menu contestuale e dallo sfondo
+- **Side-by-side diff** with aligned old/new lines
+- **Unified diff** with a toggle to switch between the two views
+- **Syntax coloring** — green for additions, red for removals
+- **Line numbers** for both sides
+- **Staged and working tree diff support** — shows unstaged changes first, then staged changes
+- **Async loading** with a spinner during loading
+- **Available on files and folders** from the context menu and from the background
 
-## 🚀 Installazione
+## 🚀 Installation
 
-### Passo 1: Installa nautilus-python
+### Step 1: Install nautilus-python
 
 ```bash
 sudo apt update
 sudo apt install python3-nautilus
 ```
 
-### Passo 2: Crea la cartella delle estensioni
+### Step 2: Create the extensions folder
 
 ```bash
 mkdir -p ~/.local/share/nautilus-python/extensions
 ```
 
-### Passo 3: Copia il file dell'estensione
+### Step 3: Copy the extension file
 
 ```bash
 cp git_diff.py ~/.local/share/nautilus-python/extensions/
 ```
 
-### Passo 4: Riavvia Nautilus
+### Step 4: Restart Nautilus
 
 ```bash
 nautilus -q
 ```
 
-**Nota:** Questa estensione non richiede dipendenze aggiuntive (solo `git` installato nel sistema).
+**Note:** This extension requires no additional dependencies (only `git` installed on the system).
 
-## 📖 Come usare
+## 📖 How to use
 
-1. Apri Nautilus e naviga in un repository Git
-2. **Clic destro** su un file modificato
-3. Seleziona **"⎇ Mostra Diff Git"**
-4. Nella finestra:
-   - Usa il toggle **"Side-by-side"** / **"Unificato"** per cambiare vista
-   - Scorri per navigare tra gli hunk di modifiche
+1. Open Nautilus and navigate to a Git repository
+2. **Right-click** on a modified file
+3. Select **"⎇ Mostra Diff Git"**
+4. In the window:
+   - Use the **"Side-by-side"** / **"Unified"** toggle to switch views
+   - Scroll to navigate through the change hunks
 
-Puoi anche fare clic destro sullo **sfondo** di una cartella per visualizzare il diff della cartella stessa.
+You can also right-click on the **background** of a folder to view the diff for the folder itself.
 
-## 🔍 Dettagli tecnici
+## 🔍 Technical details
 
-- **Versione Nautilus:** 43+ (GNOME 43+) con GTK 4
+- **Nautilus version:** 43+ (GNOME 43+) with GTK 4
 - **API:** `MenuProvider`
-- **Thread:** Il caricamento del diff avviene in un thread separato per non bloccare l'interfaccia
-- **Parser diff:** Parsing custom dell'output di `git diff` in hunk con supporto per righe aggiunte, rimosse e di contesto
+- **Threads:** Diff loading happens in a separate thread to avoid blocking the interface
+- **Diff parser:** Custom parsing of `git diff` output into hunks with support for added, removed, and context lines
 
-## 🗑️ Disinstallazione
+## 🗑️ Uninstallation
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/git_diff.py
@@ -72,4 +72,4 @@ nautilus -q
 
 ---
 
-**Torna al [README principale](../README.md)**
+**Back to [Main README](../README.md)**

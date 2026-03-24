@@ -1,233 +1,233 @@
-# 📗 Anteprima Excel - Estensione Nautilus
+# 📗 Excel Preview - Nautilus Extension
 
-**Lingua:** **🇮🇹 Italiano** | [🇬🇧 English](README_EN.md)
+**Language:** [🇮🇹 Italiano](README_IT.md) | **🇬🇧 English**
 
 ---
 
-Estensione per Nautilus che aggiunge un'anteprima avanzata per file Excel e LibreOffice Calc direttamente dal menu contestuale.
+Nautilus extension that adds advanced preview for Excel and LibreOffice Calc files directly from the context menu.
 
-## 🎯 Funzionalità
+## 🎯 Features
 
-- **Visualizzazione di tutti i fogli** del documento
-- **Tabella formattata** con le prime 100 righe per foglio
-- **Statistiche descrittive** per colonne numeriche
-- **Metadati del documento** (autore, data creazione/modifica)
-- **Informazioni sui valori nulli** per ogni colonna
-- **Evidenziazione colonne numeriche** con colore blu
-- **Supporto multi-stage** per documenti con molti fogli
+- **View all sheets** in the document
+- **Formatted table** with the first 100 rows per sheet
+- **Descriptive statistics** for numeric columns
+- **Document metadata** (author, creation/modification date)
+- **Null value information** for each column
+- **Numeric column highlighting** with blue color
+- **Multi-stage support** for documents with many sheets
 
-## 📸 Cosa vedrai
+## 📸 What you'll see
 
-Quando apri l'anteprima di un file Excel, vedrai una finestra con:
+When you open an Excel file preview, you'll see a window with:
 
-**Barra superiore:**
-- Numero di fogli
-- Righe totali (somma di tutti i fogli)
-- Dimensione file
-- Autore e data ultima modifica
+**Top bar:**
+- Number of sheets
+- Total rows (sum of all sheets)
+- File size
+- Author and last modification date
 
-**Per ogni foglio, 3 tab:**
-1. **📊 Dati**: Tabella con i dati, intestazioni con tipo di colonna
-2. **📈 Statistiche**: Statistiche descrittive per colonne numeriche
-3. **🗂 Colonne**: Informazioni dettagliate su ogni colonna
+**For each sheet, 3 tabs:**
+1. **📊 Data**: Table with data, headers with column type
+2. **📈 Statistics**: Descriptive statistics for numeric columns
+3. **🗂 Columns**: Detailed information about each column
 
-## 🚀 Installazione
+## 🚀 Installation
 
-### Passo 1: Installa nautilus-python
+### Step 1: Install nautilus-python
 
 ```bash
 sudo apt update
 sudo apt install python3-nautilus
 ```
 
-### Passo 2: Installa le dipendenze
+### Step 2: Install dependencies
 
 ```bash
 sudo apt install python3-pandas python3-openpyxl
 ```
 
-**Nota:** Entrambe le dipendenze sono necessarie per questa estensione.
+**Note:** Both dependencies are required for this extension.
 
-### Passo 3: Crea la cartella delle estensioni
+### Step 3: Create the extensions folder
 
 ```bash
 mkdir -p ~/.local/share/nautilus-python/extensions
 ```
 
-### Passo 4: Copia il file dell'estensione
+### Step 4: Copy the extension file
 
 ```bash
 cp excel_preview.py ~/.local/share/nautilus-python/extensions/
 ```
 
-### Passo 5: Riavvia Nautilus
+### Step 5: Restart Nautilus
 
 ```bash
 nautilus -q
 ```
 
-Riapri Nautilus normalmente.
+Reopen Nautilus normally.
 
-## 📖 Come usare
+## 📖 How to use
 
-1. Apri Nautilus e naviga fino a un file Excel o ODS
-2. **Clic destro** sul file
-3. Seleziona **"Anteprima Excel"**
-4. Si aprirà una finestra con l'anteprima del file
+1. Open Nautilus and navigate to an Excel or ODS file
+2. **Right-click** on the file
+3. Select **"Excel Preview"**
+4. A window will open with the file preview
 
-### Navigazione multi-foglio
+### Multi-sheet navigation
 
-- Se il file ha **un solo foglio**, vedrai direttamente i tab Dati/Statistiche/Colonne
-- Se il file ha **più fogli**, vedrai prima i tab dei fogli (sulla sinistra), poi i tab interni per ogni foglio
+- If the file has **one sheet**, you'll see directly the Data/Statistics/Columns tabs
+- If the file has **multiple sheets**, you'll first see the sheet tabs (on the left), then the internal tabs for each sheet
 
-### Funzionalità della finestra
+### Window features
 
-- **Cambia foglio**: Clicca sui tab laterali (se ci sono più fogli)
-- **Ridimensiona colonne**: Trascina il bordo dell'intestazione
-- **Ordina dati**: Clicca sull'intestazione di una colonna
-- **Apri con LibreOffice**: Clicca il pulsante in basso
+- **Change sheet**: Click on side tabs (if there are multiple sheets)
+- **Resize columns**: Drag the header border
+- **Sort data**: Click on a column header
+- **Open with LibreOffice**: Click the button at the bottom
 
-## 🔧 Configurazione
+## 🔧 Configuration
 
-Puoi personalizzare l'estensione modificando le costanti nel file `excel_preview.py`:
+You can customize the extension by modifying constants in `excel_preview.py`:
 
 ```python
-PREVIEW_ROWS = 100        # Numero di righe da mostrare per foglio
-MIN_COL_WIDTH = 80        # Larghezza minima colonna in pixel
-MAX_COL_WIDTH = 300       # Larghezza massima colonna in pixel
-WINDOW_W = 1150           # Larghezza finestra
-WINDOW_H = 700            # Altezza finestra
+PREVIEW_ROWS = 100        # Number of rows to show per sheet
+MIN_COL_WIDTH = 80        # Minimum column width in pixels
+MAX_COL_WIDTH = 300       # Maximum column width in pixels
+WINDOW_W = 1150           # Window width
+WINDOW_H = 700            # Window height
 ```
 
-## 📋 Formati supportati
+## 📋 Supported formats
 
 - `.xlsx` - Excel 2007+ (Office Open XML)
-- `.xlsm` - Excel con macro
-- `.xltx` - Template Excel
-- `.xltm` - Template Excel con macro
+- `.xlsm` - Excel with macros
+- `.xltx` - Excel template
+- `.xltm` - Excel template with macros
 - `.ods` - OpenDocument Spreadsheet (LibreOffice/OpenOffice)
 
-## 🐛 Risoluzione problemi
+## 🐛 Troubleshooting
 
-### L'estensione non appare nel menu
+### Extension doesn't appear in the menu
 
-**Soluzione:**
+**Solution:**
 ```bash
-# Verifica che nautilus-python sia installato
+# Verify that nautilus-python is installed
 dpkg -l | grep nautilus-python
 
-# Riavvia Nautilus
+# Restart Nautilus
 nautilus -q
 ```
 
-### Errore "ModuleNotFoundError: No module named 'openpyxl'"
+### Error "ModuleNotFoundError: No module named 'openpyxl'"
 
-**Soluzione:**
+**Solution:**
 ```bash
 sudo apt install python3-openpyxl
 ```
 
-### Errore "ModuleNotFoundError: No module named 'pandas'"
+### Error "ModuleNotFoundError: No module named 'pandas'"
 
-**Soluzione:**
+**Solution:**
 ```bash
 sudo apt install python3-pandas
 ```
 
-### Il file Excel non viene visualizzato correttamente
+### Excel file not displayed correctly
 
-**Possibili cause:**
-- File corrotto
-- Formato non supportato (es. vecchi file .xls di Excel 97-2003)
-- File protetto da password
+**Possible causes:**
+- Corrupted file
+- Unsupported format (e.g., old Excel 97-2003 .xls files)
+- Password-protected file
 
-**Soluzione per file .xls vecchi:**
-Apri il file con LibreOffice e salvalo come `.xlsx`
+**Solution for old .xls files:**
+Open the file with LibreOffice and save it as `.xlsx`
 
-### L'anteprima è lenta
+### Preview is slow
 
-**Causa:** File con molti fogli o molte righe
+**Cause:** File with many sheets or many rows
 
-**Soluzione:** L'estensione carica solo le prime 100 righe per foglio. Per file enormi, usa LibreOffice Calc.
+**Solution:** Extension loads only the first 100 rows per sheet. For huge files, use LibreOffice Calc.
 
-### Errore "File protetto da password"
+### Error "Password-protected file"
 
-**Soluzione:** L'estensione non supporta file protetti. Rimuovi la protezione con LibreOffice.
+**Solution:** Extension doesn't support protected files. Remove protection with LibreOffice.
 
-## 💡 Suggerimenti
+## 💡 Tips
 
-### Prestazioni
+### Performance
 
-- L'estensione carica tutti i fogli ma solo le prime 100 righe per foglio
-- Il conteggio delle righe totali è veloce (usa metadati del file)
-- Le statistiche vengono calcolate sull'intero foglio (può richiedere tempo per fogli grandi)
+- Extension loads all sheets but only the first 100 rows per sheet
+- Total row count is fast (uses file metadata)
+- Statistics are calculated on the entire sheet (may take time for large sheets)
 
-### Metadati
+### Metadata
 
-Nella barra superiore puoi vedere:
-- **Autore**: Chi ha creato il file
-- **Creato**: Data di creazione
-- **Modificato**: Data ultima modifica
-- **Fogli**: Numero di fogli nel documento
+In the top bar you can see:
+- **Author**: Who created the file
+- **Created**: Creation date
+- **Modified**: Last modification date
+- **Sheets**: Number of sheets in the document
 
-### Colonne numeriche
+### Numeric columns
 
-Le colonne numeriche sono evidenziate in blu e mostrano:
-- Tipo di dato (int64, float64, ecc.)
-- Statistiche descrittive (media, mediana, min, max, ecc.)
-- Valori nulli
+Numeric columns are highlighted in blue and show:
+- Data type (int64, float64, etc.)
+- Descriptive statistics (mean, median, min, max, etc.)
+- Null values
 
-## 🔍 Dettagli tecnici
+## 🔍 Technical details
 
-- **Versione Nautilus:** 43+ (GNOME 43+) con GTK 4
-- **Python:** 3.8 o superiore
-- **Dipendenze:** pandas, openpyxl
-- **Thread:** Il caricamento del file avviene in un thread separato per non bloccare l'interfaccia
-- **Ottimizzazione:** Tutti i fogli vengono letti in una sola chiamata pandas per velocità
+- **Nautilus version:** 43+ (GNOME 43+) with GTK 4
+- **Python:** 3.8 or higher
+- **Dependencies:** pandas, openpyxl
+- **Threads:** File loading occurs in a separate thread to avoid blocking the interface
+- **Optimization:** All sheets are read in a single pandas call for speed
 
-## 📝 Esempio di utilizzo
+## 📝 Usage example
 
-Supponiamo di avere un file `budget.xlsx` con 2 fogli:
+Suppose we have a `budget.xlsx` file with 2 sheets:
 
-**Foglio "Entrate":**
+**"Income" sheet:**
 ```
-mese,importo,categoria
-Gennaio,5000,Vendite
-Febbraio,5500,Vendite
-```
-
-**Foglio "Uscite":**
-```
-mese,importo,categoria
-Gennaio,3000,Stipendi
-Febbraio,3200,Stipendi
+month,amount,category
+January,5000,Sales
+February,5500,Sales
 ```
 
-Facendo clic destro e selezionando "Anteprima Excel", vedrai:
+**"Expenses" sheet:**
+```
+month,amount,category
+January,3000,Salaries
+February,3200,Salaries
+```
 
-**Barra superiore:**
-- 2 fogli, 4 righe totali, dimensione file
+Right-clicking and selecting "Excel Preview", you'll see:
 
-**Tab laterali:**
-- Entrate
-- Uscite
+**Top bar:**
+- 2 sheets, 4 total rows, file size
 
-**Per ogni foglio:**
-- Tab Dati: tabella con colonna "importo" in blu
-- Tab Statistiche: media, min, max per "importo"
-- Tab Colonne: mese (string), importo (int64), categoria (string)
+**Side tabs:**
+- Income
+- Expenses
 
-## 🗑️ Disinstallazione
+**For each sheet:**
+- Data tab: table with "amount" column in blue
+- Statistics tab: mean, min, max for "amount"
+- Columns tab: month (string), amount (int64), category (string)
+
+## 🗑️ Uninstallation
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/excel_preview.py
 nautilus -q
 ```
 
-## 🤝 Contributi
+## 🤝 Contributions
 
-Hai trovato un bug o vuoi migliorare l'estensione? Sentiti libero di modificare il codice!
+Found a bug or want to improve the extension? Feel free to modify the code!
 
 ---
 
-**Torna al [README principale](../README.md)**
+**Back to [Main README](../README.md)**

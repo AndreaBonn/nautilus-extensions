@@ -1,86 +1,39 @@
-# 📦 Anteprima Parquet - Estensione Nautilus
+# 📦 Parquet Preview - Nautilus Extension
 
-**Lingua:** **🇮🇹 Italiano** | [🇬🇧 English](README_EN.md)
+**Language:** [🇮🇹 Italiano](README_IT.md) | **🇬🇧 English**
 
 ---
 
-Estensione per Nautilus che aggiunge un'anteprima avanzata per file Apache Parquet direttamente dal menu contestuale.
+Nautilus extension that adds advanced preview for Apache Parquet files directly from the context menu.
 
-## 🎯 Funzionalità
+## 🎯 Features
 
-- **Schema completo** con tipi di dato PyArrow
-- **Metadati dettagliati** (row groups, compressione, codec)
-- **Anteprima dati** con le prime 100 righe
-- **Statistiche descrittive** per colonne numeriche
-- **Informazioni sui valori nulli**
-- **Evidenziazione colonne per tipo** con colori diversi
-- **Dettagli row groups** con dimensioni compresse/non compresse
+- **Complete schema** with PyArrow data types
+- **Detailed metadata** (row groups, compression, codec)
+- **Data preview** with first 100 rows
+- **Descriptive statistics** for numeric columns
+- **Null value information**
+- **Type-based column highlighting** with different colors
+- **Row group details** with compressed/uncompressed sizes
 
-## 📸 Cosa vedrai
-
-Quando apri l'anteprima di un file Parquet, vedrai una finestra con 4 tab:
-
-1. **📊 Dati**: Tabella con i dati, colonne colorate per tipo
-2. **🗂 Schema**: Informazioni su ogni colonna + dettagli row groups
-3. **📈 Statistiche**: Statistiche descrittive per colonne numeriche
-4. **ℹ Metadati**: Informazioni sul file (versione, codec, dimensioni)
-
-## 🚀 Installazione
-
-### Passo 1: Installa nautilus-python
+## 🚀 Installation
 
 ```bash
 sudo apt update
-sudo apt install python3-nautilus
-```
-
-### Passo 2: Installa le dipendenze
-
-```bash
-sudo apt install python3-pandas
+sudo apt install python3-nautilus python3-pandas
 pip install pyarrow --break-system-packages
-```
-
-**Nota:** Entrambe le dipendenze sono necessarie.
-
-### Passo 3: Crea la cartella delle estensioni
-
-```bash
 mkdir -p ~/.local/share/nautilus-python/extensions
-```
-
-### Passo 4: Copia il file dell'estensione
-
-```bash
 cp parquet_preview.py ~/.local/share/nautilus-python/extensions/
-```
-
-### Passo 5: Riavvia Nautilus
-
-```bash
 nautilus -q
 ```
 
-## 📖 Come usare
+## 📖 How to use
 
-1. Apri Nautilus e naviga fino a un file `.parquet`
-2. **Clic destro** sul file
-3. Seleziona **"Anteprima Parquet"**
-4. Si aprirà una finestra con l'anteprima del file
+1. Right-click on a `.parquet` file
+2. Select **"Parquet Preview"**
+3. Explore the tabs: Data, Schema, Statistics, Metadata
 
-## 🔧 Configurazione
-
-Puoi personalizzare modificando le costanti in `parquet_preview.py`:
-
-```python
-PREVIEW_ROWS = 100        # Numero di righe da mostrare
-MIN_COL_WIDTH = 80        # Larghezza minima colonna
-MAX_COL_WIDTH = 300       # Larghezza massima colonna
-WINDOW_W = 1100           # Larghezza finestra
-WINDOW_H = 680            # Altezza finestra
-```
-
-## 🗑️ Disinstallazione
+## 🗑️ Uninstallation
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/parquet_preview.py
@@ -89,4 +42,4 @@ nautilus -q
 
 ---
 
-**Torna al [README principale](../README.md)**
+**Back to [Main README](../README.md)**

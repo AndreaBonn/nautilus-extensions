@@ -1,60 +1,41 @@
-# 🔍 Trova Duplicati - Estensione Nautilus
+# 🔍 Find Duplicates - Nautilus Extension
 
-**Lingua:** **🇮🇹 Italiano** | [🇬🇧 English](README_EN.md)
+**Language:** [🇮🇹 Italiano](README_IT.md) | **🇬🇧 English**
 
 ---
 
-Estensione per Nautilus che trova file duplicati in una cartella usando hash MD5.
+Nautilus extension that finds duplicate files in a folder using MD5 hash.
 
-## 🎯 Funzionalità
+## 🎯 Features
 
-- **Scansione ricorsiva** di tutte le sottocartelle
-- **Hash MD5** per identificare file identici
-- **Raggruppamento** per contenuto
-- **Selezione intelligente** (mantiene il primo file)
-- **Spostamento nel cestino** con un clic
-- **Progress bar** durante la scansione
+- **Recursive scan** of all subfolders
+- **MD5 hash** to identify identical files
+- **Grouping** by content
+- **Smart selection** (keeps the first file)
+- **Move to trash** with one click
+- **Progress bar** during scan
 
-## 🚀 Installazione
-
-### Passo 1: Installa nautilus-python
+## 🚀 Installation
 
 ```bash
 sudo apt update
 sudo apt install python3-nautilus
-```
-
-### Passo 2: Crea la cartella delle estensioni
-
-```bash
 mkdir -p ~/.local/share/nautilus-python/extensions
-```
-
-### Passo 3: Copia il file dell'estensione
-
-```bash
 cp duplicate-finder.py ~/.local/share/nautilus-python/extensions/
-```
-
-### Passo 4: Riavvia Nautilus
-
-```bash
 nautilus -q
 ```
 
-**Nota:** Questa estensione non richiede dipendenze aggiuntive.
+**Note:** This extension requires no additional dependencies.
 
-## 📖 Come usare
+## 📖 How to use
 
-1. **Clic destro** su una cartella
-2. Seleziona **"🔍 Trova duplicati"**
-3. Attendi la scansione
-4. Nella finestra:
-   - Seleziona i file da eliminare
-   - Clicca **"Seleziona duplicati automaticamente"**
-   - Clicca **"🗑 Sposta nel Cestino"**
+1. **Right-click** on a folder
+2. Select **"🔍 Find duplicates"**
+3. Wait for the scan
+4. Select files to delete
+5. Click **"🗑 Move to Trash"**
 
-## 🗑️ Disinstallazione
+## 🗑️ Uninstallation
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/duplicate-finder.py
@@ -63,4 +44,4 @@ nautilus -q
 
 ---
 
-**Torna al [README principale](../README.md)**
+**Back to [Main README](../README.md)**

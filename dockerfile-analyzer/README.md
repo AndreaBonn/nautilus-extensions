@@ -1,60 +1,43 @@
-# 🐳 Analizza Dockerfile - Estensione Nautilus
+# 🐳 Analyze Dockerfile - Nautilus Extension
 
-**Lingua:** **🇮🇹 Italiano** | [🇬🇧 English](README_EN.md)
+**Language:** [🇮🇹 Italiano](README_IT.md) | **🇬🇧 English**
 
 ---
 
-Estensione per Nautilus che analizza Dockerfile e fornisce suggerimenti di best practice e sicurezza.
+Nautilus extension that analyzes Dockerfiles and provides best practice and security suggestions.
 
-## 🎯 Funzionalità
+## 🎯 Features
 
-- **Analisi struttura** Dockerfile
-- **Rilevamento multi-stage builds**
-- **Best practice e sicurezza** con 14+ controlli
-- **Evidenziazione problemi** per severità (critici, medi, info)
-- **Visualizzazione istruzioni** con syntax highlighting
-- **Metadati** (ENV, ARG, EXPOSE, VOLUME, ecc.)
+- **Dockerfile structure analysis**
+- **Multi-stage build detection**
+- **Best practices and security** with 14+ checks
+- **Issue highlighting** by severity (critical, medium, info)
+- **Instruction visualization** with syntax highlighting
+- **Metadata** (ENV, ARG, EXPOSE, VOLUME, etc.)
 
-## 🚀 Installazione
-
-### Passo 1: Installa nautilus-python
+## 🚀 Installation
 
 ```bash
 sudo apt update
 sudo apt install python3-nautilus
-```
-
-### Passo 2: Crea la cartella delle estensioni
-
-```bash
 mkdir -p ~/.local/share/nautilus-python/extensions
-```
-
-### Passo 3: Copia il file dell'estensione
-
-```bash
 cp dockerfile_analyzer.py ~/.local/share/nautilus-python/extensions/
-```
-
-### Passo 4: Riavvia Nautilus
-
-```bash
 nautilus -q
 ```
 
-**Nota:** Questa estensione non richiede dipendenze aggiuntive.
+**Note:** This extension requires no additional dependencies.
 
-## 📖 Come usare
+## 📖 How to use
 
-1. **Clic destro** su un file Dockerfile
-2. Seleziona **"Analizza Dockerfile"**
-3. Esplora i 4 tab:
-   - **🐳 Overview**: immagini, porte, variabili
-   - **⚠ Best Practice**: suggerimenti di sicurezza
-   - **📋 Istruzioni**: lista completa
-   - **📄 Sorgente**: codice con colori
+1. **Right-click** on a Dockerfile
+2. Select **"Analyze Dockerfile"**
+3. Explore the 4 tabs:
+   - **🐳 Overview**: images, ports, variables
+   - **⚠ Best Practices**: security suggestions
+   - **📋 Instructions**: complete list
+   - **📄 Source**: code with colors
 
-## 🗑️ Disinstallazione
+## 🗑️ Uninstallation
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/dockerfile_analyzer.py
@@ -63,4 +46,4 @@ nautilus -q
 
 ---
 
-**Torna al [README principale](../README.md)**
+**Back to [Main README](../README.md)**

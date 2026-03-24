@@ -1,200 +1,204 @@
-# 📊 Anteprima CSV - Estensione Nautilus
+# 📊 CSV Preview - Nautilus Extension
 
-**Lingua:** **🇮🇹 Italiano** | [🇬🇧 English](README_EN.md)
+**Language:** [🇮🇹 Italiano](README_IT.md) | **🇬🇧 English**
 
 ---
 
-Estensione per Nautilus che aggiunge un'anteprima avanzata per file CSV e TSV direttamente dal menu contestuale.
+Nautilus extension that adds advanced preview for CSV and TSV files directly from the context menu.
 
-## 🎯 Funzionalità
+## 🎯 Features
 
-- **Tabella formattata** con le prime 100 righe del file
-- **Rilevamento automatico del delimitatore** (virgola, punto e virgola, tab)
-- **Statistiche descrittive** per colonne numeriche (media, mediana, min, max, ecc.)
-- **Evidenziazione colonne numeriche** con colore blu
-- **Informazioni sui valori nulli** per ogni colonna
-- **Ordinamento colonne** cliccando sull'intestazione
-- **Supporto file grandi** con caricamento ottimizzato
+- **Formatted table** with the first 100 rows of the file
+- **Automatic delimiter detection** (comma, semicolon, tab)
+- **Descriptive statistics** for numeric columns (mean, median, min, max, etc.)
+- **Numeric column highlighting** with blue color
+- **Null value information** for each column
+- **Column sorting** by clicking on the header
+- **Large file support** with optimized loading
 
-## 📸 Cosa vedrai
+## 📸 What you'll see
 
-Quando apri l'anteprima di un file CSV, vedrai una finestra con 3 tab:
+When you open a CSV file preview, you'll see a window with 3 tabs:
 
-1. **📊 Dati**: Tabella con i dati, colonne ridimensionabili e ordinabili
-2. **📈 Statistiche**: Statistiche descrittive per colonne numeriche (solo con pandas)
-3. **🗂 Colonne**: Informazioni su ogni colonna (nome, tipo, valori nulli)
+1. **📊 Data**: Table with data, resizable and sortable columns
+2. **📈 Statistics**: Descriptive statistics for numeric columns (only with pandas)
+3. **🗂 Columns**: Information about each column (name, type, null values)
 
-Nella barra superiore troverai:
-- Numero totale di righe e colonne
-- Delimitatore rilevato
-- Dimensione del file
-- Avviso se il file è stato troncato (mostra solo prime 100 righe)
+In the top bar you'll find:
+- Total number of rows and columns
+- Detected delimiter
+- File size
+- Warning if file was truncated (shows only first 100 rows)
 
-## 🚀 Installazione
+## 🚀 Installation
 
-### Passo 1: Installa nautilus-python
+### Step 1: Install nautilus-python
 
 ```bash
 sudo apt update
 sudo apt install python3-nautilus
 ```
 
-### Passo 2: Installa le dipendenze (opzionali ma consigliate)
+### Step 2: Install dependencies (optional but recommended)
 
-Per avere le statistiche descrittive:
+To get descriptive statistics:
 ```bash
 sudo apt install python3-pandas
 ```
 
-**Nota:** L'estensione funziona anche senza pandas, ma non mostrerà le statistiche.
+**Note:** The extension works without pandas, but won't show statistics.
 
-### Passo 3: Crea la cartella delle estensioni
+### Step 3: Create the extensions folder
 
 ```bash
 mkdir -p ~/.local/share/nautilus-python/extensions
 ```
 
-### Passo 4: Copia il file dell'estensione
+### Step 4: Copy the extension file
 
 ```bash
 cp csv_preview.py ~/.local/share/nautilus-python/extensions/
 ```
 
-### Passo 5: Riavvia Nautilus
+### Step 5: Restart Nautilus
 
 ```bash
 nautilus -q
 ```
 
-Riapri Nautilus normalmente.
+Reopen Nautilus normally.
 
-## 📖 Come usare
+## 📖 How to use
 
-1. Apri Nautilus e naviga fino a un file CSV o TSV
-2. **Clic destro** sul file
-3. Seleziona **"Anteprima CSV"**
-4. Si aprirà una finestra con l'anteprima del file
+1. Open Nautilus and navigate to a CSV or TSV file
+2. **Right-click** on the file
+3. Select **"CSV Preview"**
+4. A window will open with the file preview
 
-### Funzionalità della finestra
+### Window features
 
-- **Ridimensiona colonne**: Trascina il bordo dell'intestazione
-- **Ordina dati**: Clicca sull'intestazione di una colonna
-- **Naviga tra i tab**: Clicca su "Dati", "Statistiche" o "Colonne"
-- **Apri nell'editor**: Clicca il pulsante "Apri con editor" in basso
+- **Resize columns**: Drag the header border
+- **Sort data**: Click on a column header
+- **Navigate tabs**: Click on "Data", "Statistics" or "Columns"
+- **Open in editor**: Click the "Open with editor" button at the bottom
 
-## 🔧 Configurazione
+## 🔧 Configuration
 
-Puoi personalizzare l'estensione modificando le costanti nel file `csv_preview.py`:
+You can customize the extension by modifying constants in `csv_preview.py`:
 
 ```python
-PREVIEW_ROWS = 100        # Numero di righe da mostrare
-MAX_COL_WIDTH = 300       # Larghezza massima colonna in pixel
-MIN_COL_WIDTH = 60        # Larghezza minima colonna in pixel
-WINDOW_W = 1100           # Larghezza finestra
-WINDOW_H = 650            # Altezza finestra
+PREVIEW_ROWS = 100        # Number of rows to show
+MAX_COL_WIDTH = 300       # Maximum column width in pixels
+MIN_COL_WIDTH = 60        # Minimum column width in pixels
+WINDOW_W = 1100           # Window width
+WINDOW_H = 650            # Window height
 ```
 
-## 📋 Formati supportati
+## 📋 Supported formats
 
 - `.csv` - Comma Separated Values
 - `.tsv` - Tab Separated Values
 
-L'estensione rileva automaticamente il delimitatore analizzando il contenuto del file.
+The extension automatically detects the delimiter by analyzing the file content.
 
-## 🐛 Risoluzione problemi
+## 🐛 Troubleshooting
 
-### L'estensione non appare nel menu
+### Extension doesn't appear in the menu
 
-**Soluzione:**
+**Solution:**
 ```bash
-# Verifica che nautilus-python sia installato
+# Verify that nautilus-python is installed
 dpkg -l | grep nautilus-python
 
-# Riavvia Nautilus
+# Restart Nautilus
 nautilus -q
 ```
 
-### Errore "ModuleNotFoundError: No module named 'pandas'"
+### Error "ModuleNotFoundError: No module named 'pandas'"
 
-**Soluzione:**
+**Solution:**
 ```bash
 sudo apt install python3-pandas
 ```
 
-**Nota:** Questo errore non impedisce l'uso dell'estensione, ma disabilita le statistiche.
+**Note:** This error doesn't prevent using the extension, but disables statistics.
 
-### Il file CSV non viene visualizzato correttamente
+### CSV file not displayed correctly
 
-**Possibili cause:**
-- Delimitatore non standard (l'estensione prova a rilevarlo automaticamente)
-- Encoding del file non UTF-8
-- File corrotto
+**Possible causes:**
+- Non-standard delimiter (extension tries to detect it automatically)
+- File encoding not UTF-8
+- Corrupted file
 
-**Soluzione:** Prova ad aprire il file con un editor di testo per verificare il formato.
+**Solution:** Try opening the file with a text editor to verify the format.
 
-### L'anteprima è lenta
+### Preview is slow
 
-**Causa:** File molto grande (>100MB)
+**Cause:** Very large file (>100MB)
 
-**Soluzione:** L'estensione carica solo le prime 100 righe per velocità. Per file enormi, considera di usare strumenti dedicati come LibreOffice Calc.
+**Solution:** Extension loads only the first 100 rows for speed. For huge files, consider using dedicated tools like LibreOffice Calc.
 
-## 💡 Suggerimenti
+## 💡 Tips
 
-### Prestazioni
+### Performance
 
-- L'estensione carica solo le prime 100 righe per velocità
-- Il rilevamento del delimitatore analizza solo i primi 4KB del file
-- Con pandas, le statistiche vengono calcolate sull'intero file (può richiedere tempo per file grandi)
+- Extension loads only the first 100 rows for speed
+- Delimiter detection analyzes only the first 4KB of the file
+- With pandas, statistics are calculated on the entire file (may take time for large files)
 
-### Colonne numeriche
+### Numeric columns
 
-Le colonne numeriche sono evidenziate in blu e allineate a destra per facilitare la lettura.
+Numeric columns are highlighted in blue and right-aligned for easier reading.
 
-### Valori nulli
+### Null values
 
-Nella tab "Statistiche" puoi vedere quanti valori nulli (mancanti) ci sono in ogni colonna.
+In the "Statistics" tab you can see how many null (missing) values there are in each column.
 
-## 🔍 Dettagli tecnici
+## 🔍 Technical details
 
-- **Versione Nautilus:** 43+ (GNOME 43+) con GTK 4
-- **Python:** 3.8 o superiore
-- **Dipendenze opzionali:** pandas (per statistiche)
-- **Thread:** Il caricamento del file avviene in un thread separato per non bloccare l'interfaccia
+- **Nautilus version:** 43+ (GNOME 43+) with GTK 4
+- **Python:** 3.8 or higher
+- **Optional dependencies:** pandas (for statistics)
+- **Threads:** File loading occurs in a separate thread to avoid blocking the interface
 
-## 📝 Esempio di utilizzo
+## 📝 Usage example
 
-Supponiamo di avere un file `vendite.csv`:
+Suppose we have a `sales.csv` file:
 
 ```csv
-data,prodotto,quantita,prezzo
+date,product,quantity,price
 2024-01-01,Laptop,5,899.99
 2024-01-02,Mouse,15,29.99
-2024-01-03,Tastiera,8,79.99
+2024-01-03,Keyboard,8,79.99
 ```
 
-Facendo clic destro e selezionando "Anteprima CSV", vedrai:
+Right-clicking and selecting "CSV Preview", you'll see:
 
-**Tab Dati:**
-- Tabella con 3 righe e 4 colonne
-- Colonne "quantita" e "prezzo" evidenziate in blu
+**Data tab:**
+- Table with 3 rows and 4 columns
+- "quantity" and "price" columns highlighted in blue
 
-**Tab Statistiche:**
-- Media, mediana, min, max per "quantita" e "prezzo"
-- Nessun valore nullo
+**Statistics tab:**
+- Mean, median, min, max for "quantity" and "price"
+- No null values
 
-**Tab Colonne:**
-- data: string
-- prodotto: string
-- quantita: numerico (int64)
-- prezzo: numerico (float64)
+**Columns tab:**
+- date: string
+- product: string
+- quantity: numeric (int64)
+- price: numeric (float64)
 
-## 🗑️ Disinstallazione
+## 🗑️ Uninstallation
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/csv_preview.py
 nautilus -q
 ```
 
+## 🤝 Contributions
+
+Found a bug or want to improve the extension? Feel free to modify the code!
+
 ---
 
-**Torna al [README principale](../README.md)**
+**Back to [Main README](../README.md)**

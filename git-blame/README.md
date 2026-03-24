@@ -1,66 +1,66 @@
-# ⎇ Git Blame - Estensione Nautilus
+# ⎇ Git Blame - Nautilus Extension
 
-**Lingua:** **🇮🇹 Italiano** | [🇬🇧 English](README_EN.md)
+**Language:** [🇮🇹 Italiano](README_IT.md) | **🇬🇧 English**
 
 ---
 
-Estensione per Nautilus che aggiunge colonne Git blame nella vista lista, mostrando autore, data e messaggio dell'ultimo commit per ogni file.
+Nautilus extension that adds Git blame columns in the list view, showing the author, date, and message of the last commit for each file.
 
-## 🎯 Funzionalità
+## 🎯 Features
 
-- **Colonna "Git: Autore"** — chi ha fatto l'ultimo commit sul file
-- **Colonna "Git: Data"** — quando (es. "3 hours ago")
-- **Colonna "Git: Messaggio"** — messaggio del commit (troncato a 55 caratteri)
-- **Caricamento asincrono** con thread in background per non bloccare Nautilus
-- **Cache dei risultati** per evitare chiamate git ripetute
-- **Rilevamento automatico** se il file è in un repository git
+- **"Git: Author" column** — who made the last commit on the file
+- **"Git: Date" column** — when (e.g. "3 hours ago")
+- **"Git: Message" column** — commit message (truncated to 55 characters)
+- **Async loading** with background threads to avoid blocking Nautilus
+- **Result caching** to avoid repeated git calls
+- **Automatic detection** of whether the file is inside a git repository
 
-## 🚀 Installazione
+## 🚀 Installation
 
-### Passo 1: Installa nautilus-python
+### Step 1: Install nautilus-python
 
 ```bash
 sudo apt update
 sudo apt install python3-nautilus
 ```
 
-### Passo 2: Crea la cartella delle estensioni
+### Step 2: Create the extensions folder
 
 ```bash
 mkdir -p ~/.local/share/nautilus-python/extensions
 ```
 
-### Passo 3: Copia il file dell'estensione
+### Step 3: Copy the extension file
 
 ```bash
 cp git_blame.py ~/.local/share/nautilus-python/extensions/
 ```
 
-### Passo 4: Riavvia Nautilus
+### Step 4: Restart Nautilus
 
 ```bash
 nautilus -q
 ```
 
-**Nota:** Questa estensione non richiede dipendenze aggiuntive (solo `git` installato nel sistema).
+**Note:** This extension requires no additional dependencies (only `git` installed on the system).
 
-## 📖 Come usare
+## 📖 How to use
 
-1. Apri Nautilus e naviga in una cartella all'interno di un repository Git
-2. Passa alla **Vista Lista** con `Ctrl+2`
-3. **Clic destro** sull'intestazione delle colonne
-4. Spunta **"Git: Autore"**, **"Git: Data"**, **"Git: Messaggio"**
+1. Open Nautilus and navigate to a folder inside a Git repository
+2. Switch to **List View** with `Ctrl+2`
+3. **Right-click** on the column header
+4. Check **"Git: Author"**, **"Git: Date"**, **"Git: Message"**
 
-Le colonne mostreranno le informazioni dell'ultimo commit per ogni file.
+The columns will show the last commit information for each file.
 
-## 🔍 Dettagli tecnici
+## 🔍 Technical details
 
-- **Versione Nautilus:** 43+ (GNOME 43+) con GTK 4
+- **Nautilus version:** 43+ (GNOME 43+) with GTK 4
 - **API:** `ColumnProvider` + `InfoProvider`
-- **Thread:** Il caricamento delle informazioni git avviene in thread separati per non bloccare l'interfaccia
-- **Cache:** I risultati vengono memorizzati in cache per evitare chiamate ripetute a `git log`
+- **Threads:** Git information loading happens in separate threads to avoid blocking the interface
+- **Cache:** Results are cached to avoid repeated calls to `git log`
 
-## 🗑️ Disinstallazione
+## 🗑️ Uninstallation
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/git_blame.py
@@ -69,4 +69,4 @@ nautilus -q
 
 ---
 
-**Torna al [README principale](../README.md)**
+**Back to [Main README](../README.md)**

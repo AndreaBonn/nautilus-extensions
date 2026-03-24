@@ -1,76 +1,76 @@
-# ⎇ Git Status - Estensione Nautilus
+# ⎇ Git Status - Nautilus Extension
 
-**Lingua:** **🇮🇹 Italiano** | [🇬🇧 English](README_EN.md)
+**Language:** [🇮🇹 Italiano](README_IT.md) | **🇬🇧 English**
 
 ---
 
-Estensione per Nautilus che aggiunge un pannello di stato Git con aggiornamento automatico dal menu contestuale.
+Nautilus extension that adds a Git status panel with automatic refresh from the context menu.
 
-## 🎯 Funzionalità
+## 🎯 Features
 
-- **Branch corrente** con indicatore ahead/behind rispetto al remote
-- **File staged** pronti per il commit
-- **File modificati** nel working tree
-- **File untracked** nuovi e non tracciati
-- **Ultimi 10 commit** con hash, autore, data e messaggio
-- **Conteggio stash** salvati
-- **Aggiornamento automatico** ogni 3 secondi
-- **Pulsante refresh** manuale nella barra del titolo
-- **Icone colorate** per tipo di modifica (aggiunto, modificato, eliminato)
+- **Current branch** with ahead/behind indicator relative to the remote
+- **Staged files** ready for commit
+- **Modified files** in the working tree
+- **Untracked files** new and not tracked
+- **Last 10 commits** with hash, author, date, and message
+- **Stash count** saved stashes
+- **Automatic refresh** every 3 seconds
+- **Refresh button** manual refresh in the title bar
+- **Colored icons** by change type (added, modified, deleted)
 
-## 🚀 Installazione
+## 🚀 Installation
 
-### Passo 1: Installa nautilus-python
+### Step 1: Install nautilus-python
 
 ```bash
 sudo apt update
 sudo apt install python3-nautilus
 ```
 
-### Passo 2: Crea la cartella delle estensioni
+### Step 2: Create the extensions folder
 
 ```bash
 mkdir -p ~/.local/share/nautilus-python/extensions
 ```
 
-### Passo 3: Copia il file dell'estensione
+### Step 3: Copy the extension file
 
 ```bash
 cp git_status.py ~/.local/share/nautilus-python/extensions/
 ```
 
-### Passo 4: Riavvia Nautilus
+### Step 4: Restart Nautilus
 
 ```bash
 nautilus -q
 ```
 
-**Nota:** Questa estensione non richiede dipendenze aggiuntive (solo `git` installato nel sistema).
+**Note:** This extension requires no additional dependencies (only `git` installed on the system).
 
-## 📖 Come usare
+## 📖 How to use
 
-1. Apri Nautilus e naviga in una cartella all'interno di un repository Git
-2. **Clic destro** sullo sfondo della cartella
-3. Seleziona **"⎇ Stato Git…"**
-4. Nella finestra vedrai:
-   - **Header:** nome del branch con indicatori ↑↓ per commit ahead/behind
-   - **Staged:** file pronti per il commit (verde)
-   - **Modificati:** file con modifiche non staged (giallo)
-   - **Nuovi/Untracked:** file non tracciati (blu)
-   - **Ultimi commit:** cronologia degli ultimi 10 commit
-   - **Stash:** numero di stash salvati
+1. Open Nautilus and navigate to a folder inside a Git repository
+2. **Right-click** on the folder background
+3. Select **"⎇ Stato Git…"**
+4. In the window you will see:
+   - **Header:** branch name with ↑↓ indicators for commits ahead/behind
+   - **Staged:** files ready for commit (green)
+   - **Modified:** files with unstaged changes (yellow)
+   - **New/Untracked:** untracked files (blue)
+   - **Last commits:** history of the last 10 commits
+   - **Stash:** number of saved stashes
 
-La finestra si aggiorna automaticamente ogni 3 secondi. Puoi anche cliccare **↻** per un refresh immediato.
+The window refreshes automatically every 3 seconds. You can also click **↻** for an immediate refresh.
 
-## 🔍 Dettagli tecnici
+## 🔍 Technical details
 
-- **Versione Nautilus:** 43+ (GNOME 43+) con GTK 4
+- **Nautilus version:** 43+ (GNOME 43+) with GTK 4
 - **API:** `MenuProvider`
-- **Thread:** L'aggiornamento dei dati git avviene in thread separati per non bloccare l'interfaccia
-- **Auto-refresh:** Timer con `GLib.timeout_add()` ogni 3000ms
-- **Riuso finestra:** Se la finestra è già aperta, viene riutilizzata aggiornando il path
+- **Threads:** Git data updates happen in separate threads to avoid blocking the interface
+- **Auto-refresh:** Timer using `GLib.timeout_add()` every 3000ms
+- **Window reuse:** If the window is already open, it is reused by updating the path
 
-## 🗑️ Disinstallazione
+## 🗑️ Uninstallation
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/git_status.py
@@ -79,4 +79,4 @@ nautilus -q
 
 ---
 
-**Torna al [README principale](../README.md)**
+**Back to [Main README](../README.md)**
