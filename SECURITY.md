@@ -85,7 +85,7 @@ Some extensions execute external commands via `subprocess`:
 | json-preview | `xdg-open` |
 | pdf-merger | `xdg-open` |
 | dockerfile-analyzer | `xdg-open` |
-| readme-viewer | `marktext` |
+| readme-viewer | `marktext`, `xdg-open` |
 
 All subprocess calls use **list-form arguments** (not shell strings), which mitigates shell injection. However, filenames are generally passed as-is from Nautilus.
 
