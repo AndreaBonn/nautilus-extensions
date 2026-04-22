@@ -1,0 +1,57 @@
+[project]
+name = "nautilus-extensions"
+version = "1.0.0"
+description = "Collection of Python extensions for GNOME Nautilus file manager"
+license = {text = "MIT"}
+requires-python = ">=3.8"
+readme = "README.md"
+keywords = ["nautilus", "gnome", "file-manager", "extensions", "gtk4"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: X11 Applications :: GTK",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Topic :: Desktop Environment :: Gnome",
+]
+
+[project.optional-dependencies]
+csv = ["pandas"]
+excel = ["pandas", "openpyxl"]
+parquet = ["pandas", "pyarrow"]
+pdf = ["pypdf"]
+readme = ["markdown"]
+all = ["pandas", "openpyxl", "pyarrow", "pypdf", "markdown"]
+dev = ["ruff", "pytest"]
+
+[tool.ruff]
+target-version = "py38"
+line-length = 100
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort
+    "S",    # flake8-bandit (security)
+    "B",    # flake8-bugbear
+    "UP",   # pyupgrade
+]
+ignore = [
+    "E501",   # line too long (gestito da formatter)
+    "E402",   # module level import not at top — required by gi.require_version()
+    "E701",   # multiple statements on one line — used for compact type dispatchers
+    "S603",   # subprocess call - check for execution of untrusted input
+    "S607",   # starting a process with a partial executable path
+    "S110",   # try-except-pass — intentional for desktop extension fallbacks
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S102", "S324"]  # assert, exec, md5 (per test comparativi) OK nei test
+"**/conftest.py" = ["S102"]     # exec per caricare moduli senza GTK
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
