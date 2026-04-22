@@ -12,13 +12,15 @@ Installazione:
 import os
 import subprocess
 import threading
+
 import gi
 
 gi.require_version("Nautilus", "4.0")
 gi.require_version("Gtk", "4.0")
 
-from gi.repository import Nautilus, GObject, Gtk, GLib, Pango
 from urllib.parse import unquote, urlparse
+
+from gi.repository import GLib, GObject, Gtk, Nautilus, Pango
 
 
 def run_git(args, cwd):
@@ -179,7 +181,7 @@ class GitStatusWindow(Gtk.Window):
             if len(parts) == 4:
                 commits.append(parts)
 
-        stash_count = len([l for l in stash_n.split("\n") if l.strip()]) if stash_n else 0
+        stash_count = len([line for line in stash_n.split("\n") if line.strip()]) if stash_n else 0
 
         GLib.idle_add(self._render, branch, ahead, behind,
                       staged, unstaged, untracked, commits, stash_count)

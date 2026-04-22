@@ -13,15 +13,16 @@ Dipendenze:
 import os
 import subprocess
 import threading
+
 import gi
 
 gi.require_version("Nautilus", "4.0")
 gi.require_version("Gtk", "4.0")
 gi.require_version("Gdk", "4.0")
 
-from gi.repository import Nautilus, GObject, Gtk, Gdk, GLib, Pango
 from urllib.parse import unquote, urlparse
 
+from gi.repository import GLib, GObject, Gtk, Nautilus
 
 # ─── Palette colori per i branch ──────────────────────────────────────────────
 BRANCH_COLORS = [
@@ -68,7 +69,7 @@ def get_git_log(path, max_commits=60):
         return None, None
 
     # Ottieni il grafo ASCII per determinare le relazioni
-    graph_raw = run_git(
+    run_git(
         ["log", "--all", "--graph", "--pretty=format:%H", f"-{max_commits}"],
         cwd=path
     )
@@ -140,13 +141,12 @@ class GitGraphWidget(Gtk.DrawingArea):
 
     def _layout_columns(self):
         """Assegna a ogni commit una colonna (semplice euristica)."""
-        col_map = {}
         free_cols = []
         self.commit_cols = []
 
         active_branches = {}  # branch -> colonna
 
-        for i, c in enumerate(self.commits):
+        for _i, c in enumerate(self.commits):
             branch = c["branches"][0] if c["branches"] else None
 
             if branch and branch in active_branches:
@@ -344,11 +344,17 @@ class GitGraphWindow(Gtk.Window):
             dot_css.load_from_data(
                 f"label {{ color: {color}; font-size: 14px; }}".encode()
             )
-            dot.get_style_context().add_provider(dot_css, 800)
+            Gtk.StyleContext.add_provider_for_display(
+                dot.get_display(), dot_css,
+                Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+            )
             lbl = Gtk.Label(label=branch)
             lbl_css = Gtk.CssProvider()
             lbl_css.load_from_data(b"label { font-size: 11px; color: #CDD6F4; }")
-            lbl.get_style_context().add_provider(lbl_css, 800)
+            Gtk.StyleContext.add_provider_for_display(
+                lbl.get_display(), lbl_css,
+                Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+            )
             legend_box.append(dot)
             legend_box.append(lbl)
 
@@ -370,7 +376,10 @@ class GitGraphWindow(Gtk.Window):
         stat.set_margin_bottom(6)
         css = Gtk.CssProvider()
         css.load_from_data(b"label { font-size: 10px; color: #6C7086; }")
-        stat.get_style_context().add_provider(css, 800)
+        Gtk.StyleContext.add_provider_for_display(
+            stat.get_display(), css,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
         box.append(stat)
 
 

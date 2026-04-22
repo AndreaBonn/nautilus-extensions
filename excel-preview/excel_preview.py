@@ -14,15 +14,14 @@ Dipendenze:
 
 import os
 import threading
-from urllib.parse import unquote
 
 import gi
+
 gi.require_version('Nautilus', '4.0')
 gi.require_version('Gtk', '4.0')
 gi.require_version('GLib', '2.0')
 
-from gi.repository import Nautilus, GObject, Gtk, GLib, Pango
-
+from gi.repository import GLib, GObject, Gtk, Nautilus, Pango
 
 SUPPORTED_EXTENSIONS = {'.xlsx', '.xlsm', '.xltx', '.xltm', '.ods'}
 
@@ -211,7 +210,7 @@ class ExcelPreviewWindow(Gtk.Window):
         sheets = data['sheets']
         total_sheets = len(sheets)
         total_rows   = sum(s.get('total_rows', 0) for s in sheets)
-        total_cols   = sum(s.get('total_cols', 0) for s in sheets)
+        sum(s.get('total_cols', 0) for s in sheets)
 
         # --- Info bar ---
         info_bar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=4)

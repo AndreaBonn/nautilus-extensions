@@ -12,17 +12,17 @@ Dipendenze (opzionali ma consigliate):
     sudo apt install python3-pandas
 """
 
-import os
 import csv
+import os
 import threading
-from urllib.parse import unquote
 
 import gi
+
 gi.require_version('Nautilus', '4.0')
 gi.require_version('Gtk', '4.0')
 gi.require_version('GLib', '2.0')
 
-from gi.repository import Nautilus, GObject, Gtk, GLib, Pango
+from gi.repository import GLib, GObject, Gtk, Nautilus, Pango
 
 # Pandas opzionale — se disponibile mostra anche statistiche
 PANDAS_AVAILABLE = False
@@ -87,7 +87,7 @@ CSS = b"""
 def detect_delimiter(path: str) -> str:
     """Rileva automaticamente il delimitatore del CSV."""
     try:
-        with open(path, 'r', encoding='utf-8', errors='replace') as f:
+        with open(path, encoding='utf-8', errors='replace') as f:
             sample = f.read(4096)
         dialect = csv.Sniffer().sniff(sample, delimiters=',;\t|')
         return dialect.delimiter
@@ -106,7 +106,7 @@ def read_csv_plain(path: str, max_rows: int) -> tuple[list, list, dict]:
     total_rows = 0
 
     try:
-        with open(path, 'r', encoding='utf-8', errors='replace') as f:
+        with open(path, encoding='utf-8', errors='replace') as f:
             reader = csv.reader(f, delimiter=delimiter)
             headers = next(reader, [])
             for row in reader:
@@ -339,7 +339,7 @@ class CsvPreviewWindow(Gtk.Window):
             renderer.set_property('ellipsize', Pango.EllipsizeMode.END)
 
             # Evidenzia colonne numeriche in blu
-            dtypes = info.get('dtypes', {})
+            info.get('dtypes', {})
             numeric_cols = info.get('numeric_cols', [])
             if header in numeric_cols:
                 renderer.set_property('foreground', '#0366d6')
@@ -465,7 +465,7 @@ class CsvPreviewWindow(Gtk.Window):
 
         dtypes = info.get('dtypes', {})
         null_counts = info.get('null_counts', {})
-        numeric_cols = info.get('numeric_cols', [])
+        info.get('numeric_cols', [])
         total_rows = info.get('total_rows', 0)
 
         col_types_list = [str, str, str, str]
@@ -475,7 +475,6 @@ class CsvPreviewWindow(Gtk.Window):
             dtype = dtypes.get(h, 'unknown')
             nulls = null_counts.get(h, 0)
             null_str = f"{nulls:,} ({nulls/total_rows*100:.1f}%)" if total_rows > 0 else "0"
-            kind = "numerico" if h in numeric_cols else "testo"
             store.append([str(i + 1), h, dtype, null_str])
 
         treeview = Gtk.TreeView(model=store)
@@ -538,7 +537,7 @@ class CsvPreviewExtension(GObject.GObject, Nautilus.MenuProvider):
         filename = f.get_name()
         item = Nautilus.MenuItem(
             name='CsvPreview::show',
-            label=f'Anteprima CSV',
+            label='Anteprima CSV',
             tip=f'Mostra anteprima di {filename}',
         )
         item.connect('activate', self._on_activate, f.get_location().get_path())

@@ -16,12 +16,12 @@ import os
 import threading
 
 import gi
+
 gi.require_version('Nautilus', '4.0')
 gi.require_version('Gtk', '4.0')
 gi.require_version('GLib', '2.0')
 
-from gi.repository import Nautilus, GObject, Gtk, GLib, Pango, GdkPixbuf
-
+from gi.repository import GLib, GObject, Gtk, Nautilus, Pango
 
 CSS = b"""
 .pdf-header {
@@ -485,11 +485,13 @@ class PdfMergeWindow(Gtk.Window):
     # ------------------------------------------------------------------ #
 
     def _show_success(self, msg: str):
-        self._status_bar.set_markup(f"<span foreground='#22863a'>{msg}</span>")
+        safe = GLib.markup_escape_text(msg)
+        self._status_bar.set_markup(f"<span foreground='#22863a'>{safe}</span>")
         self._status_bar.set_visible(True)
 
     def _show_error(self, msg: str):
-        self._status_bar.set_markup(f"<span foreground='#d73a49'>{msg}</span>")
+        safe = GLib.markup_escape_text(msg)
+        self._status_bar.set_markup(f"<span foreground='#d73a49'>{safe}</span>")
         self._status_bar.set_visible(True)
 
 

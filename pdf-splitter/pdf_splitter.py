@@ -21,12 +21,12 @@ import re
 import threading
 
 import gi
+
 gi.require_version('Nautilus', '4.0')
 gi.require_version('Gtk', '4.0')
 gi.require_version('GLib', '2.0')
 
-from gi.repository import Nautilus, GObject, Gtk, GLib, Pango
-
+from gi.repository import GLib, GObject, Gtk, Nautilus
 
 CSS = b"""
 .sp-header {
@@ -108,8 +108,6 @@ def parse_ranges(text: str, total_pages: int) -> list[tuple[int, int]] | str:
     return ranges
 
 
-def ranges_to_chunks(ranges: list[tuple[int, int]]) -> list[tuple[int, int]]:
-    return ranges
 
 
 def every_n_chunks(total: int, n: int) -> list[tuple[int, int]]:
@@ -166,9 +164,13 @@ def bookmark_chunks(bookmarks, total_pages: int) -> list[tuple[int, int, str]]:
 
 def chunk_filename(base: str, start: int, end: int, title: str = None) -> str:
     """Genera il nome file per un chunk: base_pag1-3.pdf o base_TitoloCapitolo.pdf"""
+    # Sanitizza base rimuovendo componenti di path
+    base = os.path.basename(base)
     if title:
-        safe = re.sub(r'\s+', '_', title)
-        return f"{base}_{safe}.pdf"
+        # Rimuovi caratteri pericolosi per il filesystem e path traversal
+        safe = re.sub(r'[^\w\s\-]', '', title).strip()[:50]
+        safe = re.sub(r'\s+', '_', safe)
+        return f"{base}_{safe}.pdf" if safe else f"{base}_pag{start + 1}-{end + 1}.pdf"
     if start == end:
         return f"{base}_pag{start + 1}.pdf"
     return f"{base}_pag{start + 1}-{end + 1}.pdf"
@@ -491,7 +493,7 @@ class PdfSplitWindow(Gtk.Window):
             return None
 
         page = self._notebook.get_current_page()
-        base = os.path.splitext(os.path.basename(self._path))[0]
+        os.path.splitext(os.path.basename(self._path))[0]
 
         if page == 0:   # Intervalli
             text = self._ranges_entry.get_text().strip()
@@ -543,7 +545,7 @@ class PdfSplitWindow(Gtk.Window):
         base = os.path.splitext(os.path.basename(self._path))[0]
         MAX_PREVIEW = 50
 
-        for i, chunk in enumerate(chunks[:MAX_PREVIEW]):
+        for _i, chunk in enumerate(chunks[:MAX_PREVIEW]):
             start, end = chunk[0], chunk[1]
             title = chunk[2] if len(chunk) > 2 else None
             name = chunk_filename(base, start, end, title)
@@ -617,6 +619,12 @@ class PdfSplitWindow(Gtk.Window):
                 filename = chunk_filename(base, start, end, title)
                 out_path = os.path.join(out_folder, filename)
 
+                # Validazione path traversal
+                if not os.path.realpath(out_path).startswith(
+                    os.path.realpath(out_folder)
+                ):
+                    raise ValueError(f"Path non valido: {filename}")
+
                 # Evita sovrascrittura
                 if os.path.exists(out_path):
                     name_part, ext = os.path.splitext(filename)
@@ -656,7 +664,8 @@ class PdfSplitWindow(Gtk.Window):
 
     def _show_status(self, msg: str, error: bool = False):
         color = '#d73a49' if error else '#22863a'
-        self._status.set_markup(f"<span foreground='{color}'>{msg}</span>")
+        safe = GLib.markup_escape_text(msg)
+        self._status.set_markup(f"<span foreground='{color}'>{safe}</span>")
         self._status.set_visible(True)
 
 

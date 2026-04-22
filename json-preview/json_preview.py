@@ -12,19 +12,19 @@ Dipendenze: solo stdlib Python
 Opzionale: sudo apt install python3-pandas  (statistiche su JSONL)
 """
 
-import os
-import json
-import gzip
-import threading
 import collections
-from urllib.parse import unquote
+import gzip
+import json
+import os
+import threading
 
 import gi
+
 gi.require_version('Nautilus', '4.0')
 gi.require_version('Gtk', '4.0')
 gi.require_version('GLib', '2.0')
 
-from gi.repository import Nautilus, GObject, Gtk, GLib, Pango
+from gi.repository import GLib, GObject, Gtk, Nautilus, Pango
 
 PANDAS_AVAILABLE = False
 try:
@@ -182,7 +182,7 @@ def read_json_file(path: str, compressed: bool = False) -> dict:
 
     try:
         opener = gzip.open(path, 'rt', encoding='utf-8', errors='replace') \
-                 if compressed else open(path, 'r', encoding='utf-8', errors='replace')
+                 if compressed else open(path, encoding='utf-8', errors='replace')
         with opener as f:
             raw = f.read(MAX_READ_BYTES)
 
@@ -226,7 +226,7 @@ def read_jsonl_file(path: str, compressed: bool = False) -> dict:
     try:
         bytes_read = 0
         opener = gzip.open(path, 'rt', encoding='utf-8', errors='replace') \
-                 if compressed else open(path, 'r', encoding='utf-8', errors='replace')
+                 if compressed else open(path, encoding='utf-8', errors='replace')
         with opener as f:
             for line in f:
                 bytes_read += len(line.encode('utf-8'))

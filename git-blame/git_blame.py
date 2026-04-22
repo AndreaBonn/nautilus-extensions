@@ -12,10 +12,13 @@ import threading
 from urllib.parse import unquote, urlparse
 
 import gi
-gi.require_version("Nautilus", "4.0")
-from gi.repository import Nautilus, GObject, GLib
 
+gi.require_version("Nautilus", "4.0")
+from gi.repository import GLib, GObject, Nautilus
+
+MAX_CACHE_SIZE = 2000
 _cache = {}
+_cache_lock = threading.Lock()
 
 
 def _git_root(path):
@@ -123,12 +126,13 @@ class GitColumnsExtension(GObject.GObject,
 
         filepath = unquote(urlparse(file_obj.get_uri()).path)
 
-        if filepath in _cache:
-            a, d, m = _cache[filepath]
-            file_obj.add_string_attribute("git_author",  a)
-            file_obj.add_string_attribute("git_date",    d)
-            file_obj.add_string_attribute("git_message", m)
-            return
+        with _cache_lock:
+            if filepath in _cache:
+                a, d, m = _cache[filepath]
+                file_obj.add_string_attribute("git_author",  a)
+                file_obj.add_string_attribute("git_date",    d)
+                file_obj.add_string_attribute("git_message", m)
+                return
 
         file_obj.add_string_attribute("git_author",  "…")
         file_obj.add_string_attribute("git_date",    "…")
@@ -137,7 +141,8 @@ class GitColumnsExtension(GObject.GObject,
         def worker(fp, fobj):
             root = _git_root(fp)
             if not root:
-                _cache[fp] = ("", "", "")
+                with _cache_lock:
+                    _cache[fp] = ("", "", "")
                 GLib.idle_add(_update, fobj, "", "", "")
                 return
 
@@ -146,7 +151,10 @@ class GitColumnsExtension(GObject.GObject,
             else:
                 result = _git_info_file(fp, root)
 
-            _cache[fp] = result
+            with _cache_lock:
+                if len(_cache) >= MAX_CACHE_SIZE:
+                    _cache.clear()
+                _cache[fp] = result
             GLib.idle_add(_update, fobj, *result)
 
         threading.Thread(target=worker, args=(filepath, file_obj),

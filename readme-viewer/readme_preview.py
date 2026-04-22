@@ -15,11 +15,12 @@ import threading
 from urllib.parse import unquote
 
 import gi
+
 gi.require_version('Nautilus', '4.0')
 gi.require_version('Gtk', '4.0')
 gi.require_version('GLib', '2.0')
 
-from gi.repository import Nautilus, GObject, Gtk, GLib
+from gi.repository import GLib, GObject, Gtk, Nautilus, Pango
 
 # Prova a caricare WebKit (per rendering Markdown)
 WEBKIT_AVAILABLE = False
@@ -145,12 +146,12 @@ class ReadmeWindow(Gtk.Window):
         lbl = Gtk.Label(label=readme_path)
         lbl.set_halign(Gtk.Align.START)
         lbl.set_hexpand(True)
-        lbl.set_ellipsize(3)  # PANGO_ELLIPSIZE_END
+        lbl.set_ellipsize(Pango.EllipsizeMode.END)
         lbl.add_css_class('dim-label')
         header.append(lbl)
 
         open_btn = Gtk.Button(label="Apri nell'editor")
-        open_btn.connect('clicked', lambda _: subprocess.Popen(['marktext', readme_path]))
+        open_btn.connect('clicked', lambda _: subprocess.Popen(['xdg-open', readme_path]))
         header.append(open_btn)
 
         box.append(header)
@@ -188,7 +189,7 @@ class ReadmeWindow(Gtk.Window):
 
     def _load(self):
         try:
-            with open(self._readme_path, 'r', encoding='utf-8', errors='replace') as f:
+            with open(self._readme_path, encoding='utf-8', errors='replace') as f:
                 content = f.read()
         except OSError as e:
             content = f"Errore nella lettura del file:\n{e}"

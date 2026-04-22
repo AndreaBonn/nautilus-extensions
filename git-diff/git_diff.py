@@ -12,13 +12,15 @@ Installazione:
 import os
 import subprocess
 import threading
+
 import gi
 
 gi.require_version("Nautilus", "4.0")
 gi.require_version("Gtk", "4.0")
 
-from gi.repository import Nautilus, GObject, Gtk, GLib, Pango
 from urllib.parse import unquote, urlparse
+
+from gi.repository import GLib, GObject, Gtk, Nautilus
 
 
 def run_git(args, cwd):
@@ -324,7 +326,7 @@ class DiffWindow(Gtk.Window):
             h_lbl.set_xalign(0)
             outer.append(h_lbl)
 
-            for typ, lo, ln, txt in hunk["lines"]:
+            for typ, lo, _ln, txt in hunk["lines"]:
                 box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
                 box.add_css_class(f"line-{typ}")
 

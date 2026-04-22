@@ -17,12 +17,12 @@ import threading
 from urllib.parse import unquote
 
 import gi
+
 gi.require_version('Nautilus', '4.0')
 gi.require_version('Gtk', '4.0')
 gi.require_version('GLib', '2.0')
 
-from gi.repository import Nautilus, GObject, Gtk, GLib, Pango
-
+from gi.repository import GLib, GObject, Gtk, Nautilus, Pango
 
 # --------------------------------------------------------------------------- #
 # Costanti
@@ -138,7 +138,7 @@ def parse_dockerfile(path: str) -> dict:
     }
 
     try:
-        with open(path, 'r', encoding='utf-8', errors='replace') as f:
+        with open(path, encoding='utf-8', errors='replace') as f:
             raw = f.read()
         result['raw_lines'] = raw.splitlines()
     except OSError as e:
@@ -266,7 +266,7 @@ def _analyze_best_practices(data: dict) -> list:
     def warn(level, title, detail=''):
         warnings.append({'level': level, 'title': title, 'detail': detail})
 
-    instructions = data['instructions']
+    data['instructions']
     run_cmds = data['run_commands']
     from_images = data['from_images']
 
@@ -445,7 +445,7 @@ class DockerfileWindow(Gtk.Window):
         highs   = sum(1 for w in data['warnings'] if w['level'] == 'high')
         mediums = sum(1 for w in data['warnings'] if w['level'] == 'medium')
         lows    = sum(1 for w in data['warnings'] if w['level'] == 'low')
-        oks     = sum(1 for w in data['warnings'] if w['level'] == 'ok')
+        sum(1 for w in data['warnings'] if w['level'] == 'ok')
 
         # --- Info bar ---
         info_bar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=4)
@@ -852,7 +852,7 @@ class DockerfileExtension(GObject.GObject, Nautilus.MenuProvider):
                 item = Nautilus.MenuItem(
                     name='DockerfileAnalyzer::folder',
                     label=f'Analizza {name}',
-                    tip=f'Analizza il Dockerfile in questa cartella',
+                    tip='Analizza il Dockerfile in questa cartella',
                 )
                 item.connect('activate', self._on_activate, path)
                 return [item]

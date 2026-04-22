@@ -15,17 +15,21 @@ Dipendenze:
 
 import os
 import threading
-from urllib.parse import unquote
 
 import gi
+
 gi.require_version('Nautilus', '4.0')
 gi.require_version('Gtk', '4.0')
 gi.require_version('GLib', '2.0')
 
-from gi.repository import Nautilus, GObject, Gtk, GLib, Pango
+from gi.repository import GLib, GObject, Gtk, Nautilus, Pango
 
-import pyarrow.parquet as pq
-import pandas as pd
+try:
+    import pandas as pd  # noqa: F401 — required by pyarrow .to_pandas()
+    import pyarrow.parquet as pq
+    HAS_PYARROW = True
+except ImportError:
+    HAS_PYARROW = False
 
 
 # --------------------------------------------------------------------------- #
@@ -206,13 +210,13 @@ def read_parquet(path: str, max_rows: int) -> dict:
                         custom_meta[key] = val
         result['custom_meta'] = custom_meta
 
-        # Leggi le prime N righe come DataFrame
-        df = pf.read().to_pandas()
+        # Leggi solo le prime N righe (evita OOM su file grandi)
+        df = pq.read_table(path).slice(0, max_rows).to_pandas()
         result['total_rows_read'] = len(df)
-        result['df_preview'] = df.head(max_rows)
+        result['df_preview'] = df
         result['df_full']    = df
 
-        # Statistiche descrittive
+        # Statistiche descrittive (solo sulle righe caricate)
         numeric_cols = list(df.select_dtypes(include='number').columns)
         result['numeric_cols'] = numeric_cols
         if numeric_cols:
@@ -666,6 +670,9 @@ class ParquetPreviewWindow(Gtk.Window):
 class ParquetPreviewExtension(GObject.GObject, Nautilus.MenuProvider):
 
     def get_file_items(self, files):
+        if not HAS_PYARROW:
+            return []
+
         if len(files) != 1:
             return []
 

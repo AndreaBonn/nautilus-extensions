@@ -2,19 +2,19 @@
 duplicate-finder.py — Estensione Nautilus per trovare file duplicati
 """
 
-import os
 import hashlib
-import threading
+import os
 import subprocess
+import threading
 from collections import defaultdict
 
 import gi
+
 gi.require_version('Nautilus', '4.0')
 gi.require_version('Gtk', '4.0')
 gi.require_version('GLib', '2.0')
 
-from gi.repository import Nautilus, GObject, Gtk, GLib, Pango
-
+from gi.repository import GLib, GObject, Gtk, Nautilus, Pango
 
 CSS = b"""
 .dup-header {
@@ -47,8 +47,8 @@ def human_size(size: int) -> str:
     return f"{size:.1f} TB"
 
 
-def md5_of_file(path: str, chunk_size: int = 65536) -> str:
-    h = hashlib.md5()
+def hash_of_file(path: str, chunk_size: int = 65536) -> str:
+    h = hashlib.sha256()
     try:
         with open(path, "rb") as f:
             while True:
@@ -80,7 +80,7 @@ def find_duplicates(root: str, progress_cb=None) -> dict:
 
     for group in candidates:
         for fpath in group:
-            digest = md5_of_file(fpath)
+            digest = hash_of_file(fpath)
             if digest:
                 by_hash[digest].append(fpath)
             done += 1
