@@ -17,6 +17,7 @@ import gzip
 import json
 import logging
 import os
+import subprocess
 import threading
 
 import gi
@@ -458,13 +459,11 @@ class JsonPreviewWindow(Gtk.Window):
         self._root.append(bottom)
 
     def _open_editor(self, _btn):
-        import subprocess
-
         if not os.path.exists(self._path):
             logging.warning("xdg-open: file not found: %s", self._path)
             return
         try:
-            subprocess.Popen(["xdg-open", self._path])
+            subprocess.run(["xdg-open", self._path], check=False)
         except OSError as e:
             logging.warning("xdg-open failed for %s: %s", self._path, e)
 

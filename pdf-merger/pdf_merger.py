@@ -14,6 +14,8 @@ Dependencies:
 
 import logging
 import os
+import re
+import subprocess
 import threading
 
 import gi
@@ -414,12 +416,13 @@ class PdfMergeWindow(Gtk.Window):
         # Prendi il nome del primo file senza estensione + "_unione"
         first = os.path.splitext(os.path.basename(self._paths[0]))[0]
         # Rimuovi numeri finali comuni (es. "documento_1" → "documento")
-        import re
 
         base = re.sub(r"[\s_\-]+\d+$", "", first)
         return f"{base}_unione.pdf" if base else "unione.pdf"
 
     def _get_output_path(self) -> str:
+        from pathlib import Path
+
         raw = self._name_entry.get_text().strip()
         if not raw:
             raw = "unione.pdf"
@@ -429,8 +432,12 @@ class PdfMergeWindow(Gtk.Window):
             name = "unione.pdf"
         if not name.lower().endswith(".pdf"):
             name += ".pdf"
-        folder = os.path.dirname(self._paths[0])
-        return os.path.join(folder, name)
+        folder = Path(os.path.dirname(self._paths[0])).resolve()
+        out_path = (folder / name).resolve()
+        if not out_path.is_relative_to(folder):
+            name = "unione.pdf"
+            out_path = folder / name
+        return str(out_path)
 
     # ------------------------------------------------------------------ #
     # PDF merge
@@ -495,10 +502,8 @@ class PdfMergeWindow(Gtk.Window):
                 f"Salvato in: {os.path.dirname(output_path)}"
             )
             # Apri la cartella contenente il file
-            import subprocess
-
             try:
-                subprocess.Popen(["xdg-open", os.path.dirname(output_path)])
+                subprocess.run(["xdg-open", os.path.dirname(output_path)], check=False)
             except OSError as e:
                 logging.warning("xdg-open failed: %s", e)
 

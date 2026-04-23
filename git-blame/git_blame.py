@@ -20,7 +20,7 @@ gi.require_version("Nautilus", "4.0")
 from gi.repository import GLib, GObject, Nautilus
 
 MAX_CACHE_SIZE = 2000
-_cache: dict[str, tuple[str, str, str]] = {}
+_cache: dict[tuple[str, float], tuple[str, str, str]] = {}
 _cache_lock = threading.Lock()
 
 
@@ -155,9 +155,16 @@ class GitColumnsExtension(GObject.GObject, Nautilus.ColumnProvider, Nautilus.Inf
 
         filepath = unquote(urlparse(file_obj.get_uri()).path)
 
+        try:
+            mtime = os.path.getmtime(filepath)
+        except OSError:
+            mtime = 0
+
+        cache_key = (filepath, mtime)
+
         with _cache_lock:
-            if filepath in _cache:
-                a, d, m = _cache[filepath]
+            if cache_key in _cache:
+                a, d, m = _cache[cache_key]
                 file_obj.add_string_attribute("git_author", a)
                 file_obj.add_string_attribute("git_date", d)
                 file_obj.add_string_attribute("git_message", m)
@@ -167,11 +174,11 @@ class GitColumnsExtension(GObject.GObject, Nautilus.ColumnProvider, Nautilus.Inf
         file_obj.add_string_attribute("git_date", "…")
         file_obj.add_string_attribute("git_message", "…")
 
-        def worker(fp, fobj):
+        def worker(fp, fobj, ck):
             root = _git_root(fp)
             if not root:
                 with _cache_lock:
-                    _cache[fp] = ("", "", "")
+                    _cache[ck] = ("", "", "")
                 GLib.idle_add(_update, fobj, "", "", "")
                 return
 
@@ -183,10 +190,10 @@ class GitColumnsExtension(GObject.GObject, Nautilus.ColumnProvider, Nautilus.Inf
             with _cache_lock:
                 if len(_cache) >= MAX_CACHE_SIZE:
                     _cache.clear()
-                _cache[fp] = result
+                _cache[ck] = result
             GLib.idle_add(_update, fobj, *result)
 
-        threading.Thread(target=worker, args=(filepath, file_obj), daemon=True).start()
+        threading.Thread(target=worker, args=(filepath, file_obj, cache_key), daemon=True).start()
 
     def _empty(self, file_obj):
         file_obj.add_string_attribute("git_author", "")

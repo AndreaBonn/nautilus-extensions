@@ -19,6 +19,7 @@ Dependencies:
 import logging
 import os
 import re
+import subprocess
 import threading
 from pathlib import Path  # noqa: F811 — used in _do_split for path traversal check
 
@@ -649,11 +650,9 @@ class PdfSplitWindow(Gtk.Window):
         if error:
             self._show_status(f"Errore: {error}", error=True)
         else:
-            import subprocess
-
             self._show_status(f"✓ Creati {len(created)} file in: {out_folder}", error=False)
             try:
-                subprocess.Popen(["xdg-open", out_folder])
+                subprocess.run(["xdg-open", out_folder], check=False)
             except OSError as e:
                 logging.warning("xdg-open failed for %s: %s", out_folder, e)
 

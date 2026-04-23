@@ -11,6 +11,7 @@ Installation:
 
 import logging
 import os
+import subprocess
 import threading
 from urllib.parse import unquote
 
@@ -135,13 +136,20 @@ def _sanitize_html(html_str: str) -> str:
     import re
 
     sanitized = _get_unsafe_tag_re().sub("", html_str)
-    # Remove event handlers (onclick, onload, etc.)
-    sanitized = re.sub(r"\bon\w+\s*=\s*[\"'][^\"']*[\"']", "", sanitized, flags=re.IGNORECASE)
+    # Remove event handlers (onclick, onload, etc.) — all quoting styles including backtick
+    sanitized = re.sub(r"\bon\w+\s*=\s*[\"'`][^\"'`]*[\"'`]", "", sanitized, flags=re.IGNORECASE)
     sanitized = re.sub(r"\bon\w+\s*=\s*\S+", "", sanitized, flags=re.IGNORECASE)
-    # Remove javascript: and data: URI schemes in href/src attributes
+    # Remove javascript: and data: URI schemes in href/src/srcset attributes
     sanitized = re.sub(
-        r"""(href|src)\s*=\s*["']?\s*(javascript|data)\s*:""",
+        r"""(href|src|srcset)\s*=\s*["']?\s*(javascript|data)\s*:""",
         r"\1=&#blocked;",
+        sanitized,
+        flags=re.IGNORECASE,
+    )
+    # Remove inline style with url() containing javascript/data
+    sanitized = re.sub(
+        r"""style\s*=\s*["'][^"']*url\s*\(\s*["']?\s*(javascript|data)\s*:""",
+        'style="',
         sanitized,
         flags=re.IGNORECASE,
     )
@@ -159,7 +167,12 @@ def render_html(content: str, filename: str) -> str:
     else:
         escaped = html_mod.escape(content)
         body = f"<pre style='white-space:pre-wrap;word-break:break-word'>{escaped}</pre>"
-    return f"<!DOCTYPE html><html><head><meta charset='utf-8'><style>{WEBKIT_CSS}</style></head><body>{body}</body></html>"
+    csp = "default-src 'none'; style-src 'unsafe-inline'; img-src file: data:"
+    return (
+        f"<!DOCTYPE html><html><head><meta charset='utf-8'>"
+        f"<meta http-equiv='Content-Security-Policy' content=\"{csp}\">"
+        f"<style>{WEBKIT_CSS}</style></head><body>{body}</body></html>"
+    )
 
 
 # --------------------------------------------------------------------------- #
@@ -235,13 +248,11 @@ class ReadmeWindow(Gtk.Window):
         threading.Thread(target=self._load, daemon=True).start()
 
     def _open_editor(self, _btn):
-        import subprocess
-
         if not os.path.exists(self._readme_path):
             logging.warning("xdg-open: file not found: %s", self._readme_path)
             return
         try:
-            subprocess.Popen(["xdg-open", self._readme_path])
+            subprocess.run(["xdg-open", self._readme_path], check=False)
         except OSError as e:
             logging.warning("xdg-open failed for %s: %s", self._readme_path, e)
 
@@ -277,7 +288,7 @@ class ReadmeWindow(Gtk.Window):
         if decision_type == NAV:
             try:
                 uri = decision.get_navigation_action().get_request().get_uri()
-                if uri and not uri.startswith("file://") and uri != "about:blank":
+                if uri and uri != "about:blank":
                     decision.ignore()
                     return True
             except Exception as e:
