@@ -50,7 +50,7 @@ test: ## Run tests
 
 security: ## Run security checks (ruff-S + bandit + pip-audit)
 	@uv run ruff check --select S .
-	@uv run bandit -r . --exclude .venv,tests -ll
+	@uv run bandit -r . --exclude './.venv,./tests' -ll
 	@uv run pip-audit
 
 check: lint test security ## Run lint + tests + security

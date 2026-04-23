@@ -62,7 +62,7 @@ class TestHashOfFile:
             path = f.name
         try:
             result = hash_of_file(path)
-            md5_result = hashlib.md5(b"test").hexdigest()
+            md5_result = hashlib.md5(b"test", usedforsecurity=False).hexdigest()
             sha256_result = hashlib.sha256(b"test").hexdigest()
             assert result == sha256_result
             assert result != md5_result

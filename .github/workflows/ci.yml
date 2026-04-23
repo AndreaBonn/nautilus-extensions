@@ -43,5 +43,5 @@ jobs:
       - uses: astral-sh/setup-uv@e4db8464a088ece1b920f60402e813ea4de65b8f # v4
       - run: uv sync --frozen --all-extras
       - run: uv run ruff check --select S .
-      - run: uv run bandit -r . --exclude .venv,tests -ll
+      - run: uv run bandit -r . --exclude './.venv,./tests' -ll
       - run: uv run pip-audit
