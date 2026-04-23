@@ -97,6 +97,16 @@ ignore = [
 testpaths = ["tests"]
 pythonpath = [".", "tests"]
 
+[tool.coverage.run]
+source = ["tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__",
+    "import gi",
+]
+
 [tool.bandit]
 exclude_dirs = [".venv", "tests"]
 
