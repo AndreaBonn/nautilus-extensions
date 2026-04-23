@@ -5,6 +5,8 @@ import subprocess
 import tempfile
 from pathlib import Path
 
+from conftest import requires_git
+
 
 def _load_functions():
     source = (Path(__file__).parent.parent / "git-blame" / "git_blame.py").read_text()
@@ -28,14 +30,6 @@ _ns = _load_functions()
 _git_root = _ns["_git_root"]
 _git_info_file = _ns["_git_info_file"]
 _git_info_dir = _ns["_git_info_dir"]
-
-
-def _git_available() -> bool:
-    try:
-        subprocess.run(["git", "--version"], capture_output=True, timeout=5)
-        return True
-    except Exception:
-        return False
 
 
 def _init_git_repo_with_commit(tmpdir: str) -> str:
@@ -64,9 +58,8 @@ def _init_git_repo_with_commit(tmpdir: str) -> str:
 
 
 class TestGitRoot:
+    @requires_git
     def test_git_root_returns_path_inside_repo(self):
-        if not _git_available():
-            return
         with tempfile.TemporaryDirectory() as tmpdir:
             _init_git_repo_with_commit(tmpdir)
             result = _git_root(tmpdir)
@@ -78,9 +71,8 @@ class TestGitRoot:
             result = _git_root(tmpdir)
             assert result is None
 
+    @requires_git
     def test_git_root_from_file_path(self):
-        if not _git_available():
-            return
         with tempfile.TemporaryDirectory() as tmpdir:
             _init_git_repo_with_commit(tmpdir)
             filepath = os.path.join(tmpdir, "file.py")
@@ -91,9 +83,8 @@ class TestGitRoot:
         result = _git_root("/nonexistent/path/file.py")
         assert result is None
 
+    @requires_git
     def test_git_root_from_subdir(self):
-        if not _git_available():
-            return
         with tempfile.TemporaryDirectory() as tmpdir:
             _init_git_repo_with_commit(tmpdir)
             subdir = os.path.join(tmpdir, "sub")
@@ -103,9 +94,8 @@ class TestGitRoot:
 
 
 class TestGitInfoFile:
+    @requires_git
     def test_git_info_file_returns_tuple_of_three(self):
-        if not _git_available():
-            return
         with tempfile.TemporaryDirectory() as tmpdir:
             _init_git_repo_with_commit(tmpdir)
             filepath = os.path.join(tmpdir, "file.py")
@@ -113,27 +103,24 @@ class TestGitInfoFile:
             assert isinstance(result, tuple)
             assert len(result) == 3
 
+    @requires_git
     def test_git_info_file_returns_author_name(self):
-        if not _git_available():
-            return
         with tempfile.TemporaryDirectory() as tmpdir:
             _init_git_repo_with_commit(tmpdir)
             filepath = os.path.join(tmpdir, "file.py")
             author, date, msg = _git_info_file(filepath, root=tmpdir)
             assert author == "Test Author"
 
+    @requires_git
     def test_git_info_file_returns_commit_message(self):
-        if not _git_available():
-            return
         with tempfile.TemporaryDirectory() as tmpdir:
             _init_git_repo_with_commit(tmpdir)
             filepath = os.path.join(tmpdir, "file.py")
             _author, _date, msg = _git_info_file(filepath, root=tmpdir)
             assert "initial commit" in msg
 
+    @requires_git
     def test_git_info_file_untracked_file_returns_empty_tuple(self):
-        if not _git_available():
-            return
         with tempfile.TemporaryDirectory() as tmpdir:
             _init_git_repo_with_commit(tmpdir)
             untracked = os.path.join(tmpdir, "untracked.py")
@@ -147,9 +134,8 @@ class TestGitInfoFile:
             result = _git_info_file("/nonexistent/file.py", root=tmpdir)
             assert result == ("", "", "")
 
+    @requires_git
     def test_git_info_file_truncates_long_message(self):
-        if not _git_available():
-            return
         with tempfile.TemporaryDirectory() as tmpdir:
             subprocess.run(["git", "init"], cwd=tmpdir, capture_output=True)
             subprocess.run(
@@ -177,34 +163,30 @@ class TestGitInfoFile:
 
 
 class TestGitInfoDir:
+    @requires_git
     def test_git_info_dir_returns_tuple_of_three(self):
-        if not _git_available():
-            return
         with tempfile.TemporaryDirectory() as tmpdir:
             _init_git_repo_with_commit(tmpdir)
             result = _git_info_dir(tmpdir, root=tmpdir)
             assert isinstance(result, tuple)
             assert len(result) == 3
 
+    @requires_git
     def test_git_info_dir_returns_author(self):
-        if not _git_available():
-            return
         with tempfile.TemporaryDirectory() as tmpdir:
             _init_git_repo_with_commit(tmpdir)
             author, _date, _msg = _git_info_dir(tmpdir, root=tmpdir)
             assert author == "Test Author"
 
+    @requires_git
     def test_git_info_dir_returns_commit_message(self):
-        if not _git_available():
-            return
         with tempfile.TemporaryDirectory() as tmpdir:
             _init_git_repo_with_commit(tmpdir)
             _author, _date, msg = _git_info_dir(tmpdir, root=tmpdir)
             assert "initial commit" in msg
 
+    @requires_git
     def test_git_info_dir_empty_repo_returns_empty_tuple(self):
-        if not _git_available():
-            return
         with tempfile.TemporaryDirectory() as tmpdir:
             subprocess.run(["git", "init"], cwd=tmpdir, capture_output=True)
             subprocess.run(

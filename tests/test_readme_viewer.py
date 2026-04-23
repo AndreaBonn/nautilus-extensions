@@ -115,8 +115,9 @@ class TestRenderHtml:
 
     def test_render_html_escapes_html_special_chars_in_plain(self):
         html = render_html("<script>alert(1)</script>", "notes.txt")
-        # I caratteri devono essere escaped in file non-md
-        assert "<script>" not in html or "&lt;script&gt;" in html
+        # Both conditions must hold: raw tag absent AND escaped version present
+        assert "<script>" not in html
+        assert "&lt;script&gt;" in html
 
     def test_render_html_includes_css_style(self):
         html = render_html("content", "README.md")

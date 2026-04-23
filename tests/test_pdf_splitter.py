@@ -5,37 +5,39 @@ import re
 
 # --- Load functions without GTK ---
 
+
 def _load_splitter_functions():
     """Load pure functions from pdf_splitter.py without GTK imports."""
     from pathlib import Path
+
     source = (Path(__file__).parent.parent / "pdf-splitter" / "pdf_splitter.py").read_text()
 
     namespace = {"os": os, "re": re}
-    lines = source.split('\n')
+    lines = source.split("\n")
     safe_lines = []
     for line in lines:
         stripped = line.strip()
-        if stripped.startswith(('import gi', 'from gi.', 'gi.require_version')):
+        if stripped.startswith(("import gi", "from gi.", "gi.require_version")):
             continue
-        if stripped.startswith('class ') and ('Gtk.' in stripped or 'GObject.' in stripped):
+        if stripped.startswith("class ") and ("Gtk." in stripped or "GObject." in stripped):
             break
         safe_lines.append(line)
-    exec('\n'.join(safe_lines), namespace)
+    exec("\n".join(safe_lines), namespace)
     return namespace
 
 
 _ns = _load_splitter_functions()
-parse_ranges = _ns['parse_ranges']
-every_n_chunks = _ns['every_n_chunks']
-single_page_chunks = _ns['single_page_chunks']
-chunk_filename = _ns['chunk_filename']
-fmt_size = _ns['fmt_size']
+parse_ranges = _ns["parse_ranges"]
+every_n_chunks = _ns["every_n_chunks"]
+single_page_chunks = _ns["single_page_chunks"]
+chunk_filename = _ns["chunk_filename"]
+fmt_size = _ns["fmt_size"]
 
 
 # --- parse_ranges ---
 
-class TestParseRanges:
 
+class TestParseRanges:
     def test_single_page(self):
         assert parse_ranges("3", total_pages=10) == [(2, 2)]
 
@@ -76,8 +78,8 @@ class TestParseRanges:
 
 # --- every_n_chunks ---
 
-class TestEveryNChunks:
 
+class TestEveryNChunks:
     def test_even_split(self):
         assert every_n_chunks(total=10, n=5) == [(0, 4), (5, 9)]
 
@@ -94,8 +96,8 @@ class TestEveryNChunks:
 
 # --- single_page_chunks ---
 
-class TestSinglePageChunks:
 
+class TestSinglePageChunks:
     def test_three_pages(self):
         assert single_page_chunks(3) == [(0, 0), (1, 1), (2, 2)]
 
@@ -105,8 +107,8 @@ class TestSinglePageChunks:
 
 # --- chunk_filename ---
 
-class TestChunkFilename:
 
+class TestChunkFilename:
     def test_page_range(self):
         assert chunk_filename("doc", start=0, end=2) == "doc_pag1-3.pdf"
 
@@ -133,8 +135,8 @@ class TestChunkFilename:
 
 # --- fmt_size ---
 
-class TestFmtSize:
 
+class TestFmtSize:
     def test_bytes(self):
         assert fmt_size(500) == "500.0 B"
 
@@ -145,7 +147,7 @@ class TestFmtSize:
         assert fmt_size(5 * 1024 * 1024) == "5.0 MB"
 
     def test_gigabytes(self):
-        assert fmt_size(3 * 1024 ** 3) == "3.0 GB"
+        assert fmt_size(3 * 1024**3) == "3.0 GB"
 
     def test_zero(self):
         assert fmt_size(0) == "0.0 B"

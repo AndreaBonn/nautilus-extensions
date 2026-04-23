@@ -5,6 +5,8 @@ import subprocess
 import tempfile
 from pathlib import Path
 
+from conftest import requires_git
+
 
 def _load_functions():
     source = (Path(__file__).parent.parent / "git-status" / "git_status.py").read_text()
@@ -29,14 +31,6 @@ run_git = _ns["run_git"]
 is_git_repo = _ns["is_git_repo"]
 
 
-def _git_available() -> bool:
-    try:
-        subprocess.run(["git", "--version"], capture_output=True, timeout=5)
-        return True
-    except Exception:
-        return False
-
-
 def _init_git_repo(tmpdir: str) -> str:
     subprocess.run(["git", "init"], cwd=tmpdir, capture_output=True)
     subprocess.run(
@@ -53,9 +47,8 @@ def _init_git_repo(tmpdir: str) -> str:
 
 
 class TestRunGit:
+    @requires_git
     def test_run_git_version_returns_non_empty(self):
-        if not _git_available():
-            return
         with tempfile.TemporaryDirectory() as tmpdir:
             result = run_git(["--version"], cwd=tmpdir)
             assert isinstance(result, str)
@@ -75,17 +68,14 @@ class TestRunGit:
             result = run_git(["--version"], cwd=tmpdir)
             assert isinstance(result, str)
 
+    @requires_git
     def test_run_git_strips_output(self):
-        # git --version non ha trailing newline dopo strip
-        if not _git_available():
-            return
         with tempfile.TemporaryDirectory() as tmpdir:
             result = run_git(["--version"], cwd=tmpdir)
             assert not result.endswith("\n")
 
+    @requires_git
     def test_run_git_in_repo_returns_toplevel(self):
-        if not _git_available():
-            return
         with tempfile.TemporaryDirectory() as tmpdir:
             _init_git_repo(tmpdir)
             result = run_git(["rev-parse", "--show-toplevel"], cwd=tmpdir)
@@ -93,9 +83,8 @@ class TestRunGit:
 
 
 class TestIsGitRepo:
+    @requires_git
     def test_is_git_repo_returns_true_for_git_repo(self):
-        if not _git_available():
-            return
         with tempfile.TemporaryDirectory() as tmpdir:
             _init_git_repo(tmpdir)
             assert is_git_repo(tmpdir) is True
@@ -113,12 +102,10 @@ class TestIsGitRepo:
             result = is_git_repo(tmpdir)
             assert isinstance(result, bool)
 
+    @requires_git
     def test_is_git_repo_subdirectory_of_repo(self):
-        if not _git_available():
-            return
         with tempfile.TemporaryDirectory() as tmpdir:
             _init_git_repo(tmpdir)
             subdir = os.path.join(tmpdir, "subdir")
             os.makedirs(subdir)
-            # Anche una sottodirectory è dentro il repo
             assert is_git_repo(subdir) is True

@@ -9,31 +9,31 @@ def _load_functions():
     import re
     from collections import defaultdict
     from pathlib import Path
+
     source = (Path(__file__).parent.parent / "duplicate-finder" / "duplicate_finder.py").read_text()
 
     namespace = {"os": os, "re": re, "hashlib": hashlib, "defaultdict": defaultdict}
     exec("from collections import defaultdict", namespace)
-    lines = source.split('\n')
+    lines = source.split("\n")
     safe_lines = []
     for line in lines:
         stripped = line.strip()
-        if stripped.startswith(('import gi', 'from gi.', 'gi.require_version')):
+        if stripped.startswith(("import gi", "from gi.", "gi.require_version")):
             continue
-        if stripped.startswith('class ') and ('Gtk.' in stripped or 'GObject.' in stripped):
+        if stripped.startswith("class ") and ("Gtk." in stripped or "GObject." in stripped):
             break
         safe_lines.append(line)
-    exec('\n'.join(safe_lines), namespace)
+    exec("\n".join(safe_lines), namespace)
     return namespace
 
 
 _ns = _load_functions()
-human_size = _ns['human_size']
-hash_of_file = _ns['hash_of_file']
-find_duplicates = _ns['find_duplicates']
+human_size = _ns["human_size"]
+hash_of_file = _ns["hash_of_file"]
+find_duplicates = _ns["find_duplicates"]
 
 
 class TestHumanSize:
-
     def test_bytes(self):
         assert human_size(100) == "100.0 B"
 
@@ -48,9 +48,8 @@ class TestHumanSize:
 
 
 class TestHashOfFile:
-
     def test_known_content(self):
-        with tempfile.NamedTemporaryFile(mode='wb', delete=False, suffix='.txt') as f:
+        with tempfile.NamedTemporaryFile(mode="wb", delete=False, suffix=".txt") as f:
             f.write(b"hello world")
             path = f.name
         try:
@@ -61,7 +60,7 @@ class TestHashOfFile:
             os.unlink(path)
 
     def test_empty_file(self):
-        with tempfile.NamedTemporaryFile(mode='wb', delete=False, suffix='.txt') as f:
+        with tempfile.NamedTemporaryFile(mode="wb", delete=False, suffix=".txt") as f:
             path = f.name
         try:
             result = hash_of_file(path)
@@ -74,7 +73,7 @@ class TestHashOfFile:
         assert hash_of_file("/nonexistent/file/path.txt") == ""
 
     def test_uses_sha256_not_md5(self):
-        with tempfile.NamedTemporaryFile(mode='wb', delete=False, suffix='.txt') as f:
+        with tempfile.NamedTemporaryFile(mode="wb", delete=False, suffix=".txt") as f:
             f.write(b"test")
             path = f.name
         try:
@@ -88,15 +87,14 @@ class TestHashOfFile:
 
 
 class TestFindDuplicates:
-
     def test_finds_duplicate_files(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             content = b"duplicate content"
             for name in ["file1.txt", "file2.txt"]:
-                with open(os.path.join(tmpdir, name), 'wb') as f:
+                with open(os.path.join(tmpdir, name), "wb") as f:
                     f.write(content)
             # Add a unique file
-            with open(os.path.join(tmpdir, "unique.txt"), 'wb') as f:
+            with open(os.path.join(tmpdir, "unique.txt"), "wb") as f:
                 f.write(b"unique content")
 
             dups = find_duplicates(tmpdir)
@@ -109,7 +107,7 @@ class TestFindDuplicates:
     def test_no_duplicates(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             for i, name in enumerate(["a.txt", "b.txt", "c.txt"]):
-                with open(os.path.join(tmpdir, name), 'wb') as f:
+                with open(os.path.join(tmpdir, name), "wb") as f:
                     f.write(f"content {i}".encode())
 
             dups = find_duplicates(tmpdir)

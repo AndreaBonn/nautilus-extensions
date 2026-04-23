@@ -5,6 +5,8 @@ import subprocess
 import tempfile
 from pathlib import Path
 
+from conftest import requires_git
+
 
 def _load_functions():
     source = (Path(__file__).parent.parent / "git-diff" / "git_diff.py").read_text()
@@ -29,14 +31,6 @@ run_git = _ns["run_git"]
 parse_diff = _ns["parse_diff"]
 
 
-def _git_available() -> bool:
-    try:
-        subprocess.run(["git", "--version"], capture_output=True, timeout=5)
-        return True
-    except Exception:
-        return False
-
-
 def _init_git_repo(tmpdir: str) -> str:
     """Inizializza un repo git minimale nel tmpdir."""
     subprocess.run(["git", "init"], cwd=tmpdir, capture_output=True)
@@ -54,9 +48,8 @@ def _init_git_repo(tmpdir: str) -> str:
 
 
 class TestRunGit:
+    @requires_git
     def test_run_git_valid_command_returns_output(self):
-        if not _git_available():
-            return
         with tempfile.TemporaryDirectory() as tmpdir:
             _init_git_repo(tmpdir)
             result = run_git(["rev-parse", "--show-toplevel"], cwd=tmpdir)
@@ -150,9 +143,8 @@ class TestParseDiff:
         all_texts = [ln[3] for ln in hunks[0]["lines"]]
         assert not any("--- a/" in t or "+++ b/" in t for t in all_texts)
 
+    @requires_git
     def test_parse_diff_real_git_output(self):
-        if not _git_available():
-            return
         with tempfile.TemporaryDirectory() as tmpdir:
             _init_git_repo(tmpdir)
             filepath = os.path.join(tmpdir, "test.py")
