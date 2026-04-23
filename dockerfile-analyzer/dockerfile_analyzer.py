@@ -846,7 +846,8 @@ class DockerfileWindow(Gtk.Window):
 
     def _section(self, box, title: str):
         lbl = Gtk.Label()
-        lbl.set_markup(f"<b>{title}</b>")
+        safe_title = GLib.markup_escape_text(title)
+        lbl.set_markup(f"<b>{safe_title}</b>")
         lbl.set_halign(Gtk.Align.START)
         lbl.set_margin_top(8)
         box.append(lbl)
@@ -854,7 +855,8 @@ class DockerfileWindow(Gtk.Window):
     def _tag_label(self, text: str) -> Gtk.Label:
         lbl = Gtk.Label()
         color = INSTRUCTION_COLORS.get(text, "#24292e")
-        lbl.set_markup(f"<span foreground='{color}'><b>{text}</b></span>")
+        safe_text = GLib.markup_escape_text(text)
+        lbl.set_markup(f"<span foreground='{color}'><b>{safe_text}</b></span>")
         lbl.add_css_class("mono")
         lbl.set_width_chars(12)
         lbl.set_halign(Gtk.Align.START)

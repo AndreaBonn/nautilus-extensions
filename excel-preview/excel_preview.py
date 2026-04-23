@@ -65,12 +65,17 @@ def fmt_size(size: int) -> str:
 
 
 def read_excel(path: str) -> dict:
+    try:
+        file_size = fmt_size(os.path.getsize(path))
+    except OSError:
+        file_size = "—"
+
     result = {
         "path": path,
         "error": None,
         "sheets": [],
         "metadata": {},
-        "file_size": fmt_size(os.path.getsize(path)),
+        "file_size": file_size,
     }
 
     try:

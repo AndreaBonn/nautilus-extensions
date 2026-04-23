@@ -218,8 +218,12 @@ def read_parquet(path: str, max_rows: int) -> dict:
         result["custom_meta"] = custom_meta
 
         # Leggi solo le prime N righe senza caricare l'intero file in RAM
-        first_batch = next(pf.iter_batches(batch_size=max_rows))
-        df = first_batch.to_pandas()
+        first_batch = next(pf.iter_batches(batch_size=max_rows), None)
+        if first_batch is not None:
+            df = first_batch.to_pandas()
+        else:
+            # Tabella vuota: costruisci un DataFrame vuoto con lo schema corretto
+            df = schema.empty_table().to_pandas()
         result["total_rows_read"] = len(df)
         result["df_preview"] = df
         result["df_full"] = df

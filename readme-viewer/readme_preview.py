@@ -178,6 +178,11 @@ class ReadmeWindow(Gtk.Window):
             else:
                 self._webview = WebKit.WebView()
             self._webview.set_vexpand(True)
+            # Disable JavaScript — README rendering does not need it,
+            # and this prevents execution of inline <script> tags in Markdown.
+            settings = self._webview.get_settings()
+            settings.set_enable_javascript(False)
+            self._webview.set_settings(settings)
             self._webview.connect("decide-policy", self._block_navigation)
             scrolled.set_child(self._webview)
         else:
@@ -230,7 +235,9 @@ class ReadmeWindow(Gtk.Window):
                     decision.ignore()
                     return True
             except Exception:
-                pass
+                # Fail-safe: block navigation if we cannot determine the URI
+                decision.ignore()
+                return True
         return False
 
 

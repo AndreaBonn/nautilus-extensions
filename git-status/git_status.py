@@ -9,6 +9,8 @@ Installazione:
   nautilus -q && nautilus &
 """
 
+from __future__ import annotations
+
 import os
 import subprocess
 import threading
@@ -23,7 +25,7 @@ from urllib.parse import unquote, urlparse
 from gi.repository import GLib, GObject, Gtk, Nautilus, Pango
 
 
-def run_git(args, cwd):
+def run_git(args: list[str], cwd: str) -> str:
     try:
         r = subprocess.run(["git"] + args, cwd=cwd, capture_output=True, text=True, timeout=5)
         return r.stdout.strip() if r.returncode == 0 else ""
@@ -31,7 +33,7 @@ def run_git(args, cwd):
         return ""
 
 
-def is_git_repo(path):
+def is_git_repo(path: str) -> bool:
     return bool(run_git(["rev-parse", "--show-toplevel"], cwd=path))
 
 
@@ -206,7 +208,8 @@ class GitStatusWindow(Gtk.Window):
         if behind and behind != "0":
             sync += f"  ↓{behind}"
         safe_branch = GLib.markup_escape_text(branch)
-        self._branch_label.set_markup(f"<b>⎇  {safe_branch}</b>{sync}")
+        safe_sync = GLib.markup_escape_text(sync) if sync else ""
+        self._branch_label.set_markup(f"<b>⎇  {safe_branch}</b>{safe_sync}")
 
         if sync:
             sync_lbl = Gtk.Label(label=sync.strip())

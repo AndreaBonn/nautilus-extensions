@@ -17,9 +17,9 @@ import threading
 
 import gi
 
-gi.require_version('Nautilus', '4.0')
-gi.require_version('Gtk', '4.0')
-gi.require_version('GLib', '2.0')
+gi.require_version("Nautilus", "4.0")
+gi.require_version("Gtk", "4.0")
+gi.require_version("GLib", "2.0")
 
 from gi.repository import GLib, GObject, Gtk, Nautilus, Pango
 
@@ -73,7 +73,7 @@ CSS = b"""
 
 
 def fmt_size(size: int) -> str:
-    for unit in ['B', 'KB', 'MB', 'GB']:
+    for unit in ["B", "KB", "MB", "GB"]:
         if size < 1024:
             return f"{size:.1f} {unit}"
         size /= 1024
@@ -84,7 +84,8 @@ def get_pdf_pages(path: str) -> int:
     """Ritorna il numero di pagine di un PDF, o -1 in caso di errore."""
     try:
         import pypdf
-        with open(path, 'rb') as f:
+
+        with open(path, "rb") as f:
             reader = pypdf.PdfReader(f, strict=False)
             return len(reader.pages)
     except Exception:
@@ -95,19 +96,18 @@ def get_pdf_pages(path: str) -> int:
 # Finestra
 # --------------------------------------------------------------------------- #
 
-class PdfMergeWindow(Gtk.Window):
 
+class PdfMergeWindow(Gtk.Window):
     def __init__(self, paths: list[str]):
         super().__init__(title="Unisci PDF")
         self.set_default_size(620, 520)
-        self._paths = list(paths)   # lista ordinabile
+        self._paths = list(paths)  # lista ordinabile
         self._merging = False
 
         provider = Gtk.CssProvider()
         provider.load_from_data(CSS)
         Gtk.StyleContext.add_provider_for_display(
-            self.get_display(), provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+            self.get_display(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
 
         self._build_ui()
@@ -122,15 +122,17 @@ class PdfMergeWindow(Gtk.Window):
 
         # --- Header ---
         header = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
-        header.add_css_class('pdf-header')
+        header.add_css_class("pdf-header")
         header.set_margin_start(4)
 
         title = Gtk.Label(label="Unisci PDF")
-        title.add_css_class('pdf-title')
+        title.add_css_class("pdf-title")
         title.set_halign(Gtk.Align.START)
 
-        subtitle = Gtk.Label(label="Trascina per riordinare i file. L'output verrà salvato nella stessa cartella del primo file.")
-        subtitle.add_css_class('pdf-subtitle')
+        subtitle = Gtk.Label(
+            label="Trascina per riordinare i file. L'output verrà salvato nella stessa cartella del primo file."
+        )
+        subtitle.add_css_class("pdf-subtitle")
         subtitle.set_halign(Gtk.Align.START)
         subtitle.set_wrap(True)
         subtitle.set_xalign(0)
@@ -146,15 +148,15 @@ class PdfMergeWindow(Gtk.Window):
         self._refresh_store()
 
         self._treeview = Gtk.TreeView(model=self._store)
-        self._treeview.set_reorderable(True)   # drag & drop per riordinare
+        self._treeview.set_reorderable(True)  # drag & drop per riordinare
         self._treeview.set_vexpand(True)
         self._treeview.set_headers_visible(True)
         self._treeview.set_grid_lines(Gtk.TreeViewGridLines.HORIZONTAL)
 
         # Colonna #
         r = Gtk.CellRendererText()
-        r.set_property('foreground', '#6a737d')
-        r.set_property('xalign', 1.0)
+        r.set_property("foreground", "#6a737d")
+        r.set_property("xalign", 1.0)
         c = Gtk.TreeViewColumn("#", r, text=0)
         c.set_min_width(36)
         c.set_max_width(40)
@@ -162,7 +164,7 @@ class PdfMergeWindow(Gtk.Window):
 
         # Colonna nome file
         r = Gtk.CellRendererText()
-        r.set_property('ellipsize', Pango.EllipsizeMode.MIDDLE)
+        r.set_property("ellipsize", Pango.EllipsizeMode.MIDDLE)
         c = Gtk.TreeViewColumn("File", r, text=1)
         c.set_resizable(True)
         c.set_expand(True)
@@ -170,16 +172,16 @@ class PdfMergeWindow(Gtk.Window):
 
         # Colonna pagine
         r = Gtk.CellRendererText()
-        r.set_property('xalign', 1.0)
-        r.set_property('foreground', '#6a737d')
+        r.set_property("xalign", 1.0)
+        r.set_property("foreground", "#6a737d")
         c = Gtk.TreeViewColumn("Pagine", r, text=4)
         c.set_min_width(60)
         self._treeview.append_column(c)
 
         # Colonna dimensione
         r = Gtk.CellRendererText()
-        r.set_property('xalign', 1.0)
-        r.set_property('foreground', '#6a737d')
+        r.set_property("xalign", 1.0)
+        r.set_property("foreground", "#6a737d")
         c = Gtk.TreeViewColumn("Dimensione", r, text=3)
         c.set_min_width(90)
         self._treeview.append_column(c)
@@ -198,22 +200,22 @@ class PdfMergeWindow(Gtk.Window):
 
         up_btn = Gtk.Button(label="⬆ Su")
         up_btn.set_tooltip_text("Sposta il file selezionato in su")
-        up_btn.connect('clicked', self._move_up)
+        up_btn.connect("clicked", self._move_up)
         btn_bar.append(up_btn)
 
         down_btn = Gtk.Button(label="⬇ Giù")
         down_btn.set_tooltip_text("Sposta il file selezionato in giù")
-        down_btn.connect('clicked', self._move_down)
+        down_btn.connect("clicked", self._move_down)
         btn_bar.append(down_btn)
 
         remove_btn = Gtk.Button(label="✕ Rimuovi")
         remove_btn.set_tooltip_text("Rimuovi il file selezionato dalla lista")
-        remove_btn.connect('clicked', self._remove_selected)
+        remove_btn.connect("clicked", self._remove_selected)
         btn_bar.append(remove_btn)
 
         # Contatore pagine totali
         self._pages_label = Gtk.Label()
-        self._pages_label.add_css_class('pdf-subtitle')
+        self._pages_label.add_css_class("pdf-subtitle")
         self._pages_label.set_hexpand(True)
         self._pages_label.set_halign(Gtk.Align.END)
         btn_bar.append(self._pages_label)
@@ -268,12 +270,12 @@ class PdfMergeWindow(Gtk.Window):
         action_bar.set_halign(Gtk.Align.END)
 
         cancel_btn = Gtk.Button(label="Annulla")
-        cancel_btn.connect('clicked', lambda _: self.close())
+        cancel_btn.connect("clicked", lambda _: self.close())
         action_bar.append(cancel_btn)
 
         self._merge_btn = Gtk.Button(label="🔗 Unisci PDF")
-        self._merge_btn.add_css_class('suggested-action')
-        self._merge_btn.connect('clicked', self._on_merge)
+        self._merge_btn.add_css_class("suggested-action")
+        self._merge_btn.connect("clicked", self._on_merge)
         action_bar.append(self._merge_btn)
 
         root.append(action_bar)
@@ -292,8 +294,8 @@ class PdfMergeWindow(Gtk.Window):
             try:
                 size = fmt_size(os.path.getsize(path))
             except OSError:
-                size = '?'
-            self._store.append([str(i + 1), name, path, size, '…'])
+                size = "?"
+            self._store.append([str(i + 1), name, path, size, "…"])
 
     def _sync_paths_from_store(self):
         """Aggiorna self._paths dall'ordine corrente dello store (dopo drag & drop)."""
@@ -316,13 +318,12 @@ class PdfMergeWindow(Gtk.Window):
         it_list = []
         it = self._store.get_iter_first()
         while it:
-            it_list.append((self._store.get_string_from_iter(it),
-                            self._store.get_value(it, 2)))
+            it_list.append((self._store.get_string_from_iter(it), self._store.get_value(it, 2)))
             it = self._store.iter_next(it)
 
         for str_path_iter, path in it_list:
             pages = get_pdf_pages(path)
-            pages_str = str(pages) if pages >= 0 else '?'
+            pages_str = str(pages) if pages >= 0 else "?"
             if pages > 0:
                 totale += pages
             GLib.idle_add(self._update_pages_cell, str_path_iter, pages_str, totale)
@@ -378,20 +379,21 @@ class PdfMergeWindow(Gtk.Window):
 
     def _suggest_output_name(self) -> str:
         if not self._paths:
-            return 'unione.pdf'
+            return "unione.pdf"
         # Prendi il nome del primo file senza estensione + "_unione"
         first = os.path.splitext(os.path.basename(self._paths[0]))[0]
         # Rimuovi numeri finali comuni (es. "documento_1" → "documento")
         import re
-        base = re.sub(r'[\s_\-]+\d+$', '', first)
+
+        base = re.sub(r"[\s_\-]+\d+$", "", first)
         return f"{base}_unione.pdf" if base else "unione.pdf"
 
     def _get_output_path(self) -> str:
         name = self._name_entry.get_text().strip()
         if not name:
-            name = 'unione.pdf'
-        if not name.lower().endswith('.pdf'):
-            name += '.pdf'
+            name = "unione.pdf"
+        if not name.lower().endswith(".pdf"):
+            name += ".pdf"
         folder = os.path.dirname(self._paths[0])
         return os.path.join(folder, name)
 
@@ -410,7 +412,9 @@ class PdfMergeWindow(Gtk.Window):
 
         # Controlla che l'output non sovrascriva uno degli input
         if output_path in self._paths:
-            self._show_error("Il file di output non può avere lo stesso nome di uno dei file di input.")
+            self._show_error(
+                "Il file di output non può avere lo stesso nome di uno dei file di input."
+            )
             return
 
         self._merge_btn.set_sensitive(False)
@@ -420,9 +424,7 @@ class PdfMergeWindow(Gtk.Window):
 
         # Avvia unione in thread separato
         threading.Thread(
-            target=self._do_merge,
-            args=(list(self._paths), output_path),
-            daemon=True
+            target=self._do_merge, args=(list(self._paths), output_path), daemon=True
         ).start()
 
         # Pulsa la progress bar finché non finisce
@@ -438,6 +440,7 @@ class PdfMergeWindow(Gtk.Window):
         self._merging = True
         try:
             import pypdf
+
             writer = pypdf.PdfWriter()
 
             for path in paths:
@@ -445,14 +448,11 @@ class PdfMergeWindow(Gtk.Window):
                 for page in reader.pages:
                     writer.add_page(page)
 
-            with open(output_path, 'wb') as f:
+            with open(output_path, "wb") as f:
                 writer.write(f)
 
             # Conta pagine totali nel file output
-            total_pages = sum(
-                len(pypdf.PdfReader(p, strict=False).pages)
-                for p in paths
-            )
+            total_pages = sum(len(pypdf.PdfReader(p, strict=False).pages) for p in paths)
 
             GLib.idle_add(self._on_merge_done, output_path, total_pages, None)
 
@@ -476,7 +476,8 @@ class PdfMergeWindow(Gtk.Window):
             )
             # Apri la cartella contenente il file
             import subprocess
-            subprocess.Popen(['xdg-open', os.path.dirname(output_path)])
+
+            subprocess.Popen(["xdg-open", os.path.dirname(output_path)])
 
         return False
 
@@ -499,14 +500,14 @@ class PdfMergeWindow(Gtk.Window):
 # Estensione
 # --------------------------------------------------------------------------- #
 
-class PdfMergeExtension(GObject.GObject, Nautilus.MenuProvider):
 
+class PdfMergeExtension(GObject.GObject, Nautilus.MenuProvider):
     def get_file_items(self, files):
         # Filtra solo i PDF
         pdf_files = [
-            f for f in files
-            if f.get_name().lower().endswith('.pdf')
-            and f.get_location().get_path() is not None
+            f
+            for f in files
+            if f.get_name().lower().endswith(".pdf") and f.get_location().get_path() is not None
         ]
 
         if len(pdf_files) < 2:
@@ -515,11 +516,11 @@ class PdfMergeExtension(GObject.GObject, Nautilus.MenuProvider):
         paths = [f.get_location().get_path() for f in pdf_files]
 
         item = Nautilus.MenuItem(
-            name='PdfMerge::merge',
-            label=f'Unisci {len(pdf_files)} PDF',
-            tip=f'Unisci {len(pdf_files)} file PDF in uno solo',
+            name="PdfMerge::merge",
+            label=f"Unisci {len(pdf_files)} PDF",
+            tip=f"Unisci {len(pdf_files)} file PDF in uno solo",
         )
-        item.connect('activate', self._on_activate, paths)
+        item.connect("activate", self._on_activate, paths)
         return [item]
 
     def get_background_items(self, folder):
