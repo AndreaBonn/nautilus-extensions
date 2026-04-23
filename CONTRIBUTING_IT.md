@@ -43,7 +43,8 @@ make check
 make lint       # Esegue il linter ruff
 make format     # Formatta il codice con ruff
 make test       # Esegue la test suite
-make check      # Esegue lint + test
+make security   # Esegue i check di sicurezza (ruff-S + bandit + pip-audit)
+make check      # Esegue lint + test + security
 make install    # Installa le estensioni in Nautilus
 make restart    # Riavvia Nautilus per caricare le modifiche
 ```

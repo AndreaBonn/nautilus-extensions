@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.1.1] - 2026-04-23
+
+### Security
+- README Viewer: add Content-Security-Policy meta tag to rendered HTML
+- README Viewer: extend HTML sanitizer (srcset, backtick event handlers, CSS url() injection)
+- README Viewer: block all link navigation including file:// URIs
+- Replace `subprocess.Popen` with `subprocess.run(check=False)` in all 7 viewers
+- PDF Merger: add `Path.resolve().is_relative_to()` validation for output path
+- Git Blame: add file mtime to cache key for automatic invalidation
+
+### Fixed
+- Remove 5 dead expressions (dockerfile_analyzer, excel_preview, csv_preview)
+- Narrow `except Exception` to specific exceptions in git_diff._git_root
+- Fix potential KeyError in excel_preview._tab_stats using local variable
+- Replace magic number `6.2832` with `math.tau` in git_graph
+
+### Changed
+- Move inline stdlib imports (re, subprocess) to top-level in 8 files
+- Unify function naming: `human_size`/`_fmt_size` → `fmt_size` across all extensions
+- Consolidate 13 duplicated `_load_functions` in tests onto `conftest._load_module_functions`
+- Add `make security` target (ruff-S + bandit + pip-audit); `make check` now includes it
+- Add `[tool.bandit]` configuration to pyproject.toml
+
 ## [1.1.0] - 2026-04-23
 
 ### Security

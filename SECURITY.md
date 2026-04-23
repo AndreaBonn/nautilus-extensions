@@ -87,7 +87,25 @@ Some extensions execute external commands via `subprocess`:
 | dockerfile-analyzer | `xdg-open` |
 | readme-viewer | `marktext`, `xdg-open` |
 
-All subprocess calls use **list-form arguments** (not shell strings), which mitigates shell injection. However, filenames are generally passed as-is from Nautilus.
+All subprocess calls use **list-form arguments** (not shell strings) with `subprocess.run(check=False)`, which mitigates shell injection and prevents zombie processes. However, filenames are generally passed as-is from Nautilus.
+
+### Security Controls
+
+The following hardening measures are implemented across extensions:
+
+| Control | Where | Description |
+|---------|-------|-------------|
+| **Content Security Policy** | readme-viewer | CSP meta tag (`default-src 'none'; style-src 'unsafe-inline'; img-src file: data:`) blocks script execution, external resource loading and form submissions |
+| **HTML sanitization** | readme-viewer | Regex-based sanitizer removes `<script>`, `<iframe>`, `<svg>`, event handlers (including backtick-quoted), `javascript:`/`data:` in `href`/`src`/`srcset`, and CSS `url()` injection |
+| **JavaScript disabled** | readme-viewer | `set_enable_javascript(False)` on WebKit WebView |
+| **Navigation blocking** | readme-viewer | All link navigation blocked except initial `about:blank` page load (including `file://` URIs) |
+| **Path traversal protection** | pdf-merger, pdf-splitter | Output paths validated with `Path.resolve().is_relative_to()` to prevent directory escape |
+| **Symlink protection** | duplicate-finder | `os.path.realpath().startswith(root + os.sep)` prevents symlink-based escape |
+| **GTK markup escaping** | all viewers | `GLib.markup_escape_text()` prevents GTK markup injection |
+| **Subprocess timeouts** | git-blame, git-diff, git-status, git-graph | All `subprocess.run` calls include `timeout` parameter |
+| **Resource limits** | duplicate-finder, json-preview | `MAX_SCAN_FILES` and `MAX_READ_BYTES` prevent DoS on large directories/files |
+| **Cache invalidation** | git-blame | Cache keys include file `mtime` to prevent stale data after modifications |
+| **No shell execution** | all extensions | All subprocess calls use list-form arguments, never `shell=True` |
 
 ### Third-Party Libraries
 
@@ -138,4 +156,4 @@ Usa invece uno di questi canali:
 
 Questo è un progetto open-source personale mantenuto nel tempo libero. Le tempistiche sono indicative, ma ogni segnalazione verrà presa seriamente.
 
-Per i dettagli completi su scope, design e best practice, consulta la sezione in inglese sopra.
+Per i dettagli completi su scope, design, controlli di sicurezza e best practice, consulta la sezione in inglese sopra.

@@ -43,7 +43,8 @@ make check
 make lint       # Run ruff linter
 make format     # Auto-format code with ruff
 make test       # Run test suite
-make check      # Run lint + tests
+make security   # Run security checks (ruff-S + bandit + pip-audit)
+make check      # Run lint + tests + security
 make install    # Install extensions to Nautilus
 make restart    # Restart Nautilus to pick up changes
 ```

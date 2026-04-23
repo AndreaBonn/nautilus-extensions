@@ -10,6 +10,6 @@
 - [ ] No regressions in existing extensions
 
 ## Checklist
-- [ ] Code follows PEP 8 conventions
+- [ ] `make check` passes (lint + tests + security)
 - [ ] No hardcoded credentials or paths
 - [ ] Subprocess calls use list-form arguments
