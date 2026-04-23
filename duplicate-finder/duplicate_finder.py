@@ -10,9 +10,9 @@ from collections import defaultdict
 
 import gi
 
-gi.require_version('Nautilus', '4.0')
-gi.require_version('Gtk', '4.0')
-gi.require_version('GLib', '2.0')
+gi.require_version("Nautilus", "4.0")
+gi.require_version("Gtk", "4.0")
+gi.require_version("GLib", "2.0")
 
 from gi.repository import GLib, GObject, Gtk, Nautilus, Pango
 
@@ -40,7 +40,7 @@ CSS = b"""
 
 
 def human_size(size: int) -> str:
-    for unit in ['B', 'KB', 'MB', 'GB']:
+    for unit in ["B", "KB", "MB", "GB"]:
         if size < 1024:
             return f"{size:.1f} {unit}"
         size /= 1024
@@ -94,8 +94,8 @@ def find_duplicates(root: str, progress_cb=None) -> dict:
 # Finestra principale
 # ---------------------------------------------------------------------------
 
-class DupFinderWindow(Gtk.Window):
 
+class DupFinderWindow(Gtk.Window):
     def __init__(self, folder_path: str):
         super().__init__(title="Trova duplicati")
         self.set_default_size(780, 600)
@@ -105,8 +105,7 @@ class DupFinderWindow(Gtk.Window):
         provider = Gtk.CssProvider()
         provider.load_from_data(CSS)
         Gtk.StyleContext.add_provider_for_display(
-            self.get_display(), provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+            self.get_display(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
 
         self._build_ui()
@@ -117,16 +116,16 @@ class DupFinderWindow(Gtk.Window):
         self.set_child(root_box)
 
         header = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
-        header.add_css_class('dup-header')
+        header.add_css_class("dup-header")
         root_box.append(header)
 
         title_lbl = Gtk.Label(label="Trova duplicati")
-        title_lbl.add_css_class('dup-title')
+        title_lbl.add_css_class("dup-title")
         title_lbl.set_halign(Gtk.Align.START)
         header.append(title_lbl)
 
         self._subtitle = Gtk.Label(label=f"Scansione di: {self._folder}")
-        self._subtitle.add_css_class('dup-subtitle')
+        self._subtitle.add_css_class("dup-subtitle")
         self._subtitle.set_halign(Gtk.Align.START)
         self._subtitle.set_ellipsize(Pango.EllipsizeMode.MIDDLE)
         header.append(self._subtitle)
@@ -142,9 +141,9 @@ class DupFinderWindow(Gtk.Window):
 
         self._hint = Gtk.Label(
             label="☑ = verrà spostato nel cestino  |  "
-                  "Il primo file di ogni gruppo non è selezionato per default"
+            "Il primo file di ogni gruppo non è selezionato per default"
         )
-        self._hint.add_css_class('dup-hint')
+        self._hint.add_css_class("dup-hint")
         self._hint.set_halign(Gtk.Align.START)
         self._hint.set_margin_start(12)
         self._hint.set_margin_top(4)
@@ -164,7 +163,7 @@ class DupFinderWindow(Gtk.Window):
 
         r1 = Gtk.CellRendererText()
         r1.set_property("font", "monospace 10")
-        col1 = Gtk.TreeViewColumn("Gruppo MD5", r1, text=1)
+        col1 = Gtk.TreeViewColumn("Group", r1, text=1)
         col1.set_fixed_width(100)
         col1.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
         tv.append_column(col1)
@@ -238,8 +237,8 @@ class DupFinderWindow(Gtk.Window):
         self._progress.set_visible(False)
 
         n_groups = len(duplicates)
-        n_files  = sum(len(v) for v in duplicates.values())
-        wasted   = 0
+        n_files = sum(len(v) for v in duplicates.values())
+        wasted = 0
         for paths in duplicates.values():
             try:
                 wasted += os.path.getsize(paths[0]) * (len(paths) - 1)
@@ -316,8 +315,7 @@ class DupFinderWindow(Gtk.Window):
         for path in to_trash:
             try:
                 result = subprocess.run(
-                    ['gio', 'trash', path],
-                    capture_output=True, text=True
+                    ["gio", "trash", path], capture_output=True, text=True, timeout=30
                 )
                 if result.returncode == 0:
                     trashed.add(path)
@@ -341,10 +339,8 @@ class DupFinderWindow(Gtk.Window):
         self._show_status(msg, error=bool(errors))
 
     def _show_status(self, msg: str, error: bool = False):
-        color = '#d73a49' if error else '#22863a'
-        self._status.set_markup(
-            f"<span foreground='{color}'>{GLib.markup_escape_text(msg)}</span>"
-        )
+        color = "#d73a49" if error else "#22863a"
+        self._status.set_markup(f"<span foreground='{color}'>{GLib.markup_escape_text(msg)}</span>")
         self._status.set_visible(True)
 
 
@@ -353,8 +349,8 @@ class DupFinderWindow(Gtk.Window):
 # e controlla anche via URI come fallback
 # ---------------------------------------------------------------------------
 
-class TrovaDuplicatiExtension(GObject.GObject, Nautilus.MenuProvider):
 
+class TrovaDuplicatiExtension(GObject.GObject, Nautilus.MenuProvider):
     def _path_from_file(self, f):
         """Ricava il path locale in modo robusto, con fallback su URI."""
         # metodo diretto
@@ -369,8 +365,9 @@ class TrovaDuplicatiExtension(GObject.GObject, Nautilus.MenuProvider):
         # fallback: parse dell'URI
         try:
             uri = f.get_uri()
-            if uri and uri.startswith('file://'):
+            if uri and uri.startswith("file://"):
                 from urllib.parse import unquote
+
                 return unquote(uri[7:])
         except Exception:
             pass
@@ -408,11 +405,11 @@ class TrovaDuplicatiExtension(GObject.GObject, Nautilus.MenuProvider):
             return []
 
         item = Nautilus.MenuItem(
-            name='TrovaDuplicati::find',
-            label='🔍 Trova duplicati',
+            name="TrovaDuplicati::find",
+            label="🔍 Trova duplicati",
             tip=f"Trova file identici in {f.get_name()}",
         )
-        item.connect('activate', self._on_activate, path)
+        item.connect("activate", self._on_activate, path)
         return [item]
 
     def get_background_items(self, folder):
@@ -424,11 +421,11 @@ class TrovaDuplicatiExtension(GObject.GObject, Nautilus.MenuProvider):
             return []
 
         item = Nautilus.MenuItem(
-            name='TrovaDuplicati::find_bg',
-            label='🔍 Trova duplicati in questa cartella',
+            name="TrovaDuplicati::find_bg",
+            label="🔍 Trova duplicati in questa cartella",
             tip=f"Trova file identici in {path}",
         )
-        item.connect('activate', self._on_activate, path)
+        item.connect("activate", self._on_activate, path)
         return [item]
 
     def _on_activate(self, _item, path):

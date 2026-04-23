@@ -17,19 +17,19 @@ import threading
 
 import gi
 
-gi.require_version('Nautilus', '4.0')
-gi.require_version('Gtk', '4.0')
-gi.require_version('GLib', '2.0')
+gi.require_version("Nautilus", "4.0")
+gi.require_version("Gtk", "4.0")
+gi.require_version("GLib", "2.0")
 
 from gi.repository import GLib, GObject, Gtk, Nautilus, Pango
 
-SUPPORTED_EXTENSIONS = {'.xlsx', '.xlsm', '.xltx', '.xltm', '.ods'}
+SUPPORTED_EXTENSIONS = {".xlsx", ".xlsm", ".xltx", ".xltm", ".ods"}
 
-PREVIEW_ROWS  = 100
+PREVIEW_ROWS = 100
 MIN_COL_WIDTH = 80
 MAX_COL_WIDTH = 300
-WINDOW_W      = 1150
-WINDOW_H      = 700
+WINDOW_W = 1150
+WINDOW_H = 700
 
 CSS = b"""
 .xl-info-bar {
@@ -52,7 +52,7 @@ CSS = b"""
 
 
 def fmt_size(size: int) -> str:
-    for unit in ['B', 'KB', 'MB', 'GB']:
+    for unit in ["B", "KB", "MB", "GB"]:
         if size < 1024:
             return f"{size:.1f} {unit}"
         size /= 1024
@@ -63,13 +63,14 @@ def fmt_size(size: int) -> str:
 # Lettura file Excel
 # --------------------------------------------------------------------------- #
 
+
 def read_excel(path: str) -> dict:
     result = {
-        'path':     path,
-        'error':    None,
-        'sheets':   [],
-        'metadata': {},
-        'file_size': fmt_size(os.path.getsize(path)),
+        "path": path,
+        "error": None,
+        "sheets": [],
+        "metadata": {},
+        "file_size": fmt_size(os.path.getsize(path)),
     }
 
     try:
@@ -80,12 +81,12 @@ def read_excel(path: str) -> dict:
         # Una sola apertura del workbook per metadati + lista fogli
         wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
         props = wb.properties
-        result['metadata'] = {
-            'Titolo':     props.title or '—',
-            'Autore':     props.creator or '—',
-            'Creato':     str(props.created)[:19].replace('T', ' ') if props.created else '—',
-            'Modificato': str(props.modified)[:19].replace('T', ' ') if props.modified else '—',
-            'Fogli':      str(len(wb.sheetnames)),
+        result["metadata"] = {
+            "Titolo": props.title or "—",
+            "Autore": props.creator or "—",
+            "Creato": str(props.created)[:19].replace("T", " ") if props.created else "—",
+            "Modificato": str(props.modified)[:19].replace("T", " ") if props.modified else "—",
+            "Fogli": str(len(wb.sheetnames)),
         }
 
         # Conta righe per ogni foglio direttamente da openpyxl (read_only, veloce)
@@ -99,9 +100,9 @@ def read_excel(path: str) -> dict:
         # Leggi tutti i fogli in una sola chiamata pandas (molto più veloce)
         all_sheets = pd.read_excel(
             path,
-            sheet_name=None,          # None = tutti i fogli
+            sheet_name=None,  # None = tutti i fogli
             nrows=PREVIEW_ROWS + 1,
-            engine='openpyxl',
+            engine="openpyxl",
         )
 
         for sheet_name in sheet_names:
@@ -110,41 +111,45 @@ def read_excel(path: str) -> dict:
                 if df is None:
                     raise ValueError("Foglio non trovato")
 
-                truncated  = len(df) > PREVIEW_ROWS
+                truncated = len(df) > PREVIEW_ROWS
                 df_preview = df.head(PREVIEW_ROWS)
                 total_rows = sheet_row_counts.get(sheet_name, len(df_preview))
 
-                numeric_cols = list(df_preview.select_dtypes(include='number').columns)
-                null_counts  = df_preview.isnull().sum().to_dict()
+                numeric_cols = list(df_preview.select_dtypes(include="number").columns)
+                null_counts = df_preview.isnull().sum().to_dict()
 
                 sheet_data = {
-                    'name':         sheet_name,
-                    'total_rows':   total_rows,
-                    'total_cols':   len(df.columns),
-                    'truncated':    truncated,
-                    'headers':      list(df_preview.columns.astype(str)),
-                    'rows':         df_preview.astype(str).values.tolist(),
-                    'numeric_cols': numeric_cols,
-                    'null_counts':  null_counts,
-                    'dtypes':       {c: str(df_preview[c].dtype) for c in df_preview.columns},
-                    'describe':     df_preview[numeric_cols].describe() if numeric_cols else None,
-                    'error':        None,
+                    "name": sheet_name,
+                    "total_rows": total_rows,
+                    "total_cols": len(df.columns),
+                    "truncated": truncated,
+                    "headers": list(df_preview.columns.astype(str)),
+                    "rows": df_preview.astype(str).values.tolist(),
+                    "numeric_cols": numeric_cols,
+                    "null_counts": null_counts,
+                    "dtypes": {c: str(df_preview[c].dtype) for c in df_preview.columns},
+                    "describe": df_preview[numeric_cols].describe() if numeric_cols else None,
+                    "error": None,
                 }
             except Exception as e:
                 sheet_data = {
-                    'name':  sheet_name,
-                    'error': str(e),
-                    'total_rows': 0, 'total_cols': 0,
-                    'truncated': False, 'headers': [],
-                    'rows': [], 'numeric_cols': [],
-                    'null_counts': {}, 'dtypes': {},
-                    'describe': None,
+                    "name": sheet_name,
+                    "error": str(e),
+                    "total_rows": 0,
+                    "total_cols": 0,
+                    "truncated": False,
+                    "headers": [],
+                    "rows": [],
+                    "numeric_cols": [],
+                    "null_counts": {},
+                    "dtypes": {},
+                    "describe": None,
                 }
 
-            result['sheets'].append(sheet_data)
+            result["sheets"].append(sheet_data)
 
     except Exception as e:
-        result['error'] = str(e)
+        result["error"] = str(e)
 
     return result
 
@@ -153,8 +158,8 @@ def read_excel(path: str) -> dict:
 # Finestra
 # --------------------------------------------------------------------------- #
 
-class ExcelPreviewWindow(Gtk.Window):
 
+class ExcelPreviewWindow(Gtk.Window):
     def __init__(self, path: str):
         filename = os.path.basename(path)
         super().__init__(title=f"{filename} — Excel Preview")
@@ -164,8 +169,7 @@ class ExcelPreviewWindow(Gtk.Window):
         provider = Gtk.CssProvider()
         provider.load_from_data(CSS)
         Gtk.StyleContext.add_provider_for_display(
-            self.get_display(), provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+            self.get_display(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
 
         self._build_skeleton()
@@ -182,7 +186,7 @@ class ExcelPreviewWindow(Gtk.Window):
         spinner.set_size_request(48, 48)
         spinner.start()
         lbl = Gtk.Label(label="Lettura file Excel…")
-        lbl.add_css_class('dim-label')
+        lbl.add_css_class("dim-label")
         box.append(spinner)
         box.append(lbl)
         self._spinner_box = box
@@ -194,7 +198,7 @@ class ExcelPreviewWindow(Gtk.Window):
 
     def _on_loaded(self, data):
         self._root.remove(self._spinner_box)
-        if data.get('error'):
+        if data.get("error"):
             lbl = Gtk.Label(label=f"Errore: {data['error']}")
             lbl.set_margin_top(40)
             self._root.append(lbl)
@@ -207,26 +211,26 @@ class ExcelPreviewWindow(Gtk.Window):
     # ------------------------------------------------------------------ #
 
     def _build_content(self, data: dict):
-        sheets = data['sheets']
+        sheets = data["sheets"]
         total_sheets = len(sheets)
-        total_rows   = sum(s.get('total_rows', 0) for s in sheets)
-        sum(s.get('total_cols', 0) for s in sheets)
+        total_rows = sum(s.get("total_rows", 0) for s in sheets)
+        sum(s.get("total_cols", 0) for s in sheets)
 
         # --- Info bar ---
         info_bar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=4)
-        info_bar.add_css_class('xl-info-bar')
+        info_bar.add_css_class("xl-info-bar")
         info_bar.set_margin_start(4)
         info_bar.set_margin_end(8)
 
-        self._stat(info_bar, "Fogli",      str(total_sheets))
+        self._stat(info_bar, "Fogli", str(total_sheets))
         self._stat(info_bar, "Righe tot.", f"{total_rows:,}")
-        self._stat(info_bar, "Dimensione", data['file_size'])
+        self._stat(info_bar, "Dimensione", data["file_size"])
 
-        meta = data.get('metadata', {})
-        if meta.get('Autore') and meta['Autore'] != '—':
-            self._stat(info_bar, "Autore", meta['Autore'])
-        if meta.get('Modificato') and meta['Modificato'] != '—':
-            self._stat(info_bar, "Modificato", meta['Modificato'])
+        meta = data.get("metadata", {})
+        if meta.get("Autore") and meta["Autore"] != "—":
+            self._stat(info_bar, "Autore", meta["Autore"])
+        if meta.get("Modificato") and meta["Modificato"] != "—":
+            self._stat(info_bar, "Modificato", meta["Modificato"])
 
         self._root.append(info_bar)
         self._root.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
@@ -243,12 +247,13 @@ class ExcelPreviewWindow(Gtk.Window):
             sheets_nb.set_tab_pos(Gtk.PositionType.LEFT)
 
             for sheet in sheets:
-                tab_label = Gtk.Label(label=sheet['name'])
-                tab_label.add_css_class('xl-sheet-tab')
+                tab_label = Gtk.Label(label=sheet["name"])
+                tab_label.add_css_class("xl-sheet-tab")
                 tab_label.set_max_width_chars(20)
                 tab_label.set_ellipsize(Pango.EllipsizeMode.END)
-                if sheet.get('error'):
-                    tab_label.set_markup(f"<span foreground='#d73a49'>{sheet['name']}</span>")
+                if sheet.get("error"):
+                    safe_name = GLib.markup_escape_text(sheet["name"])
+                    tab_label.set_markup(f"<span foreground='#d73a49'>{safe_name}</span>")
 
                 content = self._build_sheet_content(sheet)
                 sheets_nb.append_page(content, tab_label)
@@ -256,7 +261,7 @@ class ExcelPreviewWindow(Gtk.Window):
             self._root.append(sheets_nb)
 
         # --- Metadati tab sotto (se ci sono dati) ---
-        if any(v != '—' for v in meta.values()):
+        if any(v != "—" for v in meta.values()):
             self._root.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
 
         # --- Bottom bar ---
@@ -267,15 +272,16 @@ class ExcelPreviewWindow(Gtk.Window):
         bottom.set_margin_bottom(6)
 
         path_lbl = Gtk.Label(label=self._path)
-        path_lbl.add_css_class('dim-label')
+        path_lbl.add_css_class("dim-label")
         path_lbl.set_ellipsize(Pango.EllipsizeMode.START)
         path_lbl.set_hexpand(True)
         path_lbl.set_halign(Gtk.Align.START)
         bottom.append(path_lbl)
 
         import subprocess
+
         open_btn = Gtk.Button(label="Apri con LibreOffice")
-        open_btn.connect('clicked', lambda _: subprocess.Popen(['xdg-open', self._path]))
+        open_btn.connect("clicked", lambda _: subprocess.Popen(["xdg-open", self._path]))
         bottom.append(open_btn)
 
         self._root.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
@@ -289,9 +295,9 @@ class ExcelPreviewWindow(Gtk.Window):
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         box.set_vexpand(True)
 
-        if sheet.get('error'):
+        if sheet.get("error"):
             lbl = Gtk.Label(label=f"Errore nel foglio '{sheet['name']}': {sheet['error']}")
-            lbl.add_css_class('dim-label')
+            lbl.add_css_class("dim-label")
             lbl.set_margin_top(20)
             box.append(lbl)
             return box
@@ -306,13 +312,13 @@ class ExcelPreviewWindow(Gtk.Window):
         info_lbl = Gtk.Label(
             label=f"{sheet['total_rows']:,} righe  ×  {sheet['total_cols']} colonne"
         )
-        info_lbl.add_css_class('dim-label')
+        info_lbl.add_css_class("dim-label")
         info_lbl.set_halign(Gtk.Align.START)
         sub_bar.append(info_lbl)
 
-        if sheet['truncated']:
+        if sheet["truncated"]:
             trunc = Gtk.Label(label=f"⚠ Mostrate prime {PREVIEW_ROWS} righe")
-            trunc.add_css_class('dim-label')
+            trunc.add_css_class("dim-label")
             trunc.set_halign(Gtk.Align.END)
             trunc.set_hexpand(True)
             sub_bar.append(trunc)
@@ -324,21 +330,12 @@ class ExcelPreviewWindow(Gtk.Window):
         inner_nb = Gtk.Notebook()
         inner_nb.set_vexpand(True)
 
-        inner_nb.append_page(
-            self._tab_data(sheet),
-            Gtk.Label(label="📊 Dati")
-        )
+        inner_nb.append_page(self._tab_data(sheet), Gtk.Label(label="📊 Dati"))
 
-        if sheet.get('describe') is not None:
-            inner_nb.append_page(
-                self._tab_stats(sheet),
-                Gtk.Label(label="📈 Statistiche")
-            )
+        if sheet.get("describe") is not None:
+            inner_nb.append_page(self._tab_stats(sheet), Gtk.Label(label="📈 Statistiche"))
 
-        inner_nb.append_page(
-            self._tab_columns(sheet),
-            Gtk.Label(label="🗂 Colonne")
-        )
+        inner_nb.append_page(self._tab_columns(sheet), Gtk.Label(label="🗂 Colonne"))
 
         box.append(inner_nb)
         return box
@@ -351,14 +348,14 @@ class ExcelPreviewWindow(Gtk.Window):
         scrolled = Gtk.ScrolledWindow()
         scrolled.set_vexpand(True)
 
-        headers      = sheet['headers']
-        rows         = sheet['rows']
-        numeric_cols = sheet['numeric_cols']
-        dtypes       = sheet['dtypes']
+        headers = sheet["headers"]
+        rows = sheet["rows"]
+        numeric_cols = sheet["numeric_cols"]
+        dtypes = sheet["dtypes"]
 
         if not headers:
             lbl = Gtk.Label(label="Foglio vuoto.")
-            lbl.add_css_class('dim-label')
+            lbl.add_css_class("dim-label")
             lbl.set_margin_top(20)
             scrolled.set_child(lbl)
             return scrolled
@@ -367,42 +364,40 @@ class ExcelPreviewWindow(Gtk.Window):
         store = Gtk.ListStore(*col_types)
         for row in rows:
             # Assicura che la riga abbia il numero corretto di colonne
-            padded = row + [''] * max(0, len(headers) - len(row))
-            store.append(padded[:len(headers)])
+            padded = row + [""] * max(0, len(headers) - len(row))
+            store.append(padded[: len(headers)])
 
         tv = Gtk.TreeView(model=store)
         tv.set_grid_lines(Gtk.TreeViewGridLines.BOTH)
-        tv.add_css_class('mono')
+        tv.add_css_class("mono")
 
         for i, h in enumerate(headers):
             is_numeric = h in [str(c) for c in numeric_cols]
 
             renderer = Gtk.CellRendererText()
-            renderer.set_property('ellipsize', Pango.EllipsizeMode.END)
+            renderer.set_property("ellipsize", Pango.EllipsizeMode.END)
             if is_numeric:
-                renderer.set_property('xalign', 1.0)
-                renderer.set_property('foreground', '#0366d6')
+                renderer.set_property("xalign", 1.0)
+                renderer.set_property("foreground", "#0366d6")
 
             col = Gtk.TreeViewColumn()
             col.pack_start(renderer, True)
-            col.add_attribute(renderer, 'text', i)
+            col.add_attribute(renderer, "text", i)
             col.set_resizable(True)
             col.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
-            col.set_fixed_width(
-                max(MIN_COL_WIDTH, min(MAX_COL_WIDTH, len(str(h)) * 11 + 24))
-            )
+            col.set_fixed_width(max(MIN_COL_WIDTH, min(MAX_COL_WIDTH, len(str(h)) * 11 + 24)))
             col.set_sort_column_id(i)
 
             # Header con nome + tipo
-            dtype_str = dtypes.get(h, '')
+            dtype_str = dtypes.get(h, "")
             header_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
             name_lbl = Gtk.Label()
-            name_lbl.set_markup(f"<b>{h}</b>")
+            safe_h = GLib.markup_escape_text(str(h))
+            name_lbl.set_markup(f"<b>{safe_h}</b>")
             type_lbl = Gtk.Label()
-            color = '#0366d6' if is_numeric else '#6a737d'
-            type_lbl.set_markup(
-                f"<span foreground='{color}' size='small'>{dtype_str}</span>"
-            )
+            color = "#0366d6" if is_numeric else "#6a737d"
+            safe_dtype = GLib.markup_escape_text(dtype_str)
+            type_lbl.set_markup(f"<span foreground='{color}' size='small'>{safe_dtype}</span>")
             header_box.append(name_lbl)
             header_box.append(type_lbl)
             header_box.show()
@@ -427,8 +422,8 @@ class ExcelPreviewWindow(Gtk.Window):
         outer.set_margin_top(12)
         outer.set_margin_bottom(12)
 
-        desc         = sheet['describe']
-        numeric_cols = [str(c) for c in sheet['numeric_cols']]
+        desc = sheet["describe"]
+        numeric_cols = [str(c) for c in sheet["numeric_cols"]]
 
         title = Gtk.Label()
         title.set_markup("<b>Statistiche descrittive (colonne numeriche)</b>")
@@ -438,23 +433,23 @@ class ExcelPreviewWindow(Gtk.Window):
         col_types = [str] * (len(numeric_cols) + 1)
         store = Gtk.ListStore(*col_types)
         for stat in desc.index:
-            row = [stat] + [f"{desc.loc[stat, col]:.4g}" for col in sheet['numeric_cols']]
+            row = [stat] + [f"{desc.loc[stat, col]:.4g}" for col in sheet["numeric_cols"]]
             store.append(row)
 
         tv = Gtk.TreeView(model=store)
         tv.set_grid_lines(Gtk.TreeViewGridLines.HORIZONTAL)
-        tv.add_css_class('mono')
+        tv.add_css_class("mono")
 
         r = Gtk.CellRendererText()
-        r.set_property('weight', Pango.Weight.BOLD)
+        r.set_property("weight", Pango.Weight.BOLD)
         c = Gtk.TreeViewColumn("Statistica", r, text=0)
         c.set_min_width(100)
         tv.append_column(c)
 
         for i, col in enumerate(numeric_cols):
             r = Gtk.CellRendererText()
-            r.set_property('xalign', 1.0)
-            r.set_property('foreground', '#0366d6')
+            r.set_property("xalign", 1.0)
+            r.set_property("foreground", "#0366d6")
             c = Gtk.TreeViewColumn(col, r, text=i + 1)
             c.set_resizable(True)
             c.set_min_width(MIN_COL_WIDTH)
@@ -463,7 +458,7 @@ class ExcelPreviewWindow(Gtk.Window):
         outer.append(tv)
 
         # Valori nulli
-        null_counts = sheet.get('null_counts', {})
+        null_counts = sheet.get("null_counts", {})
         nulls = {k: v for k, v in null_counts.items() if v > 0}
 
         null_title = Gtk.Label()
@@ -473,7 +468,7 @@ class ExcelPreviewWindow(Gtk.Window):
         outer.append(null_title)
 
         if nulls:
-            total = sheet.get('total_rows', 1) or 1
+            total = sheet.get("total_rows", 1) or 1
             for col, count in nulls.items():
                 pct = count / total * 100
                 row_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
@@ -481,7 +476,7 @@ class ExcelPreviewWindow(Gtk.Window):
                 col_lbl.set_width_chars(24)
                 col_lbl.set_halign(Gtk.Align.START)
                 val_lbl = Gtk.Label(label=f"{count:,} ({pct:.1f}%)")
-                val_lbl.add_css_class('dim-label')
+                val_lbl.add_css_class("dim-label")
                 row_box.append(col_lbl)
                 row_box.append(val_lbl)
                 outer.append(row_box)
@@ -501,37 +496,43 @@ class ExcelPreviewWindow(Gtk.Window):
         scrolled = Gtk.ScrolledWindow()
         scrolled.set_vexpand(True)
 
-        headers      = sheet['headers']
-        dtypes       = sheet['dtypes']
-        null_counts  = sheet.get('null_counts', {})
-        numeric_cols = [str(c) for c in sheet['numeric_cols']]
-        total_rows   = sheet.get('total_rows', 0) or 1
+        headers = sheet["headers"]
+        dtypes = sheet["dtypes"]
+        null_counts = sheet.get("null_counts", {})
+        numeric_cols = [str(c) for c in sheet["numeric_cols"]]
+        total_rows = sheet.get("total_rows", 0) or 1
 
         store = Gtk.ListStore(str, str, str, str, str)
         for i, h in enumerate(headers):
-            h_str    = str(h)
-            dtype    = dtypes.get(h_str, '?')
-            nulls    = null_counts.get(h_str, 0)
-            null_str = f"{nulls:,} ({nulls/total_rows*100:.1f}%)" if nulls > 0 else "—"
-            kind     = "numerico" if h_str in numeric_cols else "testo"
+            h_str = str(h)
+            dtype = dtypes.get(h_str, "?")
+            nulls = null_counts.get(h_str, 0)
+            null_str = f"{nulls:,} ({nulls / total_rows * 100:.1f}%)" if nulls > 0 else "—"
+            kind = "numerico" if h_str in numeric_cols else "testo"
             store.append([str(i + 1), h_str, dtype, kind, null_str])
 
         tv = Gtk.TreeView(model=store)
         tv.set_grid_lines(Gtk.TreeViewGridLines.HORIZONTAL)
 
-        defs = [("#", 40), ("Nome colonna", 220), ("Tipo", 120),
-                ("Categoria", 100), ("Valori nulli", 140)]
+        defs = [
+            ("#", 40),
+            ("Nome colonna", 220),
+            ("Tipo", 120),
+            ("Categoria", 100),
+            ("Valori nulli", 140),
+        ]
         for i, (label, width) in enumerate(defs):
             r = Gtk.CellRendererText()
-            if i == 3:   # categoria: colore diverso per numerico
+            if i == 3:  # categoria: colore diverso per numerico
                 c = Gtk.TreeViewColumn(label)
                 c.pack_start(r, True)
                 c.set_min_width(width)
+
                 def set_kind_color(col, cell, model, it, _):
                     val = model.get_value(it, 3)
-                    cell.set_property('text', val)
-                    cell.set_property('foreground',
-                                      '#0366d6' if val == 'numerico' else '#6a737d')
+                    cell.set_property("text", val)
+                    cell.set_property("foreground", "#0366d6" if val == "numerico" else "#6a737d")
+
                 c.set_cell_data_func(r, set_kind_color, None)
             else:
                 c = Gtk.TreeViewColumn(label, r, text=i)
@@ -548,12 +549,12 @@ class ExcelPreviewWindow(Gtk.Window):
 
     def _stat(self, box, title, value):
         sb = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
-        sb.add_css_class('xl-stat-box')
+        sb.add_css_class("xl-stat-box")
         t = Gtk.Label(label=title)
-        t.add_css_class('xl-stat-title')
+        t.add_css_class("xl-stat-title")
         t.set_halign(Gtk.Align.START)
         v = Gtk.Label(label=str(value))
-        v.add_css_class('xl-stat-value')
+        v.add_css_class("xl-stat-value")
         v.set_halign(Gtk.Align.START)
         sb.append(t)
         sb.append(v)
@@ -564,8 +565,8 @@ class ExcelPreviewWindow(Gtk.Window):
 # Estensione
 # --------------------------------------------------------------------------- #
 
-class ExcelPreviewExtension(GObject.GObject, Nautilus.MenuProvider):
 
+class ExcelPreviewExtension(GObject.GObject, Nautilus.MenuProvider):
     def get_file_items(self, files):
         if len(files) != 1:
             return []
@@ -575,11 +576,11 @@ class ExcelPreviewExtension(GObject.GObject, Nautilus.MenuProvider):
             return []
 
         item = Nautilus.MenuItem(
-            name='ExcelPreview::show',
-            label='Anteprima Excel',
+            name="ExcelPreview::show",
+            label="Anteprima Excel",
             tip=f"Mostra anteprima di {f.get_name()}",
         )
-        item.connect('activate', self._on_activate, f.get_location().get_path())
+        item.connect("activate", self._on_activate, f.get_location().get_path())
         return [item]
 
     def get_background_items(self, folder):

@@ -85,6 +85,7 @@ coverage.xml
 *.cover
 .hypothesis/
 .pytest_cache/
+.ruff_cache/
 
 # Documentation builds
 docs/_build/

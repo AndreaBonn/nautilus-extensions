@@ -19,12 +19,13 @@ Dipendenze:
 import os
 import re
 import threading
+from pathlib import Path  # noqa: F811 — used in _do_split for path traversal check
 
 import gi
 
-gi.require_version('Nautilus', '4.0')
-gi.require_version('Gtk', '4.0')
-gi.require_version('GLib', '2.0')
+gi.require_version("Nautilus", "4.0")
+gi.require_version("Gtk", "4.0")
+gi.require_version("GLib", "2.0")
 
 from gi.repository import GLib, GObject, Gtk, Nautilus
 
@@ -63,7 +64,7 @@ CSS = b"""
 
 
 def fmt_size(size: int) -> str:
-    for unit in ['B', 'KB', 'MB', 'GB']:
+    for unit in ["B", "KB", "MB", "GB"]:
         if size < 1024:
             return f"{size:.1f} {unit}"
         size /= 1024
@@ -74,6 +75,7 @@ def fmt_size(size: int) -> str:
 # Parsing intervalli
 # --------------------------------------------------------------------------- #
 
+
 def parse_ranges(text: str, total_pages: int) -> list[tuple[int, int]] | str:
     """
     Parsa una stringa di intervalli come "1-3, 5, 7-9" e ritorna
@@ -81,12 +83,12 @@ def parse_ranges(text: str, total_pages: int) -> list[tuple[int, int]] | str:
     Ritorna una stringa di errore se il formato non è valido.
     """
     ranges = []
-    parts = re.split(r'[,;\s]+', text.strip())
+    parts = re.split(r"[,;\s]+", text.strip())
     for part in parts:
         part = part.strip()
         if not part:
             continue
-        m = re.match(r'^(\d+)-(\d+)$', part)
+        m = re.match(r"^(\d+)-(\d+)$", part)
         if m:
             a, b = int(m.group(1)), int(m.group(2))
             if a < 1 or b < 1:
@@ -96,7 +98,7 @@ def parse_ranges(text: str, total_pages: int) -> list[tuple[int, int]] | str:
             if b > total_pages:
                 return f"Pagina {b} non esiste (il PDF ha {total_pages} pagine)"
             ranges.append((a - 1, b - 1))
-        elif re.match(r'^\d+$', part):
+        elif re.match(r"^\d+$", part):
             n = int(part)
             if n < 1 or n > total_pages:
                 return f"Pagina {n} non esiste (il PDF ha {total_pages} pagine)"
@@ -106,8 +108,6 @@ def parse_ranges(text: str, total_pages: int) -> list[tuple[int, int]] | str:
     if not ranges:
         return "Inserisci almeno un intervallo"
     return ranges
-
-
 
 
 def every_n_chunks(total: int, n: int) -> list[tuple[int, int]]:
@@ -131,9 +131,9 @@ def bookmark_chunks(bookmarks, total_pages: int) -> list[tuple[int, int, str]]:
 
     def collect(items, depth=0):
         for item in items:
-            if hasattr(item, 'title') and hasattr(item, 'page'):
+            if hasattr(item, "title") and hasattr(item, "page"):
                 try:
-                    page_num = item.page.idnum if hasattr(item.page, 'idnum') else 0
+                    page_num = item.page.idnum if hasattr(item.page, "idnum") else 0
                     entries.append((page_num, item.title))
                 except Exception:
                     pass
@@ -152,7 +152,7 @@ def bookmark_chunks(bookmarks, total_pages: int) -> list[tuple[int, int, str]]:
         start = page_idx
         end = entries[i + 1][0] - 1 if i + 1 < len(entries) else total_pages - 1
         if start <= end:
-            safe_title = re.sub(r'[^\w\s\-]', '', title).strip()[:50]
+            safe_title = re.sub(r"[^\w\s\-]", "", title).strip()[:50]
             chunks.append((start, end, safe_title))
 
     return chunks
@@ -162,14 +162,15 @@ def bookmark_chunks(bookmarks, total_pages: int) -> list[tuple[int, int, str]]:
 # Nomi file output
 # --------------------------------------------------------------------------- #
 
+
 def chunk_filename(base: str, start: int, end: int, title: str = None) -> str:
     """Genera il nome file per un chunk: base_pag1-3.pdf o base_TitoloCapitolo.pdf"""
     # Sanitizza base rimuovendo componenti di path
     base = os.path.basename(base)
     if title:
         # Rimuovi caratteri pericolosi per il filesystem e path traversal
-        safe = re.sub(r'[^\w\s\-]', '', title).strip()[:50]
-        safe = re.sub(r'\s+', '_', safe)
+        safe = re.sub(r"[^\w\s\-]", "", title).strip()[:50]
+        safe = re.sub(r"\s+", "_", safe)
         return f"{base}_{safe}.pdf" if safe else f"{base}_pag{start + 1}-{end + 1}.pdf"
     if start == end:
         return f"{base}_pag{start + 1}.pdf"
@@ -180,8 +181,8 @@ def chunk_filename(base: str, start: int, end: int, title: str = None) -> str:
 # Finestra principale
 # --------------------------------------------------------------------------- #
 
-class PdfSplitWindow(Gtk.Window):
 
+class PdfSplitWindow(Gtk.Window):
     def __init__(self, path: str):
         super().__init__(title="Dividi PDF")
         self.set_default_size(680, 580)
@@ -193,8 +194,7 @@ class PdfSplitWindow(Gtk.Window):
         provider = Gtk.CssProvider()
         provider.load_from_data(CSS)
         Gtk.StyleContext.add_provider_for_display(
-            self.get_display(), provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+            self.get_display(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
 
         self._build_ui()
@@ -207,6 +207,7 @@ class PdfSplitWindow(Gtk.Window):
     def _load_pdf_info(self):
         try:
             import pypdf
+
             reader = pypdf.PdfReader(self._path, strict=False)
             total = len(reader.pages)
             bookmarks = []
@@ -227,18 +228,16 @@ class PdfSplitWindow(Gtk.Window):
         self._bookmarks = bookmarks
         filename = os.path.basename(self._path)
         size = fmt_size(os.path.getsize(self._path))
-        self._subtitle.set_text(
-            f"{filename}  •  {total} pagine  •  {size}"
-        )
+        self._subtitle.set_text(f"{filename}  •  {total} pagine  •  {size}")
         self._split_btn.set_sensitive(True)
 
         # Abilita tab segnalibri solo se esistono
         has_bookmarks = len(bookmarks) > 0
         self._notebook.get_nth_page(3).set_sensitive(has_bookmarks)
         if not has_bookmarks:
-            self._notebook.get_tab_label(
-                self._notebook.get_nth_page(3)
-            ).set_tooltip_text("Nessun segnalibro trovato in questo PDF")
+            self._notebook.get_tab_label(self._notebook.get_nth_page(3)).set_tooltip_text(
+                "Nessun segnalibro trovato in questo PDF"
+            )
 
         self._update_preview()
         return False
@@ -253,15 +252,15 @@ class PdfSplitWindow(Gtk.Window):
 
         # Header
         header = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
-        header.add_css_class('sp-header')
+        header.add_css_class("sp-header")
         header.set_margin_start(4)
 
         title = Gtk.Label(label="Dividi PDF")
-        title.add_css_class('sp-title')
+        title.add_css_class("sp-title")
         title.set_halign(Gtk.Align.START)
 
         self._subtitle = Gtk.Label(label="Caricamento…")
-        self._subtitle.add_css_class('sp-subtitle')
+        self._subtitle.add_css_class("sp-subtitle")
         self._subtitle.set_halign(Gtk.Align.START)
 
         header.append(title)
@@ -274,11 +273,11 @@ class PdfSplitWindow(Gtk.Window):
         self._notebook.set_margin_start(12)
         self._notebook.set_margin_end(12)
         self._notebook.set_margin_top(10)
-        self._notebook.connect('switch-page', lambda *_: GLib.idle_add(self._update_preview))
+        self._notebook.connect("switch-page", lambda *_: GLib.idle_add(self._update_preview))
 
-        self._notebook.append_page(self._tab_ranges(),    Gtk.Label(label="📐 Intervalli"))
-        self._notebook.append_page(self._tab_every_n(),   Gtk.Label(label="🔢 Ogni N pagine"))
-        self._notebook.append_page(self._tab_single(),    Gtk.Label(label="📄 Una per file"))
+        self._notebook.append_page(self._tab_ranges(), Gtk.Label(label="📐 Intervalli"))
+        self._notebook.append_page(self._tab_every_n(), Gtk.Label(label="🔢 Ogni N pagine"))
+        self._notebook.append_page(self._tab_single(), Gtk.Label(label="📄 Una per file"))
         self._notebook.append_page(self._tab_bookmarks(), Gtk.Label(label="🔖 Segnalibri"))
 
         root.append(self._notebook)
@@ -300,7 +299,7 @@ class PdfSplitWindow(Gtk.Window):
 
         browse_btn = Gtk.Button(label="…")
         browse_btn.set_tooltip_text("Scegli cartella")
-        browse_btn.connect('clicked', self._browse_folder)
+        browse_btn.connect("clicked", self._browse_folder)
         out_box.append(browse_btn)
 
         root.append(out_box)
@@ -318,18 +317,18 @@ class PdfSplitWindow(Gtk.Window):
         preview_tv = Gtk.TreeView(model=self._preview_store)
         preview_tv.set_headers_visible(False)
         preview_tv.set_grid_lines(Gtk.TreeViewGridLines.HORIZONTAL)
-        preview_tv.add_css_class('sp-preview-row')
+        preview_tv.add_css_class("sp-preview-row")
 
         r = Gtk.CellRendererText()
-        r.set_property('family', 'monospace')
-        r.set_property('foreground', '#24292e')
+        r.set_property("family", "monospace")
+        r.set_property("foreground", "#24292e")
         c = Gtk.TreeViewColumn("File", r, text=0)
         c.set_expand(True)
         preview_tv.append_column(c)
 
         r = Gtk.CellRendererText()
-        r.set_property('foreground', '#6a737d')
-        r.set_property('xalign', 1.0)
+        r.set_property("foreground", "#6a737d")
+        r.set_property("xalign", 1.0)
         c = Gtk.TreeViewColumn("Pagine", r, text=1)
         c.set_min_width(80)
         preview_tv.append_column(c)
@@ -369,13 +368,13 @@ class PdfSplitWindow(Gtk.Window):
         action_bar.set_halign(Gtk.Align.END)
 
         cancel_btn = Gtk.Button(label="Annulla")
-        cancel_btn.connect('clicked', lambda _: self.close())
+        cancel_btn.connect("clicked", lambda _: self.close())
         action_bar.append(cancel_btn)
 
         self._split_btn = Gtk.Button(label="✂ Dividi PDF")
-        self._split_btn.add_css_class('suggested-action')
+        self._split_btn.add_css_class("suggested-action")
         self._split_btn.set_sensitive(False)
-        self._split_btn.connect('clicked', self._on_split)
+        self._split_btn.connect("clicked", self._on_split)
         action_bar.append(self._split_btn)
 
         root.append(action_bar)
@@ -392,8 +391,10 @@ class PdfSplitWindow(Gtk.Window):
         box.set_margin_bottom(8)
 
         lbl = Gtk.Label()
-        lbl.set_markup("Inserisci gli intervalli separati da virgola.\n"
-                        "<span size='small' foreground='#6a737d'>Esempi: <tt>1-3, 5, 7-9</tt> oppure <tt>1-5, 6-10, 11-15</tt></span>")
+        lbl.set_markup(
+            "Inserisci gli intervalli separati da virgola.\n"
+            "<span size='small' foreground='#6a737d'>Esempi: <tt>1-3, 5, 7-9</tt> oppure <tt>1-5, 6-10, 11-15</tt></span>"
+        )
         lbl.set_halign(Gtk.Align.START)
         lbl.set_wrap(True)
         lbl.set_xalign(0)
@@ -401,11 +402,11 @@ class PdfSplitWindow(Gtk.Window):
 
         self._ranges_entry = Gtk.Entry()
         self._ranges_entry.set_placeholder_text("es. 1-3, 4-6, 7-9")
-        self._ranges_entry.connect('changed', lambda _: self._update_preview())
+        self._ranges_entry.connect("changed", lambda _: self._update_preview())
         box.append(self._ranges_entry)
 
         self._ranges_error = Gtk.Label()
-        self._ranges_error.add_css_class('sp-hint')
+        self._ranges_error.add_css_class("sp-hint")
         self._ranges_error.set_halign(Gtk.Align.START)
         self._ranges_error.set_visible(False)
         box.append(self._ranges_error)
@@ -427,16 +428,16 @@ class PdfSplitWindow(Gtk.Window):
         adj = Gtk.Adjustment(value=1, lower=1, upper=9999, step_increment=1)
         self._n_spin = Gtk.SpinButton(adjustment=adj, climb_rate=1, digits=0)
         self._n_spin.set_value(1)
-        self._n_spin.connect('value-changed', lambda _: self._update_preview())
+        self._n_spin.connect("value-changed", lambda _: self._update_preview())
         spin_box.append(self._n_spin)
 
         spin_lbl = Gtk.Label(label="pagine per file")
-        spin_lbl.add_css_class('sp-hint')
+        spin_lbl.add_css_class("sp-hint")
         spin_box.append(spin_lbl)
         box.append(spin_box)
 
         self._n_hint = Gtk.Label()
-        self._n_hint.add_css_class('sp-hint')
+        self._n_hint.add_css_class("sp-hint")
         self._n_hint.set_halign(Gtk.Align.START)
         box.append(self._n_hint)
 
@@ -454,7 +455,7 @@ class PdfSplitWindow(Gtk.Window):
         box.append(lbl)
 
         self._single_hint = Gtk.Label()
-        self._single_hint.add_css_class('sp-hint')
+        self._single_hint.add_css_class("sp-hint")
         self._single_hint.set_halign(Gtk.Align.START)
         box.append(self._single_hint)
 
@@ -469,7 +470,7 @@ class PdfSplitWindow(Gtk.Window):
 
         lbl = Gtk.Label(
             label="Dividi il PDF in base ai segnalibri (capitoli).\n"
-                  "Ogni segnalibro di primo livello diventa un file separato."
+            "Ogni segnalibro di primo livello diventa un file separato."
         )
         lbl.set_halign(Gtk.Align.START)
         lbl.set_wrap(True)
@@ -477,7 +478,7 @@ class PdfSplitWindow(Gtk.Window):
         box.append(lbl)
 
         self._bm_hint = Gtk.Label()
-        self._bm_hint.add_css_class('sp-hint')
+        self._bm_hint.add_css_class("sp-hint")
         self._bm_hint.set_halign(Gtk.Align.START)
         box.append(self._bm_hint)
 
@@ -495,7 +496,7 @@ class PdfSplitWindow(Gtk.Window):
         page = self._notebook.get_current_page()
         os.path.splitext(os.path.basename(self._path))[0]
 
-        if page == 0:   # Intervalli
+        if page == 0:  # Intervalli
             text = self._ranges_entry.get_text().strip()
             if not text:
                 return []
@@ -519,9 +520,7 @@ class PdfSplitWindow(Gtk.Window):
 
         elif page == 2:  # Una per file
             chunks = single_page_chunks(self._total_pages)
-            self._single_hint.set_text(
-                f"Verranno creati {self._total_pages} file (uno per pagina)"
-            )
+            self._single_hint.set_text(f"Verranno creati {self._total_pages} file (uno per pagina)")
             return [(s, e, None) for s, e in chunks]
 
         elif page == 3:  # Segnalibri
@@ -529,9 +528,7 @@ class PdfSplitWindow(Gtk.Window):
             if not chunks:
                 self._bm_hint.set_text("Nessun segnalibro trovato.")
                 return []
-            self._bm_hint.set_text(
-                f"Trovati {len(chunks)} segnalibri → {len(chunks)} file"
-            )
+            self._bm_hint.set_text(f"Trovati {len(chunks)} segnalibri → {len(chunks)} file")
             return chunks
 
         return []
@@ -549,13 +546,11 @@ class PdfSplitWindow(Gtk.Window):
             start, end = chunk[0], chunk[1]
             title = chunk[2] if len(chunk) > 2 else None
             name = chunk_filename(base, start, end, title)
-            pages_str = f"pag. {start+1}" if start == end else f"pag. {start+1}–{end+1}"
+            pages_str = f"pag. {start + 1}" if start == end else f"pag. {start + 1}–{end + 1}"
             self._preview_store.append([name, pages_str])
 
         if len(chunks) > MAX_PREVIEW:
-            self._preview_store.append([
-                f"… e altri {len(chunks) - MAX_PREVIEW} file", ""
-            ])
+            self._preview_store.append([f"… e altri {len(chunks) - MAX_PREVIEW} file", ""])
 
     # ------------------------------------------------------------------ #
     # Cartella output
@@ -594,15 +589,12 @@ class PdfSplitWindow(Gtk.Window):
         self._progress.set_fraction(0)
         self._status.set_visible(False)
 
-        threading.Thread(
-            target=self._do_split,
-            args=(chunks, out_folder),
-            daemon=True
-        ).start()
+        threading.Thread(target=self._do_split, args=(chunks, out_folder), daemon=True).start()
 
     def _do_split(self, chunks, out_folder):
         try:
             import pypdf
+
             reader = pypdf.PdfReader(self._path, strict=False)
             base = os.path.splitext(os.path.basename(self._path))[0]
             total = len(chunks)
@@ -620,9 +612,7 @@ class PdfSplitWindow(Gtk.Window):
                 out_path = os.path.join(out_folder, filename)
 
                 # Validazione path traversal
-                if not os.path.realpath(out_path).startswith(
-                    os.path.realpath(out_folder)
-                ):
+                if not Path(out_path).resolve().is_relative_to(Path(out_folder).resolve()):
                     raise ValueError(f"Path non valido: {filename}")
 
                 # Evita sovrascrittura
@@ -630,7 +620,7 @@ class PdfSplitWindow(Gtk.Window):
                     name_part, ext = os.path.splitext(filename)
                     out_path = os.path.join(out_folder, f"{name_part}_nuovo{ext}")
 
-                with open(out_path, 'wb') as f:
+                with open(out_path, "wb") as f:
                     writer.write(f)
 
                 created.append(out_path)
@@ -650,11 +640,9 @@ class PdfSplitWindow(Gtk.Window):
             self._show_status(f"Errore: {error}", error=True)
         else:
             import subprocess
-            self._show_status(
-                f"✓ Creati {len(created)} file in: {out_folder}",
-                error=False
-            )
-            subprocess.Popen(['xdg-open', out_folder])
+
+            self._show_status(f"✓ Creati {len(created)} file in: {out_folder}", error=False)
+            subprocess.Popen(["xdg-open", out_folder])
 
         return False
 
@@ -663,7 +651,7 @@ class PdfSplitWindow(Gtk.Window):
     # ------------------------------------------------------------------ #
 
     def _show_status(self, msg: str, error: bool = False):
-        color = '#d73a49' if error else '#22863a'
+        color = "#d73a49" if error else "#22863a"
         safe = GLib.markup_escape_text(msg)
         self._status.set_markup(f"<span foreground='{color}'>{safe}</span>")
         self._status.set_visible(True)
@@ -673,23 +661,23 @@ class PdfSplitWindow(Gtk.Window):
 # Estensione
 # --------------------------------------------------------------------------- #
 
-class PdfSplitExtension(GObject.GObject, Nautilus.MenuProvider):
 
+class PdfSplitExtension(GObject.GObject, Nautilus.MenuProvider):
     def get_file_items(self, files):
         if len(files) != 1:
             return []
         f = files[0]
-        if not f.get_name().lower().endswith('.pdf'):
+        if not f.get_name().lower().endswith(".pdf"):
             return []
         if f.get_location().get_path() is None:
             return []
 
         item = Nautilus.MenuItem(
-            name='PdfSplit::split',
-            label='Dividi PDF',
+            name="PdfSplit::split",
+            label="Dividi PDF",
             tip=f"Dividi {f.get_name()} in più file",
         )
-        item.connect('activate', self._on_activate, f.get_location().get_path())
+        item.connect("activate", self._on_activate, f.get_location().get_path())
         return [item]
 
     def get_background_items(self, folder):

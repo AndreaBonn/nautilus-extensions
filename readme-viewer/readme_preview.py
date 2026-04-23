@@ -16,9 +16,9 @@ from urllib.parse import unquote
 
 import gi
 
-gi.require_version('Nautilus', '4.0')
-gi.require_version('Gtk', '4.0')
-gi.require_version('GLib', '2.0')
+gi.require_version("Nautilus", "4.0")
+gi.require_version("Gtk", "4.0")
+gi.require_version("GLib", "2.0")
 
 from gi.repository import GLib, GObject, Gtk, Nautilus, Pango
 
@@ -26,14 +26,16 @@ from gi.repository import GLib, GObject, Gtk, Nautilus, Pango
 WEBKIT_AVAILABLE = False
 WEBKIT_VERSION = None
 try:
-    gi.require_version('WebKit', '6.0')
+    gi.require_version("WebKit", "6.0")
     from gi.repository import WebKit
+
     WEBKIT_AVAILABLE = True
     WEBKIT_VERSION = 6
 except (ValueError, ImportError):
     try:
-        gi.require_version('WebKit2', '4.1')
+        gi.require_version("WebKit2", "4.1")
         from gi.repository import WebKit2 as WebKit
+
         WEBKIT_AVAILABLE = True
         WEBKIT_VERSION = 2
     except (ValueError, ImportError):
@@ -43,6 +45,7 @@ except (ValueError, ImportError):
 MARKDOWN_AVAILABLE = False
 try:
     import markdown
+
     MARKDOWN_AVAILABLE = True
 except ImportError:
     pass
@@ -53,10 +56,14 @@ except ImportError:
 # --------------------------------------------------------------------------- #
 
 README_NAMES = [
-    'README.md', 'readme.md',
-    'README.txt', 'readme.txt',
-    'README.rst', 'readme.rst',
-    'README',     'readme',
+    "README.md",
+    "readme.md",
+    "README.txt",
+    "readme.txt",
+    "README.rst",
+    "readme.rst",
+    "README",
+    "readme",
 ]
 
 WEBKIT_CSS = """
@@ -93,6 +100,7 @@ tr:nth-child(even) { background: #f6f8fa; }
 # Utilità
 # --------------------------------------------------------------------------- #
 
+
 def find_readme(folder_path: str) -> str | None:
     for name in README_NAMES:
         path = os.path.join(folder_path, name)
@@ -102,17 +110,17 @@ def find_readme(folder_path: str) -> str | None:
 
 
 def uri_to_path(uri: str) -> str:
-    if uri.startswith('file://'):
+    if uri.startswith("file://"):
         return unquote(uri[7:])
     return uri
 
 
 def render_html(content: str, filename: str) -> str:
     import html as html_mod
-    if MARKDOWN_AVAILABLE and filename.lower().endswith('.md'):
+
+    if MARKDOWN_AVAILABLE and filename.lower().endswith(".md"):
         body = markdown.markdown(
-            content,
-            extensions=['fenced_code', 'tables', 'nl2br', 'sane_lists']
+            content, extensions=["fenced_code", "tables", "nl2br", "sane_lists"]
         )
     else:
         escaped = html_mod.escape(content)
@@ -124,8 +132,8 @@ def render_html(content: str, filename: str) -> str:
 # Finestra README
 # --------------------------------------------------------------------------- #
 
-class ReadmeWindow(Gtk.Window):
 
+class ReadmeWindow(Gtk.Window):
     def __init__(self, readme_path: str):
         filename = os.path.basename(readme_path)
         super().__init__(title=f"{filename} — README Preview")
@@ -147,11 +155,11 @@ class ReadmeWindow(Gtk.Window):
         lbl.set_halign(Gtk.Align.START)
         lbl.set_hexpand(True)
         lbl.set_ellipsize(Pango.EllipsizeMode.END)
-        lbl.add_css_class('dim-label')
+        lbl.add_css_class("dim-label")
         header.append(lbl)
 
         open_btn = Gtk.Button(label="Apri nell'editor")
-        open_btn.connect('clicked', lambda _: subprocess.Popen(['xdg-open', readme_path]))
+        open_btn.connect("clicked", lambda _: subprocess.Popen(["xdg-open", readme_path]))
         header.append(open_btn)
 
         box.append(header)
@@ -170,7 +178,7 @@ class ReadmeWindow(Gtk.Window):
             else:
                 self._webview = WebKit.WebView()
             self._webview.set_vexpand(True)
-            self._webview.connect('decide-policy', self._block_navigation)
+            self._webview.connect("decide-policy", self._block_navigation)
             scrolled.set_child(self._webview)
         else:
             self._textview = Gtk.TextView()
@@ -189,7 +197,7 @@ class ReadmeWindow(Gtk.Window):
 
     def _load(self):
         try:
-            with open(self._readme_path, encoding='utf-8', errors='replace') as f:
+            with open(self._readme_path, encoding="utf-8", errors="replace") as f:
                 content = f.read()
         except OSError as e:
             content = f"Errore nella lettura del file:\n{e}"
@@ -200,7 +208,7 @@ class ReadmeWindow(Gtk.Window):
 
     def _show(self, content, html):
         if WEBKIT_AVAILABLE:
-            self._webview.load_html(html, f"file://{self._readme_path}")
+            self._webview.load_html(html, "about:blank")
         else:
             self._textview.get_buffer().set_text(content)
         return False
@@ -218,7 +226,7 @@ class ReadmeWindow(Gtk.Window):
         if decision_type == NAV:
             try:
                 uri = decision.get_navigation_action().get_request().get_uri()
-                if uri and not uri.startswith('file://') and uri != 'about:blank':
+                if uri and not uri.startswith("file://") and uri != "about:blank":
                     decision.ignore()
                     return True
             except Exception:
@@ -230,8 +238,8 @@ class ReadmeWindow(Gtk.Window):
 # Estensione
 # --------------------------------------------------------------------------- #
 
-class ReadmeExtension(GObject.GObject, Nautilus.MenuProvider):
 
+class ReadmeExtension(GObject.GObject, Nautilus.MenuProvider):
     def get_background_items(self, folder):
         """Chiamato quando si fa tasto destro sullo sfondo della cartella."""
         if folder is None:
@@ -244,11 +252,11 @@ class ReadmeExtension(GObject.GObject, Nautilus.MenuProvider):
 
         filename = os.path.basename(readme_path)
         item = Nautilus.MenuItem(
-            name='ReadmePreview::show',
-            label=f'Mostra {filename}',
-            tip=f'Apri una anteprima di {readme_path}',
+            name="ReadmePreview::show",
+            label=f"Mostra {filename}",
+            tip=f"Apri una anteprima di {readme_path}",
         )
-        item.connect('activate', self._on_activate, readme_path)
+        item.connect("activate", self._on_activate, readme_path)
         return [item]
 
     def get_file_items(self, files):

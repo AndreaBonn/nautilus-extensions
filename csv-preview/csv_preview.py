@@ -18,9 +18,9 @@ import threading
 
 import gi
 
-gi.require_version('Nautilus', '4.0')
-gi.require_version('Gtk', '4.0')
-gi.require_version('GLib', '2.0')
+gi.require_version("Nautilus", "4.0")
+gi.require_version("Gtk", "4.0")
+gi.require_version("GLib", "2.0")
 
 from gi.repository import GLib, GObject, Gtk, Nautilus, Pango
 
@@ -28,6 +28,7 @@ from gi.repository import GLib, GObject, Gtk, Nautilus, Pango
 PANDAS_AVAILABLE = False
 try:
     import pandas as pd
+
     PANDAS_AVAILABLE = True
 except ImportError:
     pass
@@ -37,11 +38,11 @@ except ImportError:
 # Costanti
 # --------------------------------------------------------------------------- #
 
-PREVIEW_ROWS = 100        # righe da mostrare nella preview
-MAX_COL_WIDTH = 300       # larghezza massima colonna in px
-MIN_COL_WIDTH = 60        # larghezza minima colonna in px
-WINDOW_W      = 1100
-WINDOW_H      = 650
+PREVIEW_ROWS = 100  # righe da mostrare nella preview
+MAX_COL_WIDTH = 300  # larghezza massima colonna in px
+MIN_COL_WIDTH = 60  # larghezza minima colonna in px
+WINDOW_W = 1100
+WINDOW_H = 650
 
 
 # --------------------------------------------------------------------------- #
@@ -84,15 +85,16 @@ CSS = b"""
 # Lettura CSV
 # --------------------------------------------------------------------------- #
 
+
 def detect_delimiter(path: str) -> str:
     """Rileva automaticamente il delimitatore del CSV."""
     try:
-        with open(path, encoding='utf-8', errors='replace') as f:
+        with open(path, encoding="utf-8", errors="replace") as f:
             sample = f.read(4096)
-        dialect = csv.Sniffer().sniff(sample, delimiters=',;\t|')
+        dialect = csv.Sniffer().sniff(sample, delimiters=",;\t|")
         return dialect.delimiter
     except csv.Error:
-        return ','
+        return ","
 
 
 def read_csv_plain(path: str, max_rows: int) -> tuple[list, list, dict]:
@@ -106,7 +108,7 @@ def read_csv_plain(path: str, max_rows: int) -> tuple[list, list, dict]:
     total_rows = 0
 
     try:
-        with open(path, encoding='utf-8', errors='replace') as f:
+        with open(path, encoding="utf-8", errors="replace") as f:
             reader = csv.reader(f, delimiter=delimiter)
             headers = next(reader, [])
             for row in reader:
@@ -114,18 +116,18 @@ def read_csv_plain(path: str, max_rows: int) -> tuple[list, list, dict]:
                 if total_rows <= max_rows:
                     # Allinea la riga alle colonne dell'header
                     while len(row) < len(headers):
-                        row.append('')
-                    rows.append(row[:len(headers)])
+                        row.append("")
+                    rows.append(row[: len(headers)])
     except OSError as e:
-        return [], [], {'error': str(e)}
+        return [], [], {"error": str(e)}
 
     file_size = os.path.getsize(path)
     info = {
-        'delimiter': repr(delimiter),
-        'total_rows': total_rows,
-        'total_cols': len(headers),
-        'file_size': _fmt_size(file_size),
-        'truncated': total_rows > max_rows,
+        "delimiter": repr(delimiter),
+        "total_rows": total_rows,
+        "total_cols": len(headers),
+        "file_size": _fmt_size(file_size),
+        "truncated": total_rows > max_rows,
     }
     return headers, rows, info
 
@@ -149,22 +151,22 @@ def read_csv_pandas(path: str, max_rows: int) -> tuple[list, list, dict, object]
 
         file_size = os.path.getsize(path)
         info = {
-            'delimiter': repr(delimiter),
-            'total_rows': total_rows,
-            'total_cols': len(headers),
-            'file_size': _fmt_size(file_size),
-            'truncated': total_rows > max_rows,
-            'null_counts': df_full.isnull().sum().to_dict(),
-            'dtypes': dtypes,
-            'numeric_cols': list(df_full.select_dtypes(include='number').columns),
+            "delimiter": repr(delimiter),
+            "total_rows": total_rows,
+            "total_cols": len(headers),
+            "file_size": _fmt_size(file_size),
+            "truncated": total_rows > max_rows,
+            "null_counts": df_full.isnull().sum().to_dict(),
+            "dtypes": dtypes,
+            "numeric_cols": list(df_full.select_dtypes(include="number").columns),
         }
         return headers, rows, info, df_full
     except Exception as e:
-        return [], [], {'error': str(e)}, None
+        return [], [], {"error": str(e)}, None
 
 
 def _fmt_size(size: int) -> str:
-    for unit in ['B', 'KB', 'MB', 'GB']:
+    for unit in ["B", "KB", "MB", "GB"]:
         if size < 1024:
             return f"{size:.1f} {unit}"
         size /= 1024
@@ -175,8 +177,8 @@ def _fmt_size(size: int) -> str:
 # Finestra preview
 # --------------------------------------------------------------------------- #
 
-class CsvPreviewWindow(Gtk.Window):
 
+class CsvPreviewWindow(Gtk.Window):
     def __init__(self, csv_path: str):
         filename = os.path.basename(csv_path)
         super().__init__(title=f"{filename} — CSV Preview")
@@ -188,9 +190,7 @@ class CsvPreviewWindow(Gtk.Window):
         provider = Gtk.CssProvider()
         provider.load_from_data(CSS)
         Gtk.StyleContext.add_provider_for_display(
-            self.get_display(),
-            provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+            self.get_display(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
 
         self._build_ui()
@@ -213,7 +213,7 @@ class CsvPreviewWindow(Gtk.Window):
         spinner.set_size_request(48, 48)
         spinner.start()
         lbl = Gtk.Label(label="Caricamento CSV...")
-        lbl.add_css_class('dim-label')
+        lbl.add_css_class("dim-label")
         self._spinner_box.append(spinner)
         self._spinner_box.append(lbl)
         self._root.append(self._spinner_box)
@@ -226,18 +226,20 @@ class CsvPreviewWindow(Gtk.Window):
 
         # --- Barra info superiore ---
         info_bar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=16)
-        info_bar.add_css_class('csv-info-bar')
+        info_bar.add_css_class("csv-info-bar")
         info_bar.set_margin_start(4)
         info_bar.set_margin_end(8)
 
         self._add_stat(info_bar, "Righe", f"{info.get('total_rows', '?'):,}")
-        self._add_stat(info_bar, "Colonne", str(info.get('total_cols', '?')))
-        self._add_stat(info_bar, "Delimitatore", info.get('delimiter', '?'))
-        self._add_stat(info_bar, "Dimensione", info.get('file_size', '?'))
+        self._add_stat(info_bar, "Colonne", str(info.get("total_cols", "?")))
+        self._add_stat(info_bar, "Delimitatore", info.get("delimiter", "?"))
+        self._add_stat(info_bar, "Dimensione", info.get("file_size", "?"))
 
-        if info.get('truncated'):
-            trunc_lbl = Gtk.Label(label=f"⚠ Mostrate prime {PREVIEW_ROWS} righe su {info['total_rows']:,}")
-            trunc_lbl.add_css_class('dim-label')
+        if info.get("truncated"):
+            trunc_lbl = Gtk.Label(
+                label=f"⚠ Mostrate prime {PREVIEW_ROWS} righe su {info['total_rows']:,}"
+            )
+            trunc_lbl.add_css_class("dim-label")
             trunc_lbl.set_hexpand(True)
             trunc_lbl.set_halign(Gtk.Align.END)
             info_bar.append(trunc_lbl)
@@ -245,7 +247,7 @@ class CsvPreviewWindow(Gtk.Window):
         self._root.append(info_bar)
         self._root.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
 
-        if 'error' in info:
+        if "error" in info:
             err = Gtk.Label(label=f"Errore: {info['error']}")
             err.set_margin_top(20)
             self._root.append(err)
@@ -277,14 +279,14 @@ class CsvPreviewWindow(Gtk.Window):
         bottom.set_margin_bottom(6)
 
         path_lbl = Gtk.Label(label=self._csv_path)
-        path_lbl.add_css_class('dim-label')
+        path_lbl.add_css_class("dim-label")
         path_lbl.set_ellipsize(Pango.EllipsizeMode.START)
         path_lbl.set_hexpand(True)
         path_lbl.set_halign(Gtk.Align.START)
         bottom.append(path_lbl)
 
         open_btn = Gtk.Button(label="Apri con editor")
-        open_btn.connect('clicked', self._open_editor)
+        open_btn.connect("clicked", self._open_editor)
         bottom.append(open_btn)
 
         self._root.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
@@ -292,14 +294,14 @@ class CsvPreviewWindow(Gtk.Window):
 
     def _add_stat(self, box, title, value):
         stat_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
-        stat_box.add_css_class('csv-stat-box')
+        stat_box.add_css_class("csv-stat-box")
 
         title_lbl = Gtk.Label(label=title)
-        title_lbl.add_css_class('csv-stat-title')
+        title_lbl.add_css_class("csv-stat-title")
         title_lbl.set_halign(Gtk.Align.START)
 
         value_lbl = Gtk.Label(label=str(value))
-        value_lbl.add_css_class('csv-stat-value')
+        value_lbl.add_css_class("csv-stat-value")
         value_lbl.set_halign(Gtk.Align.START)
 
         stat_box.append(title_lbl)
@@ -324,11 +326,11 @@ class CsvPreviewWindow(Gtk.Window):
 
         treeview = Gtk.TreeView(model=store)
         treeview.set_grid_lines(Gtk.TreeViewGridLines.BOTH)
-        treeview.add_css_class('mono')
+        treeview.add_css_class("mono")
 
         # Colonna indice riga
         idx_renderer = Gtk.CellRendererText()
-        idx_renderer.set_property('foreground', '#6a737d')
+        idx_renderer.set_property("foreground", "#6a737d")
         idx_col = Gtk.TreeViewColumn("#")
         idx_col.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
         idx_col.set_fixed_width(50)
@@ -336,14 +338,14 @@ class CsvPreviewWindow(Gtk.Window):
         # Aggiungi numero riga tramite una colonna virtuale
         for i, header in enumerate(headers):
             renderer = Gtk.CellRendererText()
-            renderer.set_property('ellipsize', Pango.EllipsizeMode.END)
+            renderer.set_property("ellipsize", Pango.EllipsizeMode.END)
 
             # Evidenzia colonne numeriche in blu
-            info.get('dtypes', {})
-            numeric_cols = info.get('numeric_cols', [])
+            info.get("dtypes", {})
+            numeric_cols = info.get("numeric_cols", [])
             if header in numeric_cols:
-                renderer.set_property('foreground', '#0366d6')
-                renderer.set_property('xalign', 1.0)  # allineamento destra per numeri
+                renderer.set_property("foreground", "#0366d6")
+                renderer.set_property("xalign", 1.0)  # allineamento destra per numeri
 
             col = Gtk.TreeViewColumn(header, renderer, text=i)
             col.set_resizable(True)
@@ -352,10 +354,11 @@ class CsvPreviewWindow(Gtk.Window):
             col.set_sort_column_id(i)
 
             # Header in grassetto
+            safe_header = GLib.markup_escape_text(header)
             label = Gtk.Label(label=header)
-            label.set_markup(f"<b>{header}</b>")
+            label.set_markup(f"<b>{safe_header}</b>")
             if header in numeric_cols:
-                label.set_markup(f"<b><span foreground='#0366d6'>{header}</span></b>")
+                label.set_markup(f"<b><span foreground='#0366d6'>{safe_header}</span></b>")
             col.set_widget(label)
             label.show()
 
@@ -378,11 +381,11 @@ class CsvPreviewWindow(Gtk.Window):
         outer.set_margin_top(16)
         outer.set_margin_bottom(16)
 
-        numeric_cols = info.get('numeric_cols', [])
+        numeric_cols = info.get("numeric_cols", [])
 
         if not numeric_cols:
             lbl = Gtk.Label(label="Nessuna colonna numerica trovata.")
-            lbl.add_css_class('dim-label')
+            lbl.add_css_class("dim-label")
             outer.append(lbl)
             scrolled.set_child(outer)
             return scrolled
@@ -395,7 +398,7 @@ class CsvPreviewWindow(Gtk.Window):
             return scrolled
 
         # Tabella statistiche
-        stats_headers = ['Statistica'] + numeric_cols
+        stats_headers = ["Statistica"] + numeric_cols
         stats_rows_data = []
         for stat in desc.index:
             row = [stat] + [f"{desc.loc[stat, col]:.4g}" for col in numeric_cols]
@@ -408,12 +411,12 @@ class CsvPreviewWindow(Gtk.Window):
 
         treeview = Gtk.TreeView(model=store)
         treeview.set_grid_lines(Gtk.TreeViewGridLines.HORIZONTAL)
-        treeview.add_css_class('mono')
+        treeview.add_css_class("mono")
 
         for i, h in enumerate(stats_headers):
             renderer = Gtk.CellRendererText()
             if i > 0:
-                renderer.set_property('xalign', 1.0)
+                renderer.set_property("xalign", 1.0)
             col = Gtk.TreeViewColumn(h, renderer, text=i)
             col.set_resizable(True)
             col.set_min_width(MIN_COL_WIDTH)
@@ -426,7 +429,7 @@ class CsvPreviewWindow(Gtk.Window):
         outer.append(treeview)
 
         # Valori nulli
-        null_counts = info.get('null_counts', {})
+        null_counts = info.get("null_counts", {})
         nulls_with_data = {k: v for k, v in null_counts.items() if v > 0}
         if nulls_with_data:
             null_title = Gtk.Label()
@@ -436,13 +439,13 @@ class CsvPreviewWindow(Gtk.Window):
             outer.append(null_title)
 
             for col, count in nulls_with_data.items():
-                pct = count / info['total_rows'] * 100
+                pct = count / info["total_rows"] * 100
                 row_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
                 col_lbl = Gtk.Label(label=col)
                 col_lbl.set_width_chars(20)
                 col_lbl.set_halign(Gtk.Align.START)
                 val_lbl = Gtk.Label(label=f"{count:,} ({pct:.1f}%)")
-                val_lbl.add_css_class('dim-label')
+                val_lbl.add_css_class("dim-label")
                 row_box.append(col_lbl)
                 row_box.append(val_lbl)
                 outer.append(row_box)
@@ -463,18 +466,18 @@ class CsvPreviewWindow(Gtk.Window):
         scrolled = Gtk.ScrolledWindow()
         scrolled.set_vexpand(True)
 
-        dtypes = info.get('dtypes', {})
-        null_counts = info.get('null_counts', {})
-        info.get('numeric_cols', [])
-        total_rows = info.get('total_rows', 0)
+        dtypes = info.get("dtypes", {})
+        null_counts = info.get("null_counts", {})
+        info.get("numeric_cols", [])
+        total_rows = info.get("total_rows", 0)
 
         col_types_list = [str, str, str, str]
         store = Gtk.ListStore(*col_types_list)
 
         for i, h in enumerate(headers):
-            dtype = dtypes.get(h, 'unknown')
+            dtype = dtypes.get(h, "unknown")
             nulls = null_counts.get(h, 0)
-            null_str = f"{nulls:,} ({nulls/total_rows*100:.1f}%)" if total_rows > 0 else "0"
+            null_str = f"{nulls:,} ({nulls / total_rows * 100:.1f}%)" if total_rows > 0 else "0"
             store.append([str(i + 1), h, dtype, null_str])
 
         treeview = Gtk.TreeView(model=store)
@@ -515,15 +518,16 @@ class CsvPreviewWindow(Gtk.Window):
 
     def _open_editor(self, _btn):
         import subprocess
-        subprocess.Popen(['xdg-open', self._csv_path])
+
+        subprocess.Popen(["xdg-open", self._csv_path])
 
 
 # --------------------------------------------------------------------------- #
 # Estensione
 # --------------------------------------------------------------------------- #
 
-class CsvPreviewExtension(GObject.GObject, Nautilus.MenuProvider):
 
+class CsvPreviewExtension(GObject.GObject, Nautilus.MenuProvider):
     def get_file_items(self, files):
         """Chiamato quando si seleziona uno o più file."""
         # Mostra la voce solo se è selezionato un singolo CSV
@@ -536,11 +540,11 @@ class CsvPreviewExtension(GObject.GObject, Nautilus.MenuProvider):
 
         filename = f.get_name()
         item = Nautilus.MenuItem(
-            name='CsvPreview::show',
-            label='Anteprima CSV',
-            tip=f'Mostra anteprima di {filename}',
+            name="CsvPreview::show",
+            label="Anteprima CSV",
+            tip=f"Mostra anteprima di {filename}",
         )
-        item.connect('activate', self._on_activate, f.get_location().get_path())
+        item.connect("activate", self._on_activate, f.get_location().get_path())
         return [item]
 
     def get_background_items(self, folder):
@@ -548,7 +552,7 @@ class CsvPreviewExtension(GObject.GObject, Nautilus.MenuProvider):
 
     def _is_csv(self, nautilus_file) -> bool:
         name = nautilus_file.get_name().lower()
-        return name.endswith('.csv') or name.endswith('.tsv')
+        return name.endswith(".csv") or name.endswith(".tsv")
 
     def _on_activate(self, _item, path):
         win = CsvPreviewWindow(path)

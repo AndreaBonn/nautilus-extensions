@@ -11,7 +11,7 @@
 | Latest on `main` | Yes |
 | Older commits | No |
 
-This project does not use formal versioning yet. Security fixes are applied to the latest code on the `main` branch.
+Security fixes are applied to the latest release on the `main` branch.
 
 ## Reporting a Vulnerability
 

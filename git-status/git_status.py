@@ -25,8 +25,7 @@ from gi.repository import GLib, GObject, Gtk, Nautilus, Pango
 
 def run_git(args, cwd):
     try:
-        r = subprocess.run(["git"] + args, cwd=cwd,
-                           capture_output=True, text=True, timeout=5)
+        r = subprocess.run(["git"] + args, cwd=cwd, capture_output=True, text=True, timeout=5)
         return r.stdout.strip() if r.returncode == 0 else ""
     except Exception:
         return ""
@@ -44,10 +43,9 @@ class GitStatusWindow(Gtk.Window):
         super().__init__()
         self._path = path
         self._timer_id = None
+        self._loading = False
 
-        repo_name = os.path.basename(
-            run_git(["rev-parse", "--show-toplevel"], cwd=path) or path
-        )
+        repo_name = os.path.basename(run_git(["rev-parse", "--show-toplevel"], cwd=path) or path)
         self.set_default_size(360, 580)
         self.set_resizable(True)
 
@@ -147,15 +145,18 @@ class GitStatusWindow(Gtk.Window):
         return True
 
     def _refresh(self):
+        if self._loading:
+            return
+        self._loading = True
         threading.Thread(target=self._load, daemon=True).start()
 
     def _load(self):
         path = self._path
 
-        branch  = run_git(["rev-parse", "--abbrev-ref", "HEAD"], cwd=path)
-        ahead   = run_git(["rev-list", "--count", "@{u}..HEAD"], cwd=path)
-        behind  = run_git(["rev-list", "--count", "HEAD..@{u}"], cwd=path)
-        status  = run_git(["status", "--porcelain"], cwd=path)
+        branch = run_git(["rev-parse", "--abbrev-ref", "HEAD"], cwd=path)
+        ahead = run_git(["rev-list", "--count", "@{u}..HEAD"], cwd=path)
+        behind = run_git(["rev-list", "--count", "HEAD..@{u}"], cwd=path)
+        status = run_git(["status", "--porcelain"], cwd=path)
         log_raw = run_git(["log", "--pretty=format:%h|%an|%ar|%s", "-10"], cwd=path)
         stash_n = run_git(["stash", "list"], cwd=path)
 
@@ -183,8 +184,9 @@ class GitStatusWindow(Gtk.Window):
 
         stash_count = len([line for line in stash_n.split("\n") if line.strip()]) if stash_n else 0
 
-        GLib.idle_add(self._render, branch, ahead, behind,
-                      staged, unstaged, untracked, commits, stash_count)
+        GLib.idle_add(
+            self._render, branch, ahead, behind, staged, unstaged, untracked, commits, stash_count
+        )
 
     def _clear(self):
         while True:
@@ -193,15 +195,18 @@ class GitStatusWindow(Gtk.Window):
                 break
             self._content.remove(child)
 
-    def _render(self, branch, ahead, behind,
-                staged, unstaged, untracked, commits, stash_count):
+    def _render(self, branch, ahead, behind, staged, unstaged, untracked, commits, stash_count):
+        self._loading = False
         self._clear()
 
         # Aggiorna titolo branch
         sync = ""
-        if ahead  and ahead  != "0": sync += f"  ↑{ahead}"
-        if behind and behind != "0": sync += f"  ↓{behind}"
-        self._branch_label.set_markup(f"<b>⎇  {branch}</b>{sync}")
+        if ahead and ahead != "0":
+            sync += f"  ↑{ahead}"
+        if behind and behind != "0":
+            sync += f"  ↓{behind}"
+        safe_branch = GLib.markup_escape_text(branch)
+        self._branch_label.set_markup(f"<b>⎇  {safe_branch}</b>{sync}")
 
         if sync:
             sync_lbl = Gtk.Label(label=sync.strip())
@@ -228,7 +233,7 @@ class GitStatusWindow(Gtk.Window):
             for name in untracked[:15]:
                 self._file_row("?", name, "status-untracked")
             if len(untracked) > 15:
-                more = Gtk.Label(label=f"  … e altri {len(untracked)-15} file")
+                more = Gtk.Label(label=f"  … e altri {len(untracked) - 15} file")
                 more.add_css_class("commit-meta")
                 more.set_xalign(0)
                 more.set_margin_start(14)
@@ -262,9 +267,7 @@ class GitStatusWindow(Gtk.Window):
             date_l.add_css_class("commit-meta")
             top.append(date_l)
 
-            msg_l = Gtk.Label(
-                label=msg[:55] + ("…" if len(msg) > 55 else "")
-            )
+            msg_l = Gtk.Label(label=msg[:55] + ("…" if len(msg) > 55 else ""))
             msg_l.add_css_class("commit-msg")
             msg_l.set_xalign(0)
             msg_l.set_ellipsize(Pango.EllipsizeMode.END)
@@ -284,7 +287,7 @@ class GitStatusWindow(Gtk.Window):
             sep2.set_margin_top(4)
             self._content.append(sep2)
             sl = Gtk.Label(
-                label=f"📦  {stash_count} stash salvat{'o' if stash_count==1 else 'i'}"
+                label=f"📦  {stash_count} stash salvat{'o' if stash_count == 1 else 'i'}"
             )
             sl.add_css_class("stash-label")
             sl.set_xalign(0)
@@ -347,7 +350,7 @@ class GitStatusExtension(GObject.GObject, Nautilus.MenuProvider):
         item = Nautilus.MenuItem(
             name="GitStatus::Open",
             label="⎇  Stato Git…",
-            tip="Mostra branch, file modificati e ultimi commit"
+            tip="Mostra branch, file modificati e ultimi commit",
         )
         item.connect("activate", lambda *_: self._open(path))
         return [item]
