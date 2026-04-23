@@ -6,6 +6,14 @@
 
 Raccolta di estensioni per Nautilus (il file manager di Ubuntu/GNOME) che aggiungono funzionalità avanzate di anteprima e gestione file direttamente dal menu contestuale.
 
+<!-- Screenshot — decommenta quando le immagini sono disponibili
+<p align="center">
+  <img src="assets/screenshots/csv-preview.png" width="280" alt="CSV Preview">
+  <img src="assets/screenshots/git-graph.png" width="280" alt="Git Graph">
+  <img src="assets/screenshots/pdf-splitter.png" width="280" alt="PDF Splitter">
+</p>
+-->
+
 ## 📋 Indice
 
 - [Cosa sono le estensioni Nautilus](#cosa-sono-le-estensioni-nautilus)

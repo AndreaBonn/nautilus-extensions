@@ -1,7 +1,7 @@
 """
-git_columns_nautilus.py — Colonne Git nella vista lista di Nautilus
+git_columns_nautilus.py — Git columns in Nautilus list view
 
-Installazione:
+Installation:
   cp git_columns_nautilus.py ~/.local/share/nautilus-python/extensions/
   nautilus -q && nautilus &
 """
@@ -41,7 +41,7 @@ def _git_root(path: str) -> str | None:
 
 
 def _git_info_file(filepath: str, root: str) -> tuple[str, str, str]:
-    """Info per un file: autore, data relativa, messaggio."""
+    """Return (author, relative_date, message) for a single file."""
     rel = os.path.relpath(filepath, root)
     try:
         r = subprocess.run(
@@ -65,14 +65,14 @@ def _git_info_file(filepath: str, root: str) -> tuple[str, str, str]:
 
 def _git_info_dir(dirpath: str, root: str) -> tuple[str, str, str]:
     """
-    Info per una cartella: trova l'ultimo commit che ha toccato
-    qualsiasi file dentro quella cartella.
+    Return (author, relative_date, message) for a directory,
+    based on the last commit that touched any file inside it.
     """
     rel = os.path.relpath(dirpath, root)
-    # Per la root stessa usa "."
+    # Use "." for the root itself
     rel = "." if rel == "" else rel
     try:
-        # Autore + data + messaggio dell'ultimo commit nella cartella
+        # Author + date + message of the last commit in the directory
         r = subprocess.run(
             ["git", "log", "-1", "--pretty=format:%an||%ar||%s", "--", rel],
             cwd=root,
@@ -82,7 +82,7 @@ def _git_info_dir(dirpath: str, root: str) -> tuple[str, str, str]:
         )
         out = r.stdout.strip()
         if not out:
-            # Fallback: info del repo (branch + ultimo commit globale)
+            # Fallback: repo info (branch + latest global commit)
             r2 = subprocess.run(
                 ["git", "log", "-1", "--pretty=format:%an||%ar||%s"],
                 cwd=root,

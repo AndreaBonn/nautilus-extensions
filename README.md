@@ -6,6 +6,14 @@
 
 Collection of extensions for Nautilus (Ubuntu/GNOME file manager) that add advanced preview and file management features directly from the context menu.
 
+<!-- Screenshots — uncomment when images are available
+<p align="center">
+  <img src="assets/screenshots/csv-preview.png" width="280" alt="CSV Preview">
+  <img src="assets/screenshots/git-graph.png" width="280" alt="Git Graph">
+  <img src="assets/screenshots/pdf-splitter.png" width="280" alt="PDF Splitter">
+</p>
+-->
+
 ## 📋 Table of Contents
 
 - [What are Nautilus extensions](#what-are-nautilus-extensions)

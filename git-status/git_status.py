@@ -1,10 +1,10 @@
 """
-git_status_nautilus.py — Pannello di stato Git per Nautilus
-Apre una finestra flottante con aggiornamento automatico ogni 3 secondi.
+git_status_nautilus.py — Git status panel for Nautilus
+Opens a floating window with automatic refresh every 3 seconds.
 
-Uso: click destro in una cartella git → "⎇ Stato Git…"
+Usage: right-click in a git folder → "⎇ Stato Git…"
 
-Installazione:
+Installation:
   cp git_status_nautilus.py ~/.local/share/nautilus-python/extensions/
   nautilus -q && nautilus &
 """
@@ -203,7 +203,7 @@ class GitStatusWindow(Gtk.Window):
         self._loading = False
         self._clear()
 
-        # Aggiorna titolo branch
+        # Update branch title
         sync = ""
         if ahead and ahead != "0":
             sync += f"  ↑{ahead}"

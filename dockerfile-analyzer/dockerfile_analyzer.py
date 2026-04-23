@@ -1,14 +1,14 @@
 """
-dockerfile_analyzer.py — Estensione Nautilus per analisi Dockerfile
+dockerfile_analyzer.py — Nautilus extension for Dockerfile analysis
 ====================================================================
-Aggiunge "Analizza Dockerfile" nel menu tasto destro su file Dockerfile.
-Mostra struttura, istruzioni raggruppate, best practice e suggerimenti.
+Adds "Analizza Dockerfile" to the right-click menu on Dockerfile files.
+Shows structure, grouped instructions, best practices, and suggestions.
 
-Installazione:
+Installation:
     cp dockerfile_analyzer.py ~/.local/share/nautilus-python/extensions/
     nautilus -q && nautilus
 
-Dipendenze: solo stdlib Python
+Dependencies: Python stdlib only
 """
 
 import os
@@ -731,7 +731,7 @@ class DockerfileWindow(Gtk.Window):
             title_box.append(title_lbl)
             card.append(title_box)
 
-            # Dettaglio
+            # Detail
             if w.get("detail"):
                 detail_lbl = Gtk.Label(label=w["detail"])
                 detail_lbl.add_css_class("dim-label")
@@ -877,7 +877,7 @@ class DockerfileWindow(Gtk.Window):
 
 
 # --------------------------------------------------------------------------- #
-# Estensione
+# Extension
 # --------------------------------------------------------------------------- #
 
 
@@ -897,7 +897,7 @@ class DockerfileExtension(GObject.GObject, Nautilus.MenuProvider):
         return [item]
 
     def get_background_items(self, folder):
-        """Mostra la voce anche sul menu della cartella se contiene un Dockerfile."""
+        """Show menu item on folder background if it contains a Dockerfile."""
         if folder is None:
             return []
 

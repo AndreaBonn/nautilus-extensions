@@ -1,10 +1,10 @@
 """
-git_diff_nautilus.py — Diff visuale side-by-side dal menu contestuale di Nautilus
+git_diff_nautilus.py — Visual side-by-side diff from Nautilus context menu
 
-Click destro su un file modificato → "⎇ Mostra Diff Git"
-Apre una finestra con diff side-by-side colorato.
+Right-click on a modified file → "⎇ Mostra Diff Git"
+Opens a window with a coloured side-by-side diff.
 
-Installazione:
+Installation:
   cp git_diff_nautilus.py ~/.local/share/nautilus-python/extensions/
   nautilus -q && nautilus &
 """
@@ -212,7 +212,7 @@ class DiffWindow(Gtk.Window):
             h_lbl.set_xalign(0)
             outer.append(h_lbl)
 
-            # Costruisci le due colonne: old (solo ctx+del) e new (solo ctx+add)
+            # Build two columns: old (ctx+del only) and new (ctx+add only)
             left_lines = []  # (lineno, type, text)
             right_lines = []
 

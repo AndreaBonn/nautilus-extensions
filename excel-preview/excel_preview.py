@@ -1,14 +1,14 @@
 """
-excel_preview.py — Estensione Nautilus per anteprima file Excel
-===============================================================
-Aggiunge "Anteprima Excel" nel menu tasto destro su file .xlsx, .xls, .ods
-Mostra fogli, dati, statistiche e metadati.
+excel_preview.py — Nautilus extension for Excel file preview
+=============================================================
+Adds "Anteprima Excel" to the right-click menu on .xlsx, .xls, .ods files.
+Shows sheets, data, statistics, and metadata.
 
-Installazione:
+Installation:
     cp excel_preview.py ~/.local/share/nautilus-python/extensions/
     nautilus -q && nautilus
 
-Dipendenze:
+Dependencies:
     sudo apt install python3-openpyxl python3-pandas
 """
 
@@ -60,7 +60,7 @@ def fmt_size(size: int) -> str:
 
 
 # --------------------------------------------------------------------------- #
-# Lettura file Excel
+# Excel file reading
 # --------------------------------------------------------------------------- #
 
 
@@ -567,7 +567,7 @@ class ExcelPreviewWindow(Gtk.Window):
 
 
 # --------------------------------------------------------------------------- #
-# Estensione
+# Extension
 # --------------------------------------------------------------------------- #
 
 

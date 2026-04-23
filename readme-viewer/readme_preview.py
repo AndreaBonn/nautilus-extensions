@@ -1,10 +1,10 @@
 """
-readme_preview.py — Estensione Nautilus per anteprima README
-============================================================
-Aggiunge una voce "Mostra README" nel menu tasto destro sullo sfondo
-della cartella, quando è presente un file README.
+readme_preview.py — Nautilus extension for README preview
+==========================================================
+Adds a "Mostra README" entry to the right-click menu on the folder
+background when a README file is present.
 
-Installazione:
+Installation:
     cp readme_preview.py ~/.local/share/nautilus-python/extensions/
     nautilus -q && nautilus
 """
@@ -220,7 +220,7 @@ class ReadmeWindow(Gtk.Window):
         return False
 
     def _block_navigation(self, webview, decision, decision_type):
-        """Impedisce di aprire link esterni nella webview."""
+        """Block external link navigation inside the WebView."""
         try:
             if WEBKIT_VERSION == 6:
                 NAV = WebKit.PolicyDecisionType.NAVIGATION_ACTION
@@ -244,13 +244,13 @@ class ReadmeWindow(Gtk.Window):
 
 
 # --------------------------------------------------------------------------- #
-# Estensione
+# Extension
 # --------------------------------------------------------------------------- #
 
 
 class ReadmeExtension(GObject.GObject, Nautilus.MenuProvider):
     def get_background_items(self, folder):
-        """Chiamato quando si fa tasto destro sullo sfondo della cartella."""
+        """Called on right-click on the folder background."""
         if folder is None:
             return []
 

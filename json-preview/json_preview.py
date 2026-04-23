@@ -1,15 +1,15 @@
 """
-json_preview.py — Estensione Nautilus per anteprima JSON e JSONL
+json_preview.py — Nautilus extension for JSON and JSONL preview
 ================================================================
-Aggiunge "Anteprima JSON" nel menu tasto destro su file .json e .jsonl
-Mostra struttura ad albero, schema inferito, anteprima dati e statistiche.
+Adds "Anteprima JSON" to the right-click menu on .json and .jsonl files.
+Shows tree structure, inferred schema, data preview, and statistics.
 
-Installazione:
+Installation:
     cp json_preview.py ~/.local/share/nautilus-python/extensions/
     nautilus -q && nautilus
 
-Dipendenze: solo stdlib Python
-Opzionale: sudo apt install python3-pandas  (statistiche su JSONL)
+Dependencies: Python stdlib only
+Optional: sudo apt install python3-pandas  (statistics on JSONL)
 """
 
 import collections
@@ -179,7 +179,7 @@ def merge_schemas(schemas: list) -> dict:
 
 
 # --------------------------------------------------------------------------- #
-# Lettura file
+# File reading
 # --------------------------------------------------------------------------- #
 
 
@@ -829,7 +829,7 @@ class JsonPreviewWindow(Gtk.Window):
 
 
 # --------------------------------------------------------------------------- #
-# Estensione
+# Extension
 # --------------------------------------------------------------------------- #
 
 

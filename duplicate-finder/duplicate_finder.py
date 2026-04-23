@@ -1,5 +1,5 @@
 """
-duplicate-finder.py — Estensione Nautilus per trovare file duplicati
+duplicate-finder.py — Nautilus extension to find duplicate files
 """
 
 import hashlib
@@ -347,15 +347,15 @@ class DupFinderWindow(Gtk.Window):
 
 
 # ---------------------------------------------------------------------------
-# Estensione — usa is_directory() invece di get_file_type()
-# e controlla anche via URI come fallback
+# Extension — uses is_directory() instead of get_file_type()
+# and also checks via URI as fallback
 # ---------------------------------------------------------------------------
 
 
 class DuplicateFinderExtension(GObject.GObject, Nautilus.MenuProvider):
     def _path_from_file(self, f):
-        """Ricava il path locale in modo robusto, con fallback su URI."""
-        # metodo diretto
+        """Extract local path robustly, with URI fallback."""
+        # Direct method
         try:
             loc = f.get_location()
             if loc:
@@ -376,8 +376,8 @@ class DuplicateFinderExtension(GObject.GObject, Nautilus.MenuProvider):
         return None
 
     def _is_local_dir(self, f):
-        """True se il file è una cartella locale, con doppio controllo."""
-        # check 1: tipo Nautilus
+        """Return True if the Nautilus file is a local directory (double check)."""
+        # Check 1: Nautilus file type
         try:
             if f.get_file_type() == Nautilus.FileType.DIRECTORY:
                 return True
@@ -396,7 +396,7 @@ class DuplicateFinderExtension(GObject.GObject, Nautilus.MenuProvider):
         return False
 
     def get_file_items(self, files):
-        """Clic destro su una cartella selezionata."""
+        """Right-click on a selected folder."""
         if len(files) != 1:
             return []
         f = files[0]
@@ -415,7 +415,7 @@ class DuplicateFinderExtension(GObject.GObject, Nautilus.MenuProvider):
         return [item]
 
     def get_background_items(self, folder):
-        """Clic destro sul background di una cartella aperta."""
+        """Right-click on the background of an open folder."""
         if folder is None:
             return []
         path = self._path_from_file(folder)

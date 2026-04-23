@@ -1,14 +1,14 @@
 """
-csv_preview.py — Estensione Nautilus per anteprima CSV
-=======================================================
-Aggiunge una voce "Anteprima CSV" nel menu tasto destro su file .csv
-Mostra le prime N righe in una tabella formattata con statistiche di base.
+csv_preview.py — Nautilus extension for CSV preview
+=====================================================
+Adds a "Anteprima CSV" entry to the right-click menu on .csv files.
+Shows the first N rows in a formatted table with basic statistics.
 
-Installazione:
+Installation:
     cp csv_preview.py ~/.local/share/nautilus-python/extensions/
     nautilus -q && nautilus
 
-Dipendenze (opzionali ma consigliate):
+Optional dependencies (recommended):
     sudo apt install python3-pandas
 """
 
@@ -24,7 +24,7 @@ gi.require_version("GLib", "2.0")
 
 from gi.repository import GLib, GObject, Gtk, Nautilus, Pango
 
-# Pandas opzionale — se disponibile mostra anche statistiche
+# Pandas optional — if available, also shows statistics
 PANDAS_AVAILABLE = False
 try:
     import pandas as pd
@@ -35,12 +35,12 @@ except ImportError:
 
 
 # --------------------------------------------------------------------------- #
-# Costanti
+# Constants
 # --------------------------------------------------------------------------- #
 
-PREVIEW_ROWS = 100  # righe da mostrare nella preview
-MAX_COL_WIDTH = 300  # larghezza massima colonna in px
-MIN_COL_WIDTH = 60  # larghezza minima colonna in px
+PREVIEW_ROWS = 100  # rows to show in the preview
+MAX_COL_WIDTH = 300  # maximum column width in px
+MIN_COL_WIDTH = 60  # minimum column width in px
 WINDOW_W = 1100
 WINDOW_H = 650
 
@@ -48,6 +48,7 @@ WINDOW_H = 650
 # --------------------------------------------------------------------------- #
 # CSS
 # --------------------------------------------------------------------------- #
+
 
 CSS = b"""
 .csv-header {
@@ -82,12 +83,12 @@ CSS = b"""
 
 
 # --------------------------------------------------------------------------- #
-# Lettura CSV
+# CSV reading
 # --------------------------------------------------------------------------- #
 
 
 def detect_delimiter(path: str) -> str:
-    """Rileva automaticamente il delimitatore del CSV."""
+    """Automatically detects the CSV delimiter."""
     try:
         with open(path, encoding="utf-8", errors="replace") as f:
             sample = f.read(4096)
@@ -99,8 +100,8 @@ def detect_delimiter(path: str) -> str:
 
 def read_csv_plain(path: str, max_rows: int) -> tuple[list, list, dict]:
     """
-    Legge il CSV con la stdlib.
-    Ritorna (headers, rows, info) dove info contiene metadati base.
+    Reads the CSV using stdlib.
+    Returns (headers, rows, info) where info contains basic metadata.
     """
     delimiter = detect_delimiter(path)
     headers = []
@@ -114,7 +115,7 @@ def read_csv_plain(path: str, max_rows: int) -> tuple[list, list, dict]:
             for row in reader:
                 total_rows += 1
                 if total_rows <= max_rows:
-                    # Allinea la riga alle colonne dell'header
+                    # Align the row to the header columns
                     while len(row) < len(headers):
                         row.append("")
                     rows.append(row[: len(headers)])
@@ -134,8 +135,8 @@ def read_csv_plain(path: str, max_rows: int) -> tuple[list, list, dict]:
 
 def read_csv_pandas(path: str, max_rows: int) -> tuple[list, list, dict, object]:
     """
-    Legge con pandas — più robusto e aggiunge statistiche.
-    Ritorna anche il dataframe per le statistiche.
+    Reads with pandas — more robust and adds statistics.
+    Also returns the dataframe for statistics.
     """
     try:
         delimiter = detect_delimiter(path)
@@ -146,7 +147,7 @@ def read_csv_pandas(path: str, max_rows: int) -> tuple[list, list, dict, object]
         headers = list(df.columns.astype(str))
         rows = df.astype(str).values.tolist()
 
-        # Tipi colonne
+        # Column types
         dtypes = {col: str(df_full[col].dtype) for col in df_full.columns}
 
         file_size = os.path.getsize(path)
@@ -174,7 +175,7 @@ def _fmt_size(size: int) -> str:
 
 
 # --------------------------------------------------------------------------- #
-# Finestra preview
+# Preview window
 # --------------------------------------------------------------------------- #
 
 
@@ -186,7 +187,7 @@ class CsvPreviewWindow(Gtk.Window):
         self._csv_path = csv_path
         self._df = None
 
-        # Applica CSS
+        # Apply CSS
         provider = Gtk.CssProvider()
         provider.load_from_data(CSS)
         Gtk.StyleContext.add_provider_for_display(
@@ -204,7 +205,7 @@ class CsvPreviewWindow(Gtk.Window):
         self._root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         self.set_child(self._root)
 
-        # Spinner di caricamento iniziale
+        # Initial loading spinner
         self._spinner_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
         self._spinner_box.set_valign(Gtk.Align.CENTER)
         self._spinner_box.set_halign(Gtk.Align.CENTER)
@@ -219,12 +220,12 @@ class CsvPreviewWindow(Gtk.Window):
         self._root.append(self._spinner_box)
 
     def _build_content(self, headers, rows, info, df=None):
-        """Costruisce l'interfaccia completa dopo il caricamento dei dati."""
+        """Builds the full UI after data has been loaded."""
 
-        # Rimuove lo spinner
+        # Remove the spinner
         self._root.remove(self._spinner_box)
 
-        # --- Barra info superiore ---
+        # --- Top info bar ---
         info_bar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=16)
         info_bar.add_css_class("csv-info-bar")
         info_bar.set_margin_start(4)
@@ -253,25 +254,25 @@ class CsvPreviewWindow(Gtk.Window):
             self._root.append(err)
             return
 
-        # --- Notebook con tabs ---
+        # --- Notebook with tabs ---
         notebook = Gtk.Notebook()
         notebook.set_vexpand(True)
         self._root.append(notebook)
 
-        # Tab 1: Tabella dati
+        # Tab 1: Data table
         table_widget = self._build_table(headers, rows, info)
         notebook.append_page(table_widget, Gtk.Label(label="📊 Dati"))
 
-        # Tab 2: Statistiche (solo con pandas)
+        # Tab 2: Statistics (only with pandas)
         if df is not None:
             stats_widget = self._build_stats(df, info)
             notebook.append_page(stats_widget, Gtk.Label(label="📈 Statistiche"))
 
-        # Tab 3: Info colonne
+        # Tab 3: Column info
         cols_widget = self._build_columns_info(headers, info)
         notebook.append_page(cols_widget, Gtk.Label(label="🗂 Colonne"))
 
-        # --- Barra inferiore ---
+        # --- Bottom bar ---
         bottom = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
         bottom.set_margin_start(8)
         bottom.set_margin_end(8)
@@ -309,7 +310,7 @@ class CsvPreviewWindow(Gtk.Window):
         box.append(stat_box)
 
     # ------------------------------------------------------------------ #
-    # Tab Dati
+    # Data tab
     # ------------------------------------------------------------------ #
 
     def _build_table(self, headers, rows, info) -> Gtk.Widget:
@@ -317,7 +318,7 @@ class CsvPreviewWindow(Gtk.Window):
         scrolled.set_vexpand(True)
         scrolled.set_hexpand(True)
 
-        # Crea ListStore con tutte le colonne come stringhe
+        # Create ListStore with all columns as strings
         col_types = [str] * len(headers)
         store = Gtk.ListStore(*col_types)
 
@@ -328,24 +329,24 @@ class CsvPreviewWindow(Gtk.Window):
         treeview.set_grid_lines(Gtk.TreeViewGridLines.BOTH)
         treeview.add_css_class("mono")
 
-        # Colonna indice riga
+        # Row index column
         idx_renderer = Gtk.CellRendererText()
         idx_renderer.set_property("foreground", "#6a737d")
         idx_col = Gtk.TreeViewColumn("#")
         idx_col.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
         idx_col.set_fixed_width(50)
 
-        # Aggiungi numero riga tramite una colonna virtuale
+        # Add row number via a virtual column
         for i, header in enumerate(headers):
             renderer = Gtk.CellRendererText()
             renderer.set_property("ellipsize", Pango.EllipsizeMode.END)
 
-            # Evidenzia colonne numeriche in blu
+            # Highlight numeric columns in blue
             info.get("dtypes", {})
             numeric_cols = info.get("numeric_cols", [])
             if header in numeric_cols:
                 renderer.set_property("foreground", "#0366d6")
-                renderer.set_property("xalign", 1.0)  # allineamento destra per numeri
+                renderer.set_property("xalign", 1.0)  # right-align numbers
 
             col = Gtk.TreeViewColumn(header, renderer, text=i)
             col.set_resizable(True)
@@ -353,7 +354,7 @@ class CsvPreviewWindow(Gtk.Window):
             col.set_fixed_width(max(MIN_COL_WIDTH, min(MAX_COL_WIDTH, len(header) * 12 + 20)))
             col.set_sort_column_id(i)
 
-            # Header in grassetto
+            # Bold header
             safe_header = GLib.markup_escape_text(header)
             label = Gtk.Label(label=header)
             label.set_markup(f"<b>{safe_header}</b>")
@@ -368,7 +369,7 @@ class CsvPreviewWindow(Gtk.Window):
         return scrolled
 
     # ------------------------------------------------------------------ #
-    # Tab Statistiche
+    # Statistics tab
     # ------------------------------------------------------------------ #
 
     def _build_stats(self, df, info) -> Gtk.Widget:
@@ -390,14 +391,14 @@ class CsvPreviewWindow(Gtk.Window):
             scrolled.set_child(outer)
             return scrolled
 
-        # Statistiche descrittive con pandas
+        # Descriptive statistics with pandas
         try:
             desc = df[numeric_cols].describe()
         except Exception:
             scrolled.set_child(Gtk.Label(label="Errore nel calcolo delle statistiche."))
             return scrolled
 
-        # Tabella statistiche
+        # Statistics table
         stats_headers = ["Statistica"] + numeric_cols
         stats_rows_data = []
         for stat in desc.index:
@@ -428,7 +429,7 @@ class CsvPreviewWindow(Gtk.Window):
         outer.append(title)
         outer.append(treeview)
 
-        # Valori nulli
+        # Null values
         null_counts = info.get("null_counts", {})
         nulls_with_data = {k: v for k, v in null_counts.items() if v > 0}
         if nulls_with_data:
@@ -459,7 +460,7 @@ class CsvPreviewWindow(Gtk.Window):
         return scrolled
 
     # ------------------------------------------------------------------ #
-    # Tab Colonne
+    # Columns tab
     # ------------------------------------------------------------------ #
 
     def _build_columns_info(self, headers, info) -> Gtk.Widget:
@@ -495,7 +496,7 @@ class CsvPreviewWindow(Gtk.Window):
         return scrolled
 
     # ------------------------------------------------------------------ #
-    # Caricamento dati
+    # Data loading
     # ------------------------------------------------------------------ #
 
     def _load_data(self):
@@ -513,7 +514,7 @@ class CsvPreviewWindow(Gtk.Window):
         return False
 
     # ------------------------------------------------------------------ #
-    # Handler
+    # Handlers
     # ------------------------------------------------------------------ #
 
     def _open_editor(self, _btn):
@@ -523,14 +524,14 @@ class CsvPreviewWindow(Gtk.Window):
 
 
 # --------------------------------------------------------------------------- #
-# Estensione
+# Extension
 # --------------------------------------------------------------------------- #
 
 
 class CsvPreviewExtension(GObject.GObject, Nautilus.MenuProvider):
     def get_file_items(self, files):
-        """Chiamato quando si seleziona uno o più file."""
-        # Mostra la voce solo se è selezionato un singolo CSV
+        """Called when one or more files are selected."""
+        # Show the menu item only when a single CSV is selected
         if len(files) != 1:
             return []
 

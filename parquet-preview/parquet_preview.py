@@ -1,14 +1,14 @@
 """
-parquet_preview.py — Estensione Nautilus per anteprima file Parquet
-====================================================================
-Aggiunge una voce "Anteprima Parquet" nel menu tasto destro su file .parquet
-Mostra schema, metadati, row groups e anteprima dati.
+parquet_preview.py — Nautilus extension for Parquet file preview
+================================================================
+Adds a "Anteprima Parquet" entry to the right-click menu on .parquet files.
+Shows schema, metadata, row groups, and data preview.
 
-Installazione:
+Installation:
     cp parquet_preview.py ~/.local/share/nautilus-python/extensions/
     nautilus -q && nautilus
 
-Dipendenze:
+Dependencies:
     sudo apt install python3-pandas
     pip install pyarrow --break-system-packages
 """
@@ -138,7 +138,7 @@ def dtype_short(dtype) -> str:
 
 
 # --------------------------------------------------------------------------- #
-# Lettura Parquet
+# Parquet reading
 # --------------------------------------------------------------------------- #
 
 
@@ -286,7 +286,7 @@ class ParquetPreviewWindow(Gtk.Window):
         self._root.append(self._spinner_box)
 
     # ------------------------------------------------------------------ #
-    # Caricamento in thread
+    # Load in background thread
     # ------------------------------------------------------------------ #
 
     def _load(self):
@@ -671,7 +671,7 @@ class ParquetPreviewWindow(Gtk.Window):
 
 
 # --------------------------------------------------------------------------- #
-# Estensione
+# Extension
 # --------------------------------------------------------------------------- #
 
 

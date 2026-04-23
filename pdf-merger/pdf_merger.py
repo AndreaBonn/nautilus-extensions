@@ -1,14 +1,14 @@
 """
-pdf_merge.py — Estensione Nautilus per unire PDF
-=================================================
-Seleziona 2+ file PDF in Nautilus, tasto destro → "Unisci PDF".
-Apre una finestra per riordinare i file e scegliere il nome output.
+pdf_merge.py — Nautilus extension for merging PDFs
+===================================================
+Select 2+ PDF files in Nautilus, right-click → "Unisci PDF".
+Opens a window to reorder the files and choose the output name.
 
-Installazione:
+Installation:
     cp pdf_merge.py ~/.local/share/nautilus-python/extensions/
     nautilus -q && nautilus
 
-Dipendenze:
+Dependencies:
     sudo apt install python3-pypdf
 """
 
@@ -407,7 +407,7 @@ class PdfMergeWindow(Gtk.Window):
         return os.path.join(folder, name)
 
     # ------------------------------------------------------------------ #
-    # Unione PDF
+    # PDF merge
     # ------------------------------------------------------------------ #
 
     def _on_merge(self, _btn):
@@ -506,7 +506,7 @@ class PdfMergeWindow(Gtk.Window):
 
 
 # --------------------------------------------------------------------------- #
-# Estensione
+# Extension
 # --------------------------------------------------------------------------- #
 
 

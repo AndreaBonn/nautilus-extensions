@@ -1,18 +1,18 @@
 """
-pdf_split.py — Estensione Nautilus per dividere PDF
-====================================================
-Tasto destro su un PDF → "Dividi PDF"
-Supporta 4 modalità:
-  1. Intervalli personalizzati (es. 1-3, 4-6, 9)
-  2. Ogni N pagine
-  3. Una pagina per file
-  4. Per segnalibri/capitoli
+pdf_split.py — Nautilus extension for splitting PDFs
+=====================================================
+Right-click on a PDF → "Dividi PDF"
+Supports 4 modes:
+  1. Custom ranges (e.g. 1-3, 4-6, 9)
+  2. Every N pages
+  3. One page per file
+  4. By bookmarks/chapters
 
-Installazione:
+Installation:
     cp pdf_split.py ~/.local/share/nautilus-python/extensions/
     nautilus -q && nautilus
 
-Dipendenze:
+Dependencies:
     sudo apt install python3-pypdf
 """
 
@@ -201,7 +201,7 @@ class PdfSplitWindow(Gtk.Window):
         threading.Thread(target=self._load_pdf_info, daemon=True).start()
 
     # ------------------------------------------------------------------ #
-    # Caricamento info PDF
+    # PDF info loading
     # ------------------------------------------------------------------ #
 
     def _load_pdf_info(self):
@@ -611,7 +611,7 @@ class PdfSplitWindow(Gtk.Window):
                 filename = chunk_filename(base, start, end, title)
                 out_path = os.path.join(out_folder, filename)
 
-                # Validazione path traversal
+                # Path traversal validation
                 if not Path(out_path).resolve().is_relative_to(Path(out_folder).resolve()):
                     raise ValueError(f"Path non valido: {filename}")
 
@@ -658,7 +658,7 @@ class PdfSplitWindow(Gtk.Window):
 
 
 # --------------------------------------------------------------------------- #
-# Estensione
+# Extension
 # --------------------------------------------------------------------------- #
 
 

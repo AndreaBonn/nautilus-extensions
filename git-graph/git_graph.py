@@ -1,11 +1,11 @@
 """
-git_graph_nautilus.py — Estensione Nautilus per visualizzare il grafo Git
-Installazione:
+git_graph_nautilus.py — Nautilus extension to visualise the Git graph
+Installation:
   mkdir -p ~/.local/share/nautilus-python/extensions/
   cp git_graph_nautilus.py ~/.local/share/nautilus-python/extensions/
   nautilus -q && nautilus &
 
-Dipendenze:
+Dependencies:
   sudo apt install python3-nautilus python3-gi gir1.2-gtk-3.0
   pip3 install gitpython  --break-system-packages
 """
@@ -271,7 +271,7 @@ class GitGraphWidget(Gtk.DrawingArea):
             msg = commit["message"][:available] if available > 0 else ""
             cr.show_text(msg)
 
-            # Autore + data (a destra)
+            # Author + date (right side)
             cr.set_source_rgb(0.50, 0.52, 0.60)
             cr.set_font_size(9)
             info = f"{commit['author']}  {commit['date']}"
