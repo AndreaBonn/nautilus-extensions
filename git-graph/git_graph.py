@@ -334,6 +334,9 @@ class GitGraphWindow(Gtk.Window):
         legend_box.set_margin_top(8)
         legend_box.set_margin_bottom(4)
 
+        lbl_css = Gtk.CssProvider()
+        lbl_css.load_from_data(b"label { font-size: 11px; color: #CDD6F4; }")
+
         for branch, color in branch_color_map.items():
             dot = Gtk.Label(label="●")
             dot.add_css_class("branch-dot")
@@ -344,8 +347,6 @@ class GitGraphWindow(Gtk.Window):
                 dot.get_display(), dot_css, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
             )
             lbl = Gtk.Label(label=branch)
-            lbl_css = Gtk.CssProvider()
-            lbl_css.load_from_data(b"label { font-size: 11px; color: #CDD6F4; }")
             Gtk.StyleContext.add_provider_for_display(
                 lbl.get_display(), lbl_css, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
             )

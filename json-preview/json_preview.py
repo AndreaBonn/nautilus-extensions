@@ -15,6 +15,7 @@ Optional: sudo apt install python3-pandas  (statistics on JSONL)
 import collections
 import gzip
 import json
+import logging
 import os
 import threading
 
@@ -283,8 +284,8 @@ def read_jsonl_file(path: str, compressed: bool = False) -> dict:
             result["null_counts"] = df.isnull().sum().to_dict()
             if result["numeric_cols"]:
                 result["describe"] = df[result["numeric_cols"]].describe()
-        except Exception:
-            pass
+        except Exception as e:
+            logging.debug("DataFrame analysis failed: %s", e)
 
     return result
 

@@ -311,3 +311,30 @@ class TestIsGzipped:
             assert is_gzipped(path) is False
         finally:
             os.unlink(path)
+
+
+class TestReadJsonFileGzip:
+    def test_read_gzipped_json_returns_data(self):
+        data = {"key": "value", "number": 42}
+        with tempfile.NamedTemporaryFile(suffix=".json.gz", delete=False) as f:
+            path = f.name
+        try:
+            with gzip.open(path, "wt", encoding="utf-8") as gz:
+                json.dump(data, gz)
+            assert is_gzipped(path) is True
+            result = read_json_file(path, compressed=True)
+            assert result["data"] == data
+        finally:
+            os.unlink(path)
+
+    def test_read_gzipped_json_array_returns_list(self):
+        data = [1, 2, 3]
+        with tempfile.NamedTemporaryFile(suffix=".json.gz", delete=False) as f:
+            path = f.name
+        try:
+            with gzip.open(path, "wt", encoding="utf-8") as gz:
+                json.dump(data, gz)
+            result = read_json_file(path, compressed=True)
+            assert result["data"] == data
+        finally:
+            os.unlink(path)

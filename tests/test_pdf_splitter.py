@@ -31,6 +31,7 @@ parse_ranges = _ns["parse_ranges"]
 every_n_chunks = _ns["every_n_chunks"]
 single_page_chunks = _ns["single_page_chunks"]
 chunk_filename = _ns["chunk_filename"]
+bookmark_chunks = _ns["bookmark_chunks"]
 fmt_size = _ns["fmt_size"]
 
 
@@ -151,3 +152,85 @@ class TestFmtSize:
 
     def test_zero(self):
         assert fmt_size(0) == "0.0 B"
+
+
+# --- bookmark_chunks ---
+
+
+class TestBookmarkChunks:
+    @staticmethod
+    def _fake_bookmark(title: str, page_idnum: int):
+        class FakePage:
+            pass
+
+        class FakeBookmark:
+            pass
+
+        bm = FakeBookmark()
+        bm.title = title
+        bm.page = FakePage()
+        bm.page.idnum = page_idnum
+        return bm
+
+    def test_empty_bookmarks_returns_empty(self):
+        assert bookmark_chunks([], total_pages=10) == []
+
+    def test_single_bookmark_covers_all_pages(self):
+        bms = [self._fake_bookmark("Intro", 0)]
+        result = bookmark_chunks(bms, total_pages=10)
+        assert result == [(0, 9, "Intro")]
+
+    def test_two_bookmarks_produce_correct_ranges(self):
+        bms = [
+            self._fake_bookmark("Ch1", 0),
+            self._fake_bookmark("Ch2", 5),
+        ]
+        result = bookmark_chunks(bms, total_pages=10)
+        assert result == [(0, 4, "Ch1"), (5, 9, "Ch2")]
+
+    def test_last_bookmark_extends_to_end(self):
+        bms = [
+            self._fake_bookmark("A", 0),
+            self._fake_bookmark("B", 7),
+        ]
+        result = bookmark_chunks(bms, total_pages=10)
+        assert result[-1] == (7, 9, "B")
+
+    def test_bookmarks_sorted_by_page(self):
+        bms = [
+            self._fake_bookmark("Second", 5),
+            self._fake_bookmark("First", 0),
+        ]
+        result = bookmark_chunks(bms, total_pages=10)
+        assert result[0][2] == "First"
+        assert result[1][2] == "Second"
+
+    def test_special_chars_in_title_sanitized(self):
+        bms = [self._fake_bookmark("Ch/1: <evil>&more", 0)]
+        result = bookmark_chunks(bms, total_pages=5)
+        title = result[0][2]
+        assert "/" not in title
+        assert "<" not in title
+        assert "&" not in title
+
+    def test_title_truncated_at_50_chars(self):
+        long_title = "A" * 100
+        bms = [self._fake_bookmark(long_title, 0)]
+        result = bookmark_chunks(bms, total_pages=5)
+        assert len(result[0][2]) <= 50
+
+    def test_nested_bookmarks_as_list(self):
+        inner = [self._fake_bookmark("Nested", 3)]
+        bms = [self._fake_bookmark("Top", 0), inner]
+        result = bookmark_chunks(bms, total_pages=10)
+        assert len(result) == 2
+        assert result[1][2] == "Nested"
+
+    def test_bookmark_without_page_attr_skipped(self):
+        class NoPage:
+            title = "Bad"
+
+        bms = [NoPage(), self._fake_bookmark("Good", 0)]
+        result = bookmark_chunks(bms, total_pages=5)
+        assert len(result) == 1
+        assert result[0][2] == "Good"

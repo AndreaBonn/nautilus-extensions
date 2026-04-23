@@ -111,7 +111,7 @@ class PdfMergeWindow(Gtk.Window):
         super().__init__(title="Unisci PDF")
         self.set_default_size(620, 520)
         self._paths = list(paths)  # lista ordinabile
-        self._merging = False
+        self._merging = threading.Event()
 
         provider = Gtk.CssProvider()
         provider.load_from_data(CSS)
@@ -342,8 +342,8 @@ class PdfMergeWindow(Gtk.Window):
             it = self._store.get_iter_from_string(str_iter)
             self._store.set_value(it, 4, pages_str)
             self._pages_label.set_text(f"Totale: {totale} pagine")
-        except Exception:
-            pass
+        except Exception as e:
+            logging.debug("Page count update failed: %s", e)
         return False
 
     # ------------------------------------------------------------------ #
@@ -398,8 +398,12 @@ class PdfMergeWindow(Gtk.Window):
         return f"{base}_unione.pdf" if base else "unione.pdf"
 
     def _get_output_path(self) -> str:
-        name = self._name_entry.get_text().strip()
-        if not name:
+        raw = self._name_entry.get_text().strip()
+        if not raw:
+            raw = "unione.pdf"
+        # Strip directory components to prevent path traversal
+        name = os.path.basename(raw)
+        if not name or name.startswith("."):
             name = "unione.pdf"
         if not name.lower().endswith(".pdf"):
             name += ".pdf"
@@ -440,13 +444,13 @@ class PdfMergeWindow(Gtk.Window):
         GLib.timeout_add(100, self._pulse_progress)
 
     def _pulse_progress(self):
-        if self._merging or self._progress.get_visible():
+        if self._merging.is_set() or self._progress.get_visible():
             self._progress.pulse()
             return True
         return False
 
     def _do_merge(self, paths: list, output_path: str):
-        self._merging = True
+        self._merging.set()
         try:
             import pypdf
 
@@ -468,7 +472,7 @@ class PdfMergeWindow(Gtk.Window):
         except Exception as e:
             GLib.idle_add(self._on_merge_done, output_path, 0, str(e))
         finally:
-            self._merging = False
+            self._merging.clear()
 
     def _on_merge_done(self, output_path: str, total_pages: int, error: str | None):
         self._progress.set_visible(False)

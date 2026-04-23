@@ -75,14 +75,24 @@ ignore = [
     "E501",   # line too long (gestito da formatter)
     "E402",   # module level import not at top — required by gi.require_version()
     "E701",   # multiple statements on one line — used for compact type dispatchers
-    "S603",   # subprocess call - check for execution of untrusted input
-    "S607",   # starting a process with a partial executable path
-    "S110",   # try-except-pass — intentional for desktop extension fallbacks
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**" = ["S101", "S102", "S324"]  # assert, exec, md5 (per test comparativi) OK nei test
+"tests/**" = ["S101", "S102", "S324", "S603", "S607"]  # assert, exec, md5, subprocess OK nei test
 "**/conftest.py" = ["S102"]     # exec per caricare moduli senza GTK
+# Desktop extensions use subprocess with list args (no shell=True) for xdg-open, git, gio
+"csv-preview/**" = ["S603", "S607"]
+"dockerfile-analyzer/**" = ["S603", "S607"]
+"duplicate-finder/**" = ["S603", "S607"]
+"excel-preview/**" = ["S603", "S607"]
+"git-blame/**" = ["S603", "S607"]
+"git-diff/**" = ["S603", "S607"]
+"git-graph/**" = ["S603", "S607"]
+"git-status/**" = ["S603", "S607"]
+"json-preview/**" = ["S603", "S607"]
+"pdf-merger/**" = ["S603", "S607"]
+"pdf-splitter/**" = ["S603", "S607"]
+"readme-viewer/**" = ["S603", "S607"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

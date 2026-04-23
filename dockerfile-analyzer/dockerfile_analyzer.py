@@ -327,11 +327,13 @@ def _analyze_best_practices(data: dict) -> list:
     for run in run_cmds:
         cmd = run["cmd"]
         if "pip install" in cmd and "requirements" not in cmd:
-            pkgs = re.findall(r"pip install\s+([\w\-\s]+)", cmd)
+            pkgs = re.findall(r"pip install\s+([\w\-\s=.<>,\[\]!~;]+)", cmd)
             for pkg_str in pkgs:
                 pkgs_list = pkg_str.strip().split()
                 unversioned = [
-                    p for p in pkgs_list if p and "==" not in p and not p.startswith("-")
+                    p
+                    for p in pkgs_list
+                    if p and "==" not in p and not p.startswith("-") and not p.startswith(".")
                 ]
                 if unversioned:
                     warn(

@@ -59,7 +59,8 @@ def _git_info_file(filepath: str, root: str) -> tuple[str, str, str]:
             return ("", "", "")
         author, date, msg = parts
         return (author, date, msg[:60] + ("…" if len(msg) > 60 else ""))
-    except Exception:
+    except Exception as e:
+        logging.debug("_git_info_file failed for %s: %s", filepath, e)
         return ("", "", "")
 
 
@@ -98,7 +99,8 @@ def _git_info_dir(dirpath: str, root: str) -> tuple[str, str, str]:
             return ("", "", "")
         author, date, msg = parts
         return (author, date, msg[:60] + ("…" if len(msg) > 60 else ""))
-    except Exception:
+    except Exception as e:
+        logging.debug("_git_info_dir failed for %s: %s", dirpath, e)
         return ("", "", "")
 
 

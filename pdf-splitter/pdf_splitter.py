@@ -16,6 +16,7 @@ Dependencies:
     sudo apt install python3-pypdf
 """
 
+import logging
 import os
 import re
 import threading
@@ -135,8 +136,8 @@ def bookmark_chunks(bookmarks, total_pages: int) -> list[tuple[int, int, str]]:
                 try:
                     page_num = item.page.idnum if hasattr(item.page, "idnum") else 0
                     entries.append((page_num, item.title))
-                except Exception:
-                    pass
+                except Exception as e:
+                    logging.debug("Skipping malformed bookmark: %s", e)
             if isinstance(item, list):
                 collect(item, depth + 1)
 
@@ -213,8 +214,8 @@ class PdfSplitWindow(Gtk.Window):
             bookmarks = []
             try:
                 bookmarks = list(reader.outline)
-            except Exception:
-                pass
+            except Exception as e:
+                logging.debug("Cannot read PDF bookmarks: %s", e)
             GLib.idle_add(self._on_pdf_loaded, total, bookmarks, None)
         except Exception as e:
             GLib.idle_add(self._on_pdf_loaded, 0, [], str(e))
@@ -566,8 +567,8 @@ class PdfSplitWindow(Gtk.Window):
             folder = dialog.select_folder_finish(result)
             if folder:
                 self._out_entry.set_text(folder.get_path())
-        except Exception:
-            pass
+        except Exception as e:
+            logging.debug("Folder selection cancelled or failed: %s", e)
 
     # ------------------------------------------------------------------ #
     # Split

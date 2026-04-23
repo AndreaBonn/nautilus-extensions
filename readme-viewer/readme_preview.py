@@ -116,6 +116,31 @@ def uri_to_path(uri: str) -> str:
     return uri
 
 
+_UNSAFE_TAG_RE = None
+
+
+def _get_unsafe_tag_re():
+    import re
+
+    global _UNSAFE_TAG_RE
+    if _UNSAFE_TAG_RE is None:
+        _UNSAFE_TAG_RE = re.compile(
+            r"<\s*/?\s*(script|iframe|object|embed|form|input|textarea|button|link"
+            r"|meta|base|applet|style)\b[^>]*>",
+            re.IGNORECASE,
+        )
+    return _UNSAFE_TAG_RE
+
+
+def _sanitize_html(html_str: str) -> str:
+    import re
+
+    sanitized = _get_unsafe_tag_re().sub("", html_str)
+    sanitized = re.sub(r"\bon\w+\s*=\s*[\"'][^\"']*[\"']", "", sanitized, flags=re.IGNORECASE)
+    sanitized = re.sub(r"\bon\w+\s*=\s*\S+", "", sanitized, flags=re.IGNORECASE)
+    return sanitized
+
+
 def render_html(content: str, filename: str) -> str:
     import html as html_mod
 
@@ -123,6 +148,7 @@ def render_html(content: str, filename: str) -> str:
         body = markdown.markdown(
             content, extensions=["fenced_code", "tables", "nl2br", "sane_lists"]
         )
+        body = _sanitize_html(body)
     else:
         escaped = html_mod.escape(content)
         body = f"<pre style='white-space:pre-wrap;word-break:break-word'>{escaped}</pre>"

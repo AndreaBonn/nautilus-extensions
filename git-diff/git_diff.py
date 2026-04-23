@@ -142,34 +142,12 @@ class DiffWindow(Gtk.Window):
     def _build_diff_ui(self, hunks, staged):
         self._hunks = hunks
         self._staged = staged
+        self._install_css()
         self._render()
 
-    def _on_toggle(self, btn):
-        self._split = btn.get_active()
-        btn.set_label("Side-by-side" if self._split else "Unificato")
-        if self._hunks:
-            self._render()
-
-    def _render(self):
-        # Rimuovi vecchio diff se esiste
-        old = self.stack.get_child_by_name("diff")
-        if old:
-            self.stack.remove(old)
-
-        scroll = Gtk.ScrolledWindow()
-        scroll.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-
-        if self._split:
-            widget = self._build_split_view()
-        else:
-            widget = self._build_unified_view()
-
-        scroll.set_child(widget)
-        self.stack.add_named(scroll, "diff")
-        self.stack.set_visible_child_name("diff")
-
-    # ── Vista side-by-side ─────────────────────────────────────────────────────
-    def _build_split_view(self):
+    def _install_css(self):
+        if getattr(self, "_css_installed", False):
+            return
         css = Gtk.CssProvider()
         css.load_from_data(b"""
             .diff-grid { background: transparent; }
@@ -201,7 +179,35 @@ class DiffWindow(Gtk.Window):
         Gtk.StyleContext.add_provider_for_display(
             self.get_display(), css, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
+        self._css_provider = css
+        self._css_installed = True
 
+    def _on_toggle(self, btn):
+        self._split = btn.get_active()
+        btn.set_label("Side-by-side" if self._split else "Unificato")
+        if self._hunks:
+            self._render()
+
+    def _render(self):
+        # Rimuovi vecchio diff se esiste
+        old = self.stack.get_child_by_name("diff")
+        if old:
+            self.stack.remove(old)
+
+        scroll = Gtk.ScrolledWindow()
+        scroll.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+
+        if self._split:
+            widget = self._build_split_view()
+        else:
+            widget = self._build_unified_view()
+
+        scroll.set_child(widget)
+        self.stack.add_named(scroll, "diff")
+        self.stack.set_visible_child_name("diff")
+
+    # ── Vista side-by-side ─────────────────────────────────────────────────────
+    def _build_split_view(self):
         outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         outer.set_margin_top(4)
 
@@ -374,7 +380,8 @@ class GitDiffExtension(GObject.GObject, Nautilus.MenuProvider):
                 timeout=3,
             )
             return r.stdout.strip() if r.returncode == 0 else None
-        except Exception:
+        except Exception as e:
+            logging.debug("git rev-parse failed: %s", e)
             return None
 
     def _menu_item(self, name):

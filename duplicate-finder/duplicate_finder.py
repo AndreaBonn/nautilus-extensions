@@ -63,10 +63,18 @@ def hash_of_file(path: str, chunk_size: int = 65536) -> str:
     return h.hexdigest()
 
 
+MAX_SCAN_FILES = 100_000
+
+
 def find_duplicates(root: str, progress_cb=None) -> dict:
     by_size = defaultdict(list)
+    file_count = 0
     for dirpath, _, filenames in os.walk(root):
         for fname in filenames:
+            file_count += 1
+            if file_count > MAX_SCAN_FILES:
+                logging.warning("Scan limit reached: %d files, stopping", MAX_SCAN_FILES)
+                break
             fpath = os.path.join(dirpath, fname)
             try:
                 size = os.path.getsize(fpath)
@@ -74,6 +82,8 @@ def find_duplicates(root: str, progress_cb=None) -> dict:
                     by_size[size].append(fpath)
             except OSError as e:
                 logging.debug("File skipped during scan: %s", e)
+        if file_count > MAX_SCAN_FILES:
+            break
 
     candidates = [paths for paths in by_size.values() if len(paths) > 1]
     total = sum(len(g) for g in candidates)
@@ -362,8 +372,8 @@ class DuplicateFinderExtension(GObject.GObject, Nautilus.MenuProvider):
                 p = loc.get_path()
                 if p:
                     return p
-        except Exception:
-            pass
+        except Exception as e:
+            logging.debug("get_location failed: %s", e)
         # fallback: parse dell'URI
         try:
             uri = f.get_uri()
@@ -371,8 +381,8 @@ class DuplicateFinderExtension(GObject.GObject, Nautilus.MenuProvider):
                 from urllib.parse import unquote
 
                 return unquote(uri[7:])
-        except Exception:
-            pass
+        except Exception as e:
+            logging.debug("URI fallback failed: %s", e)
         return None
 
     def _is_local_dir(self, f):
@@ -381,14 +391,14 @@ class DuplicateFinderExtension(GObject.GObject, Nautilus.MenuProvider):
         try:
             if f.get_file_type() == Nautilus.FileType.DIRECTORY:
                 return True
-        except Exception:
-            pass
+        except Exception as e:
+            logging.debug("get_file_type check failed: %s", e)
         # check 2: is_directory()
         try:
             if f.is_directory():
                 return True
-        except Exception:
-            pass
+        except Exception as e:
+            logging.debug("is_directory check failed: %s", e)
         # check 3: controlla sul filesystem
         path = self._path_from_file(f)
         if path and os.path.isdir(path):

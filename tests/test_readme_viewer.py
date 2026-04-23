@@ -30,6 +30,7 @@ _ns = _load_functions()
 find_readme = _ns["find_readme"]
 uri_to_path = _ns["uri_to_path"]
 render_html = _ns["render_html"]
+_sanitize_html = _ns["_sanitize_html"]
 
 
 class TestFindReadme:
@@ -127,3 +128,43 @@ class TestRenderHtml:
         html = render_html("", "README.md")
         assert isinstance(html, str)
         assert "<!DOCTYPE html>" in html
+
+
+class TestSanitizeHtml:
+    def test_removes_script_tags(self):
+        result = _sanitize_html('<p>Hello</p><script>alert("xss")</script>')
+        assert "<script" not in result
+        assert "<p>Hello</p>" in result
+
+    def test_removes_iframe_tags(self):
+        result = _sanitize_html('<iframe src="evil.com"></iframe>')
+        assert "<iframe" not in result
+
+    def test_removes_event_handlers_double_quotes(self):
+        result = _sanitize_html('<img src="x.png" onerror="alert(1)">')
+        assert "onerror" not in result
+        assert "src" in result
+
+    def test_removes_event_handlers_single_quotes(self):
+        result = _sanitize_html("<div onclick='steal()'>click</div>")
+        assert "onclick" not in result
+        assert "click" in result
+
+    def test_preserves_safe_tags(self):
+        safe = "<h1>Title</h1><p>Text</p><a href='link'>link</a><code>code</code>"
+        result = _sanitize_html(safe)
+        assert result == safe
+
+    def test_removes_object_embed_form(self):
+        result = _sanitize_html('<object data="x"></object><embed src="y"><form action="z">')
+        assert "<object" not in result
+        assert "<embed" not in result
+        assert "<form" not in result
+
+    def test_case_insensitive(self):
+        result = _sanitize_html("<SCRIPT>bad</SCRIPT><ScRiPt>bad</ScRiPt>")
+        assert "SCRIPT" not in result.upper() or "script" not in result.lower()
+
+    def test_removes_style_tag(self):
+        result = _sanitize_html("<style>body { background: url('evil') }</style>")
+        assert "<style" not in result

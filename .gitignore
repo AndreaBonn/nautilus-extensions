@@ -97,10 +97,16 @@ site/
 # pyenv
 .python-version
 
-# Environments
+# Environments and secrets
 .env
 .env.local
 .env.*.local
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+credentials/
 
 # mypy
 .mypy_cache/

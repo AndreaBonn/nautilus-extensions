@@ -319,3 +319,35 @@ class TestAnalyzeBestPractices:
         # Verifica che sia ordinato
         numeric = [order.get(lvl, 99) for lvl in levels]
         assert numeric == sorted(numeric)
+
+    def test_pip_install_without_pinned_version_generates_medium(self):
+        data = self._base_data(run_commands=[{"line": 3, "cmd": "pip install requests flask"}])
+        warnings = _analyze_best_practices(data)
+        medium = [w for w in warnings if w["level"] == "medium"]
+        assert any(
+            "versione" in w["title"].lower() or "dipendenz" in w["title"].lower() for w in medium
+        )
+
+    def test_pip_install_with_pinned_version_no_version_warning(self):
+        data = self._base_data(
+            run_commands=[
+                {"line": 3, "cmd": "pip install --no-cache-dir requests==2.31.0 flask==3.0.0"}
+            ]
+        )
+        warnings = _analyze_best_practices(data)
+        assert not any(
+            "versione" in w["title"].lower() or "dipendenz" in w["title"].lower() for w in warnings
+        )
+
+    def test_copy_dot_dot_generates_low_warning(self):
+        data = self._base_data(copy_adds=[{"line": 5, "instruction": "COPY", "args": ". ."}])
+        warnings = _analyze_best_practices(data)
+        low = [w for w in warnings if w["level"] == "low"]
+        assert any("COPY" in w["title"] and "contesto" in w["title"] for w in low)
+
+    def test_copy_specific_path_no_context_warning(self):
+        data = self._base_data(
+            copy_adds=[{"line": 5, "instruction": "COPY", "args": "requirements.txt /app/"}]
+        )
+        warnings = _analyze_best_practices(data)
+        assert not any("contesto" in w["title"] for w in warnings)
