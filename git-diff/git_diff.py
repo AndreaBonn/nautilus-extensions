@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import logging
 import os
+import re
 import subprocess
 import threading
 
@@ -54,8 +55,6 @@ def parse_diff(raw: str) -> list[dict]:
     for line in raw.split("\n"):
         if line.startswith("@@"):
             # es. @@ -10,6 +10,8 @@
-            import re
-
             m = re.search(r"@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@(.*)", line)
             if m:
                 old_line = int(m.group(1))
@@ -386,7 +385,7 @@ class GitDiffExtension(GObject.GObject, Nautilus.MenuProvider):
                 timeout=3,
             )
             return r.stdout.strip() if r.returncode == 0 else None
-        except Exception as e:
+        except (OSError, subprocess.TimeoutExpired) as e:
             logging.debug("git rev-parse failed: %s", e)
             return None
 

@@ -274,7 +274,6 @@ def _analyze_best_practices(data: dict) -> list:
     def warn(level, title, detail=""):
         warnings.append({"level": level, "title": title, "detail": detail})
 
-    data["instructions"]
     run_cmds = data["run_commands"]
     from_images = data["from_images"]
 
@@ -484,7 +483,6 @@ class DockerfileWindow(Gtk.Window):
         highs = sum(1 for w in data["warnings"] if w["level"] == "high")
         mediums = sum(1 for w in data["warnings"] if w["level"] == "medium")
         lows = sum(1 for w in data["warnings"] if w["level"] == "low")
-        sum(1 for w in data["warnings"] if w["level"] == "ok")
 
         # --- Info bar ---
         info_bar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=4)
@@ -544,7 +542,7 @@ class DockerfileWindow(Gtk.Window):
             logging.warning("xdg-open: file not found: %s", self._path)
             return
         try:
-            subprocess.Popen(["xdg-open", self._path])
+            subprocess.run(["xdg-open", self._path], check=False)
         except OSError as e:
             logging.warning("xdg-open failed for %s: %s", self._path, e)
 

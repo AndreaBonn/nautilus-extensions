@@ -14,6 +14,7 @@ Dependencies:
 
 import logging
 import os
+import subprocess
 import threading
 
 import gi
@@ -231,7 +232,6 @@ class ExcelPreviewWindow(Gtk.Window):
         sheets = data["sheets"]
         total_sheets = len(sheets)
         total_rows = sum(s.get("total_rows", 0) for s in sheets)
-        sum(s.get("total_cols", 0) for s in sheets)
 
         # --- Info bar ---
         info_bar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=4)
@@ -303,13 +303,11 @@ class ExcelPreviewWindow(Gtk.Window):
         self._root.append(bottom)
 
     def _open_editor(self, _btn):
-        import subprocess
-
         if not os.path.exists(self._path):
             logging.warning("xdg-open: file not found: %s", self._path)
             return
         try:
-            subprocess.Popen(["xdg-open", self._path])
+            subprocess.run(["xdg-open", self._path], check=False)
         except OSError as e:
             logging.warning("xdg-open failed for %s: %s", self._path, e)
 
@@ -459,7 +457,7 @@ class ExcelPreviewWindow(Gtk.Window):
         col_types = [str] * (len(numeric_cols) + 1)
         store = Gtk.ListStore(*col_types)
         for stat in desc.index:
-            row = [stat] + [f"{desc.loc[stat, col]:.4g}" for col in sheet["numeric_cols"]]
+            row = [stat] + [f"{desc.loc[stat, col]:.4g}" for col in numeric_cols]
             store.append(row)
 
         tv = Gtk.TreeView(model=store)

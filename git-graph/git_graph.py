@@ -13,6 +13,7 @@ Dependencies:
 from __future__ import annotations
 
 import logging
+import math
 import os
 import subprocess
 import threading
@@ -218,19 +219,19 @@ class GitGraphWidget(Gtk.DrawingArea):
 
             # Nodo (cerchio)
             cr.set_source_rgb(*c)
-            cr.arc(nx, ny, self.NODE_R, 0, 6.2832)
+            cr.arc(nx, ny, self.NODE_R, 0, math.tau)
             cr.fill()
 
             # Bordo nodo
             cr.set_source_rgba(1, 1, 1, 0.3)
             cr.set_line_width(1)
-            cr.arc(nx, ny, self.NODE_R, 0, 6.2832)
+            cr.arc(nx, ny, self.NODE_R, 0, math.tau)
             cr.stroke()
 
             # HEAD marker
             if commit["is_head"]:
                 cr.set_source_rgb(*hex_to_rgb(HEAD_COLOR))
-                cr.arc(nx, ny, self.NODE_R + 3, 0, 6.2832)
+                cr.arc(nx, ny, self.NODE_R + 3, 0, math.tau)
                 cr.set_line_width(1.5)
                 cr.stroke()
 

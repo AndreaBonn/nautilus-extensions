@@ -40,7 +40,7 @@ CSS = b"""
 """
 
 
-def human_size(size: int) -> str:
+def fmt_size(size: int) -> str:
     for unit in ["B", "KB", "MB", "GB"]:
         if size < 1024:
             return f"{size:.1f} {unit}"
@@ -262,7 +262,7 @@ class DupFinderWindow(Gtk.Window):
         else:
             self._subtitle.set_text(
                 f"{self._folder}  •  {n_groups} gruppi  •  "
-                f"{n_files} file  •  Recuperabile: {human_size(wasted)}"
+                f"{n_files} file  •  Recuperabile: {fmt_size(wasted)}"
             )
             self._hint.set_visible(True)
             self._btn_auto.set_sensitive(True)
@@ -278,7 +278,7 @@ class DupFinderWindow(Gtk.Window):
             first = True
             for p in sorted(paths):
                 try:
-                    size = human_size(os.path.getsize(p))
+                    size = fmt_size(os.path.getsize(p))
                 except OSError:
                     size = "?"
                 self._store.append([not first, short_hash, p, size])

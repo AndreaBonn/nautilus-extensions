@@ -15,6 +15,7 @@ Optional dependencies (recommended):
 import csv
 import logging
 import os
+import subprocess
 import threading
 
 import gi
@@ -128,7 +129,7 @@ def read_csv_plain(path: str, max_rows: int) -> tuple[list, list, dict]:
         "delimiter": repr(delimiter),
         "total_rows": total_rows,
         "total_cols": len(headers),
-        "file_size": _fmt_size(file_size),
+        "file_size": fmt_size(file_size),
         "truncated": total_rows > max_rows,
     }
     return headers, rows, info
@@ -156,7 +157,7 @@ def read_csv_pandas(path: str, max_rows: int) -> tuple[list, list, dict, object]
             "delimiter": repr(delimiter),
             "total_rows": total_rows,
             "total_cols": len(headers),
-            "file_size": _fmt_size(file_size),
+            "file_size": fmt_size(file_size),
             "truncated": total_rows > max_rows,
             "null_counts": df_full.isnull().sum().to_dict(),
             "dtypes": dtypes,
@@ -174,7 +175,7 @@ def read_csv_pandas(path: str, max_rows: int) -> tuple[list, list, dict, object]
         return [], [], {"error": str(e)}, None
 
 
-def _fmt_size(size: int) -> str:
+def fmt_size(size: int) -> str:
     for unit in ["B", "KB", "MB", "GB"]:
         if size < 1024:
             return f"{size:.1f} {unit}"
@@ -350,7 +351,6 @@ class CsvPreviewWindow(Gtk.Window):
             renderer.set_property("ellipsize", Pango.EllipsizeMode.END)
 
             # Highlight numeric columns in blue
-            info.get("dtypes", {})
             numeric_cols = info.get("numeric_cols", [])
             if header in numeric_cols:
                 renderer.set_property("foreground", "#0366d6")
@@ -478,7 +478,6 @@ class CsvPreviewWindow(Gtk.Window):
 
         dtypes = info.get("dtypes", {})
         null_counts = info.get("null_counts", {})
-        info.get("numeric_cols", [])
         total_rows = info.get("total_rows", 0)
 
         col_types_list = [str, str, str, str]
@@ -527,13 +526,12 @@ class CsvPreviewWindow(Gtk.Window):
     # ------------------------------------------------------------------ #
 
     def _open_editor(self, _btn):
-        import subprocess
 
         if not os.path.exists(self._csv_path):
             logging.warning("xdg-open: file not found: %s", self._csv_path)
             return
         try:
-            subprocess.Popen(["xdg-open", self._csv_path])
+            subprocess.run(["xdg-open", self._csv_path], check=False)
         except OSError as e:
             logging.warning("xdg-open failed for %s: %s", self._csv_path, e)
 
