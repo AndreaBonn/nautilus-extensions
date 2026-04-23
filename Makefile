@@ -15,7 +15,7 @@ EXTENSIONS = \
 	pdf-splitter/pdf_splitter.py \
 	readme-viewer/readme_preview.py
 
-.PHONY: install uninstall lint format test check restart help
+.PHONY: install uninstall lint format test security check restart help
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
@@ -48,4 +48,9 @@ format: ## Auto-format with ruff
 test: ## Run tests
 	@uv run pytest tests/ -v
 
-check: lint test ## Run lint + tests
+security: ## Run security checks (ruff-S + bandit + pip-audit)
+	@uv run ruff check --select S .
+	@uv run bandit -r . --exclude .venv,tests -ll
+	@uv run pip-audit
+
+check: lint test security ## Run lint + tests + security

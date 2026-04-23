@@ -1,32 +1,21 @@
 """Tests for pdf-splitter pure functions."""
 
 import os
-import re
 
-# --- Load functions without GTK ---
+from conftest import ROOT, _load_module_functions
 
-
-def _load_splitter_functions():
-    """Load pure functions from pdf_splitter.py without GTK imports."""
-    from pathlib import Path
-
-    source = (Path(__file__).parent.parent / "pdf-splitter" / "pdf_splitter.py").read_text()
-
-    namespace = {"os": os, "re": re}
-    lines = source.split("\n")
-    safe_lines = []
-    for line in lines:
-        stripped = line.strip()
-        if stripped.startswith(("import gi", "from gi.", "gi.require_version")):
-            continue
-        if stripped.startswith("class ") and ("Gtk." in stripped or "GObject." in stripped):
-            break
-        safe_lines.append(line)
-    exec("\n".join(safe_lines), namespace)
-    return namespace
-
-
-_ns = _load_splitter_functions()
+_ns = _load_module_functions(
+    ROOT / "pdf-splitter" / "pdf_splitter.py",
+    "pdf_splitter",
+    [
+        "parse_ranges",
+        "every_n_chunks",
+        "single_page_chunks",
+        "chunk_filename",
+        "bookmark_chunks",
+        "fmt_size",
+    ],
+)
 parse_ranges = _ns["parse_ranges"]
 every_n_chunks = _ns["every_n_chunks"]
 single_page_chunks = _ns["single_page_chunks"]

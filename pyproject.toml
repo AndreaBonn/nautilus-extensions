@@ -97,6 +97,9 @@ ignore = [
 testpaths = ["tests"]
 pythonpath = [".", "tests"]
 
+[tool.bandit]
+exclude_dirs = [".venv", "tests"]
+
 [dependency-groups]
 dev = [
     "bandit>=1.7.10",

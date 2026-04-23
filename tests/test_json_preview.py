@@ -4,27 +4,22 @@ import gzip
 import json
 import os
 import tempfile
-from pathlib import Path
 
+from conftest import ROOT, _load_module_functions
 
-def _load_functions():
-    source = (Path(__file__).parent.parent / "json-preview" / "json_preview.py").read_text()
-    namespace = {}
-    exec("import os, json, gzip, collections, logging, threading", namespace)
-    lines = source.split("\n")
-    safe_lines = []
-    for line in lines:
-        stripped = line.strip()
-        if stripped.startswith(("import gi", "from gi.", "gi.require_version")):
-            continue
-        if stripped.startswith("class ") and ("Gtk." in stripped or "GObject." in stripped):
-            break
-        safe_lines.append(line)
-    exec("\n".join(safe_lines), namespace)
-    return namespace
-
-
-_ns = _load_functions()
+_ns = _load_module_functions(
+    ROOT / "json-preview" / "json_preview.py",
+    "json_preview",
+    [
+        "fmt_size",
+        "json_type",
+        "type_color",
+        "infer_schema",
+        "read_json_file",
+        "read_jsonl_file",
+        "is_gzipped",
+    ],
+)
 fmt_size = _ns["fmt_size"]
 json_type = _ns["json_type"]
 type_color = _ns["type_color"]

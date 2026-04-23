@@ -1,32 +1,15 @@
 """Tests for git-graph pure functions."""
 
 import subprocess
-from pathlib import Path
 
 import pytest
-from conftest import requires_git
+from conftest import ROOT, _load_module_functions, requires_git
 
-
-def _load_functions():
-    import math
-
-    source = (Path(__file__).parent.parent / "git-graph" / "git_graph.py").read_text()
-
-    namespace = {"math": math}
-    lines = source.split("\n")
-    safe_lines = []
-    for line in lines:
-        stripped = line.strip()
-        if stripped.startswith(("import gi", "from gi.", "gi.require_version")):
-            continue
-        if stripped.startswith("class ") and ("Gtk." in stripped or "GObject." in stripped):
-            break
-        safe_lines.append(line)
-    exec("\n".join(safe_lines), namespace)
-    return namespace
-
-
-_ns = _load_functions()
+_ns = _load_module_functions(
+    ROOT / "git-graph" / "git_graph.py",
+    "git_graph",
+    ["hex_to_rgb", "get_git_log"],
+)
 hex_to_rgb = _ns["hex_to_rgb"]
 get_git_log = _ns["get_git_log"]
 

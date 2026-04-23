@@ -3,30 +3,14 @@
 import os
 import subprocess
 import tempfile
-from pathlib import Path
 
-from conftest import requires_git
+from conftest import ROOT, _load_module_functions, requires_git
 
-
-def _load_functions():
-    source = (Path(__file__).parent.parent / "git-blame" / "git_blame.py").read_text()
-    namespace = {}
-    exec("import os, logging, subprocess, threading", namespace)
-    exec("from urllib.parse import unquote, urlparse", namespace)
-    lines = source.split("\n")
-    safe_lines = []
-    for line in lines:
-        stripped = line.strip()
-        if stripped.startswith(("import gi", "from gi.", "gi.require_version")):
-            continue
-        if stripped.startswith("class ") and ("Gtk." in stripped or "GObject." in stripped):
-            break
-        safe_lines.append(line)
-    exec("\n".join(safe_lines), namespace)
-    return namespace
-
-
-_ns = _load_functions()
+_ns = _load_module_functions(
+    ROOT / "git-blame" / "git_blame.py",
+    "git_blame",
+    ["_git_root", "_git_info_file", "_git_info_dir"],
+)
 _git_root = _ns["_git_root"]
 _git_info_file = _ns["_git_info_file"]
 _git_info_dir = _ns["_git_info_dir"]

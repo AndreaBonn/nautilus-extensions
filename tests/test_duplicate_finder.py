@@ -4,31 +4,14 @@ import hashlib
 import os
 import tempfile
 
+from conftest import ROOT, _load_module_functions
 
-def _load_functions():
-    import re
-    from collections import defaultdict
-    from pathlib import Path
-
-    source = (Path(__file__).parent.parent / "duplicate-finder" / "duplicate_finder.py").read_text()
-
-    namespace = {"os": os, "re": re, "hashlib": hashlib, "defaultdict": defaultdict}
-    exec("from collections import defaultdict", namespace)
-    lines = source.split("\n")
-    safe_lines = []
-    for line in lines:
-        stripped = line.strip()
-        if stripped.startswith(("import gi", "from gi.", "gi.require_version")):
-            continue
-        if stripped.startswith("class ") and ("Gtk." in stripped or "GObject." in stripped):
-            break
-        safe_lines.append(line)
-    exec("\n".join(safe_lines), namespace)
-    return namespace
-
-
-_ns = _load_functions()
-human_size = _ns["human_size"]
+_ns = _load_module_functions(
+    ROOT / "duplicate-finder" / "duplicate_finder.py",
+    "duplicate_finder",
+    ["fmt_size", "hash_of_file", "find_duplicates", "MAX_SCAN_FILES"],
+)
+fmt_size = _ns["fmt_size"]
 hash_of_file = _ns["hash_of_file"]
 find_duplicates = _ns["find_duplicates"]
 MAX_SCAN_FILES = _ns.get("MAX_SCAN_FILES", 100_000)
@@ -36,16 +19,16 @@ MAX_SCAN_FILES = _ns.get("MAX_SCAN_FILES", 100_000)
 
 class TestHumanSize:
     def test_bytes(self):
-        assert human_size(100) == "100.0 B"
+        assert fmt_size(100) == "100.0 B"
 
     def test_kilobytes(self):
-        assert human_size(1024) == "1.0 KB"
+        assert fmt_size(1024) == "1.0 KB"
 
     def test_megabytes(self):
-        assert human_size(1024 * 1024) == "1.0 MB"
+        assert fmt_size(1024 * 1024) == "1.0 MB"
 
     def test_zero(self):
-        assert human_size(0) == "0.0 B"
+        assert fmt_size(0) == "0.0 B"
 
 
 class TestHashOfFile:

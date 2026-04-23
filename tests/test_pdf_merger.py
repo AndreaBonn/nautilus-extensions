@@ -10,39 +10,13 @@ import re
 from pathlib import Path
 
 import pytest
+from conftest import ROOT, _load_module_functions
 
-# ---------------------------------------------------------------------------
-# Load pure functions without GTK
-# ---------------------------------------------------------------------------
-
-
-def _load_merger_functions():
-    """Load pure functions from pdf_merger.py, skipping gi imports."""
-    source = (Path(__file__).parent.parent / "pdf-merger" / "pdf_merger.py").read_text()
-
-    namespace = {"os": os, "re": re}
-    for line in source.split("\n"):
-        stripped = line.strip()
-        if stripped.startswith(("import gi", "from gi.", "gi.require_version")):
-            continue
-        if stripped.startswith("class ") and ("Gtk." in stripped or "GObject." in stripped):
-            break
-        namespace.setdefault("__builtins__", __builtins__)
-
-    safe_lines = []
-    for line in source.split("\n"):
-        stripped = line.strip()
-        if stripped.startswith(("import gi", "from gi.", "gi.require_version")):
-            continue
-        if stripped.startswith("class ") and ("Gtk." in stripped or "GObject." in stripped):
-            break
-        safe_lines.append(line)
-
-    exec("\n".join(safe_lines), namespace)
-    return namespace
-
-
-_ns = _load_merger_functions()
+_ns = _load_module_functions(
+    ROOT / "pdf-merger" / "pdf_merger.py",
+    "pdf_merger",
+    ["fmt_size", "get_pdf_pages", "merge_pdf_files"],
+)
 fmt_size = _ns["fmt_size"]
 get_pdf_pages = _ns["get_pdf_pages"]
 merge_pdf_files = _ns.get("merge_pdf_files")

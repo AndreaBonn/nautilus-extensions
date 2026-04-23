@@ -2,31 +2,14 @@
 
 import os
 import tempfile
-from pathlib import Path
 
+from conftest import ROOT, _load_module_functions
 
-def _load_functions():
-    source = (Path(__file__).parent.parent / "readme-viewer" / "readme_preview.py").read_text()
-    namespace = {}
-    exec("import os, logging, subprocess, threading", namespace)
-    exec("from urllib.parse import unquote", namespace)
-    lines = source.split("\n")
-    safe_lines = []
-    for line in lines:
-        stripped = line.strip()
-        if stripped.startswith(("import gi", "from gi.", "gi.require_version")):
-            continue
-        # Salta i try/except per WebKit (richiedono gi)
-        if "gi.require_version" in stripped:
-            continue
-        if stripped.startswith("class ") and ("Gtk." in stripped or "GObject." in stripped):
-            break
-        safe_lines.append(line)
-    exec("\n".join(safe_lines), namespace)
-    return namespace
-
-
-_ns = _load_functions()
+_ns = _load_module_functions(
+    ROOT / "readme-viewer" / "readme_preview.py",
+    "readme_preview",
+    ["find_readme", "uri_to_path", "render_html", "_sanitize_html"],
+)
 find_readme = _ns["find_readme"]
 uri_to_path = _ns["uri_to_path"]
 render_html = _ns["render_html"]

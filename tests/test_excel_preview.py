@@ -2,29 +2,15 @@
 
 import os
 import tempfile
-from pathlib import Path
 
 import openpyxl
+from conftest import ROOT, _load_module_functions
 
-
-def _load_functions():
-    source = (Path(__file__).parent.parent / "excel-preview" / "excel_preview.py").read_text()
-    namespace = {}
-    exec("import os, logging, threading", namespace)
-    lines = source.split("\n")
-    safe_lines = []
-    for line in lines:
-        stripped = line.strip()
-        if stripped.startswith(("import gi", "from gi.", "gi.require_version")):
-            continue
-        if stripped.startswith("class ") and ("Gtk." in stripped or "GObject." in stripped):
-            break
-        safe_lines.append(line)
-    exec("\n".join(safe_lines), namespace)
-    return namespace
-
-
-_ns = _load_functions()
+_ns = _load_module_functions(
+    ROOT / "excel-preview" / "excel_preview.py",
+    "excel_preview",
+    ["fmt_size", "read_excel", "PREVIEW_ROWS"],
+)
 fmt_size = _ns["fmt_size"]
 read_excel = _ns["read_excel"]
 PREVIEW_ROWS = _ns["PREVIEW_ROWS"]

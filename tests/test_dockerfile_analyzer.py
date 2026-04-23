@@ -2,30 +2,21 @@
 
 import os
 import tempfile
-from pathlib import Path
 
+from conftest import ROOT, _load_module_functions
 
-def _load_functions():
-    source = (
-        Path(__file__).parent.parent / "dockerfile-analyzer" / "dockerfile_analyzer.py"
-    ).read_text()
-    namespace = {}
-    exec("import os, re, logging, threading", namespace)
-    exec("from urllib.parse import unquote, urlparse", namespace)
-    lines = source.split("\n")
-    safe_lines = []
-    for line in lines:
-        stripped = line.strip()
-        if stripped.startswith(("import gi", "from gi.", "gi.require_version")):
-            continue
-        if stripped.startswith("class ") and ("Gtk." in stripped or "GObject." in stripped):
-            break
-        safe_lines.append(line)
-    exec("\n".join(safe_lines), namespace)
-    return namespace
-
-
-_ns = _load_functions()
+_ns = _load_module_functions(
+    ROOT / "dockerfile-analyzer" / "dockerfile_analyzer.py",
+    "dockerfile_analyzer",
+    [
+        "parse_dockerfile",
+        "_parse_from",
+        "_parse_env",
+        "_parse_arg",
+        "_parse_label",
+        "_analyze_best_practices",
+    ],
+)
 parse_dockerfile = _ns["parse_dockerfile"]
 _parse_from = _ns["_parse_from"]
 _parse_env = _ns["_parse_env"]

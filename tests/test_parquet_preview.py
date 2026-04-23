@@ -1,28 +1,13 @@
 """Tests for parquet-preview pure functions."""
 
-from pathlib import Path
-
 import pytest
+from conftest import ROOT, _load_module_functions
 
-
-def _load_functions():
-    source = (Path(__file__).parent.parent / "parquet-preview" / "parquet_preview.py").read_text()
-    namespace = {}
-    exec("import os, logging, threading", namespace)
-    lines = source.split("\n")
-    safe_lines = []
-    for line in lines:
-        stripped = line.strip()
-        if stripped.startswith(("import gi", "from gi.", "gi.require_version")):
-            continue
-        if stripped.startswith("class ") and ("Gtk." in stripped or "GObject." in stripped):
-            break
-        safe_lines.append(line)
-    exec("\n".join(safe_lines), namespace)
-    return namespace
-
-
-_ns = _load_functions()
+_ns = _load_module_functions(
+    ROOT / "parquet-preview" / "parquet_preview.py",
+    "parquet_preview",
+    ["fmt_size", "dtype_color", "dtype_short", "read_parquet"],
+)
 fmt_size = _ns["fmt_size"]
 dtype_color = _ns["dtype_color"]
 dtype_short = _ns["dtype_short"]

@@ -2,58 +2,44 @@
 
 import os
 import tempfile
-from pathlib import Path
 
+import pytest
+from conftest import ROOT, _load_module_functions
 
-def _load_functions():
-    source = (Path(__file__).parent.parent / "csv-preview" / "csv_preview.py").read_text()
-    namespace = {}
-    exec("import os, csv, logging, threading", namespace)
-    lines = source.split("\n")
-    safe_lines = []
-    for line in lines:
-        stripped = line.strip()
-        if stripped.startswith(("import gi", "from gi.", "gi.require_version")):
-            continue
-        if stripped.startswith("class ") and ("Gtk." in stripped or "GObject." in stripped):
-            break
-        safe_lines.append(line)
-    exec("\n".join(safe_lines), namespace)
-    return namespace
-
-
-_ns = _load_functions()
+_ns = _load_module_functions(
+    ROOT / "csv-preview" / "csv_preview.py",
+    "csv_preview",
+    ["detect_delimiter", "read_csv_plain", "read_csv_pandas", "fmt_size"],
+)
 detect_delimiter = _ns["detect_delimiter"]
 read_csv_plain = _ns["read_csv_plain"]
 read_csv_pandas = _ns.get("read_csv_pandas")
-_fmt_size = _ns["_fmt_size"]
-
-import pytest
+fmt_size = _ns["fmt_size"]
 
 requires_pandas = pytest.mark.skipif(read_csv_pandas is None, reason="pandas not available")
 
 
 class TestFmtSize:
-    def test_fmt_size_bytes_returns_b_unit(self):
-        assert _fmt_size(500) == "500.0 B"
+    def testfmt_size_bytes_returns_b_unit(self):
+        assert fmt_size(500) == "500.0 B"
 
-    def test_fmt_size_zero_returns_zero_b(self):
-        assert _fmt_size(0) == "0.0 B"
+    def testfmt_size_zero_returns_zero_b(self):
+        assert fmt_size(0) == "0.0 B"
 
-    def test_fmt_size_exactly_1kb_returns_kb(self):
-        assert _fmt_size(1024) == "1.0 KB"
+    def testfmt_size_exactly_1kb_returns_kb(self):
+        assert fmt_size(1024) == "1.0 KB"
 
-    def test_fmt_size_exactly_1mb_returns_mb(self):
-        assert _fmt_size(1024 * 1024) == "1.0 MB"
+    def testfmt_size_exactly_1mb_returns_mb(self):
+        assert fmt_size(1024 * 1024) == "1.0 MB"
 
-    def test_fmt_size_exactly_1gb_returns_gb(self):
-        assert _fmt_size(1024**3) == "1.0 GB"
+    def testfmt_size_exactly_1gb_returns_gb(self):
+        assert fmt_size(1024**3) == "1.0 GB"
 
-    def test_fmt_size_large_returns_tb(self):
-        assert _fmt_size(1024**4) == "1.0 TB"
+    def testfmt_size_large_returns_tb(self):
+        assert fmt_size(1024**4) == "1.0 TB"
 
-    def test_fmt_size_fractional_kb(self):
-        assert _fmt_size(2048) == "2.0 KB"
+    def testfmt_size_fractional_kb(self):
+        assert fmt_size(2048) == "2.0 KB"
 
 
 class TestDetectDelimiter:
