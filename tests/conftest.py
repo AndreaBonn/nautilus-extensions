@@ -6,6 +6,8 @@ Functions are imported by adding extension directories to sys.path
 to avoid issues with the gi.require_version imports at module level.
 """
 
+from __future__ import annotations
+
 import subprocess
 from pathlib import Path
 
@@ -60,6 +62,12 @@ def _load_module_functions(module_path: Path, module_name: str, functions: list[
             break
         safe_lines.append(line)
 
-    exec("\n".join(safe_lines), namespace)
+    code = compile(
+        "\n".join(safe_lines),
+        filename=str(module_path),
+        mode="exec",
+        flags=__import__("__future__").annotations.compiler_flag,
+    )
+    exec(code, namespace)
 
     return {name: namespace[name] for name in functions if name in namespace}
