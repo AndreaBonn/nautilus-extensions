@@ -4,12 +4,12 @@
 
 ---
 
-Estensione per Nautilus che trova file duplicati in una cartella usando hash MD5.
+Estensione per Nautilus che trova file duplicati in una cartella usando hash SHA-256.
 
 ## 🎯 Funzionalità
 
 - **Scansione ricorsiva** di tutte le sottocartelle
-- **Hash MD5** per identificare file identici
+- **Hash SHA-256** per identificare file identici
 - **Raggruppamento** per contenuto
 - **Selezione intelligente** (mantiene il primo file)
 - **Spostamento nel cestino** con un clic

@@ -6,6 +6,8 @@ Installazione:
   nautilus -q && nautilus &
 """
 
+from __future__ import annotations
+
 import os
 import subprocess
 import threading
@@ -17,31 +19,35 @@ gi.require_version("Nautilus", "4.0")
 from gi.repository import GLib, GObject, Nautilus
 
 MAX_CACHE_SIZE = 2000
-_cache = {}
+_cache: dict[str, tuple[str, str, str]] = {}
 _cache_lock = threading.Lock()
 
 
-def _git_root(path):
+def _git_root(path: str) -> str | None:
     cwd = path if os.path.isdir(path) else os.path.dirname(path)
     try:
         r = subprocess.run(
             ["git", "rev-parse", "--show-toplevel"],
-            cwd=cwd, capture_output=True, text=True, timeout=3
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            timeout=3,
         )
         return r.stdout.strip() if r.returncode == 0 else None
     except Exception:
         return None
 
 
-def _git_info_file(filepath, root):
+def _git_info_file(filepath: str, root: str) -> tuple[str, str, str]:
     """Info per un file: autore, data relativa, messaggio."""
     rel = os.path.relpath(filepath, root)
     try:
         r = subprocess.run(
-            ["git", "log", "-1",
-             "--pretty=format:%an||%ar||%s",
-             "--follow", "--", rel],
-            cwd=root, capture_output=True, text=True, timeout=5
+            ["git", "log", "-1", "--pretty=format:%an||%ar||%s", "--follow", "--", rel],
+            cwd=root,
+            capture_output=True,
+            text=True,
+            timeout=5,
         )
         out = r.stdout.strip()
         if not out:
@@ -55,7 +61,7 @@ def _git_info_file(filepath, root):
         return ("", "", "")
 
 
-def _git_info_dir(dirpath, root):
+def _git_info_dir(dirpath: str, root: str) -> tuple[str, str, str]:
     """
     Info per una cartella: trova l'ultimo commit che ha toccato
     qualsiasi file dentro quella cartella.
@@ -66,17 +72,21 @@ def _git_info_dir(dirpath, root):
     try:
         # Autore + data + messaggio dell'ultimo commit nella cartella
         r = subprocess.run(
-            ["git", "log", "-1",
-             "--pretty=format:%an||%ar||%s",
-             "--", rel],
-            cwd=root, capture_output=True, text=True, timeout=5
+            ["git", "log", "-1", "--pretty=format:%an||%ar||%s", "--", rel],
+            cwd=root,
+            capture_output=True,
+            text=True,
+            timeout=5,
         )
         out = r.stdout.strip()
         if not out:
             # Fallback: info del repo (branch + ultimo commit globale)
             r2 = subprocess.run(
                 ["git", "log", "-1", "--pretty=format:%an||%ar||%s"],
-                cwd=root, capture_output=True, text=True, timeout=5
+                cwd=root,
+                capture_output=True,
+                text=True,
+                timeout=5,
             )
             out = r2.stdout.strip()
         if not out:
@@ -90,10 +100,7 @@ def _git_info_dir(dirpath, root):
         return ("", "", "")
 
 
-class GitColumnsExtension(GObject.GObject,
-                          Nautilus.ColumnProvider,
-                          Nautilus.InfoProvider):
-
+class GitColumnsExtension(GObject.GObject, Nautilus.ColumnProvider, Nautilus.InfoProvider):
     def __init__(self):
         super().__init__()
 
@@ -129,13 +136,13 @@ class GitColumnsExtension(GObject.GObject,
         with _cache_lock:
             if filepath in _cache:
                 a, d, m = _cache[filepath]
-                file_obj.add_string_attribute("git_author",  a)
-                file_obj.add_string_attribute("git_date",    d)
+                file_obj.add_string_attribute("git_author", a)
+                file_obj.add_string_attribute("git_date", d)
                 file_obj.add_string_attribute("git_message", m)
                 return
 
-        file_obj.add_string_attribute("git_author",  "…")
-        file_obj.add_string_attribute("git_date",    "…")
+        file_obj.add_string_attribute("git_author", "…")
+        file_obj.add_string_attribute("git_date", "…")
         file_obj.add_string_attribute("git_message", "…")
 
         def worker(fp, fobj):
@@ -157,18 +164,17 @@ class GitColumnsExtension(GObject.GObject,
                 _cache[fp] = result
             GLib.idle_add(_update, fobj, *result)
 
-        threading.Thread(target=worker, args=(filepath, file_obj),
-                         daemon=True).start()
+        threading.Thread(target=worker, args=(filepath, file_obj), daemon=True).start()
 
     def _empty(self, file_obj):
-        file_obj.add_string_attribute("git_author",  "")
-        file_obj.add_string_attribute("git_date",    "")
+        file_obj.add_string_attribute("git_author", "")
+        file_obj.add_string_attribute("git_date", "")
         file_obj.add_string_attribute("git_message", "")
 
 
 def _update(file_obj, author, date, msg):
-    file_obj.add_string_attribute("git_author",  author)
-    file_obj.add_string_attribute("git_date",    date)
+    file_obj.add_string_attribute("git_author", author)
+    file_obj.add_string_attribute("git_date", date)
     file_obj.add_string_attribute("git_message", msg)
     file_obj.invalidate_extension_info()
     return GLib.SOURCE_REMOVE

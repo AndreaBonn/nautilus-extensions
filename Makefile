@@ -15,7 +15,7 @@ EXTENSIONS = \
 	pdf-splitter/pdf_splitter.py \
 	readme-viewer/readme_preview.py
 
-.PHONY: install uninstall lint test check restart help
+.PHONY: install uninstall lint format test check restart help
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
@@ -40,12 +40,12 @@ restart: ## Restart Nautilus
 	nautilus -q 2>/dev/null; nautilus &
 
 lint: ## Run ruff linter on all extensions
-	@ruff check .
+	@uv run ruff check .
 
 format: ## Auto-format with ruff
-	@ruff format .
+	@uv run ruff format .
 
 test: ## Run tests
-	@pytest tests/ -v
+	@uv run pytest tests/ -v
 
 check: lint test ## Run lint + tests

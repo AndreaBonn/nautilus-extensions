@@ -9,6 +9,8 @@ Installazione:
   nautilus -q && nautilus &
 """
 
+from __future__ import annotations
+
 import os
 import subprocess
 import threading
@@ -23,16 +25,15 @@ from urllib.parse import unquote, urlparse
 from gi.repository import GLib, GObject, Gtk, Nautilus
 
 
-def run_git(args, cwd):
+def run_git(args: list[str], cwd: str) -> str:
     try:
-        r = subprocess.run(["git"] + args, cwd=cwd,
-                           capture_output=True, text=True, timeout=10)
+        r = subprocess.run(["git"] + args, cwd=cwd, capture_output=True, text=True, timeout=10)
         return r.stdout if r.returncode == 0 else ""
     except Exception:
         return ""
 
 
-def parse_diff(raw):
+def parse_diff(raw: str) -> list[dict]:
     """
     Parsa l'output di `git diff` in chunks.
     Ritorna lista di hunk: {'header': str, 'lines': [(type, lineno_old, lineno_new, text), ...]}
@@ -46,12 +47,13 @@ def parse_diff(raw):
         if line.startswith("@@"):
             # es. @@ -10,6 +10,8 @@
             import re
+
             m = re.search(r"@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@(.*)", line)
             if m:
                 old_line = int(m.group(1))
                 new_line = int(m.group(2))
-                header   = line
-                current  = {"header": header, "lines": []}
+                header = line
+                current = {"header": header, "lines": []}
                 hunks.append(current)
         elif current is not None:
             if line.startswith("+") and not line.startswith("+++"):
@@ -61,7 +63,9 @@ def parse_diff(raw):
                 current["lines"].append(("del", old_line, None, line[1:]))
                 old_line += 1
             elif not line.startswith(("---", "+++")):
-                current["lines"].append(("ctx", old_line, new_line, line[1:] if line.startswith(" ") else line))
+                current["lines"].append(
+                    ("ctx", old_line, new_line, line[1:] if line.startswith(" ") else line)
+                )
                 old_line += 1
                 new_line += 1
 
@@ -207,7 +211,7 @@ class DiffWindow(Gtk.Window):
             outer.append(h_lbl)
 
             # Costruisci le due colonne: old (solo ctx+del) e new (solo ctx+add)
-            left_lines  = []  # (lineno, type, text)
+            left_lines = []  # (lineno, type, text)
             right_lines = []
 
             # Associa righe: del/add appaiono affiancate, ctx su entrambi i lati
@@ -267,7 +271,7 @@ class DiffWindow(Gtk.Window):
                 # Left sign
                 signs = {"add": "+", "del": "−", "ctx": " ", "empty": ""}
                 ls_lbl = Gtk.Label(label=signs.get(l_type, ""))
-                ls_lbl.add_css_class(f"sign-{'del' if l_type=='del' else 'ctx'}")
+                ls_lbl.add_css_class(f"sign-{'del' if l_type == 'del' else 'ctx'}")
                 ls_lbl.add_css_class(f"line-{l_type}")
                 grid.attach(ls_lbl, 1, row_i, 1, 1)
 
@@ -293,7 +297,7 @@ class DiffWindow(Gtk.Window):
 
                 # Right sign
                 rs_lbl = Gtk.Label(label=signs.get(r_type, ""))
-                rs_lbl.add_css_class(f"sign-{'add' if r_type=='add' else 'ctx'}")
+                rs_lbl.add_css_class(f"sign-{'add' if r_type == 'add' else 'ctx'}")
                 rs_lbl.add_css_class(f"line-{r_type}")
                 grid.attach(rs_lbl, 5, row_i, 1, 1)
 
@@ -336,7 +340,9 @@ class DiffWindow(Gtk.Window):
 
                 sign_map = {"add": "+", "del": "−", "ctx": " "}
                 sign = Gtk.Label(label=sign_map.get(typ, " "))
-                sign.add_css_class(f"sign-{'add' if typ=='add' else 'del' if typ=='del' else 'ctx'}")
+                sign.add_css_class(
+                    f"sign-{'add' if typ == 'add' else 'del' if typ == 'del' else 'ctx'}"
+                )
                 box.append(sign)
 
                 t_lbl = Gtk.Label(label=txt[:160])
@@ -358,8 +364,13 @@ class GitDiffExtension(GObject.GObject, Nautilus.MenuProvider):
     def _git_root(self, path):
         try:
             cwd = os.path.dirname(path) if os.path.isfile(path) else path
-            r = subprocess.run(["git", "rev-parse", "--show-toplevel"],
-                               cwd=cwd, capture_output=True, text=True, timeout=3)
+            r = subprocess.run(
+                ["git", "rev-parse", "--show-toplevel"],
+                cwd=cwd,
+                capture_output=True,
+                text=True,
+                timeout=3,
+            )
             return r.stdout.strip() if r.returncode == 0 else None
         except Exception:
             return None
@@ -368,7 +379,7 @@ class GitDiffExtension(GObject.GObject, Nautilus.MenuProvider):
         item = Nautilus.MenuItem(
             name=name,
             label="⎇  Mostra Diff Git",
-            tip="Visualizza le modifiche side-by-side rispetto all'ultimo commit"
+            tip="Visualizza le modifiche side-by-side rispetto all'ultimo commit",
         )
         return item
 

@@ -4,12 +4,12 @@
 
 ---
 
-Nautilus extension that finds duplicate files in a folder using MD5 hash.
+Nautilus extension that finds duplicate files in a folder using SHA-256 hash.
 
 ## 🎯 Features
 
 - **Recursive scan** of all subfolders
-- **MD5 hash** to identify identical files
+- **SHA-256 hash** to identify identical files
 - **Grouping** by content
 - **Smart selection** (keeps the first file)
 - **Move to trash** with one click

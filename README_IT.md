@@ -115,7 +115,7 @@ Analizza Dockerfile con:
 
 ### 8. 🔍 **Trova Duplicati** (`duplicate-finder`)
 Trova file duplicati in una cartella:
-- Scansione ricorsiva con hash MD5
+- Scansione ricorsiva con hash SHA-256
 - Raggruppamento per contenuto identico
 - Selezione intelligente (mantiene il primo)
 - Spostamento nel cestino con un clic
@@ -527,8 +527,9 @@ Puoi modificare i file `.py` per personalizzare:
 ## 📝 Note tecniche
 
 - **Versione Nautilus:** Queste estensioni sono progettate per Nautilus 43+ (GNOME 43+) con GTK 4
-- **Python:** Richiede Python 3.8 o superiore
+- **Python:** Richiede Python 3.9 o superiore
 - **Thread:** Le operazioni pesanti (lettura file, calcolo hash) vengono eseguite in thread separati per non bloccare l'interfaccia
+- **Architettura a file singolo:** Ogni estensione è un file `.py` autonomo — questo è un [vincolo di Nautilus](https://wiki.gnome.org/Projects/NautilusPython), non una scelta di design. Nautilus carica le estensioni scansionando una singola directory alla ricerca di file `.py`, quindi ogni estensione deve contenere UI, logica di parsing e entry point in un unico modulo. Alcune funzioni utility (es. `fmt_size`) sono intenzionalmente duplicate tra le estensioni per questa ragione.
 
 ---
 

@@ -115,7 +115,7 @@ Analyze Dockerfiles with:
 
 ### 8. 🔍 **Find Duplicates** (`duplicate-finder`)
 Find duplicate files in a folder:
-- Recursive scan with MD5 hash
+- Recursive scan with SHA-256 hash
 - Grouping by identical content
 - Smart selection (keeps the first)
 - Move to trash with one click
@@ -527,8 +527,9 @@ You can modify the `.py` files to customize:
 ## 📝 Technical notes
 
 - **Nautilus version:** These extensions are designed for Nautilus 43+ (GNOME 43+) with GTK 4
-- **Python:** Requires Python 3.8 or higher
+- **Python:** Requires Python 3.9 or higher
 - **Threads:** Heavy operations (file reading, hash calculation) are executed in separate threads to avoid blocking the interface
+- **Single-file architecture:** Each extension is a self-contained `.py` file — this is a [Nautilus constraint](https://wiki.gnome.org/Projects/NautilusPython), not a design choice. Nautilus loads extensions by scanning a single directory for `.py` files, so each extension must bundle its UI, parsing logic, and entry point in one module. Some utility functions (e.g. `fmt_size`) are intentionally duplicated across extensions for this reason.
 
 ---
 

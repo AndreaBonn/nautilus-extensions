@@ -1,12 +1,14 @@
 # Contributing to Nautilus Extensions
 
-Thank you for your interest in contributing! 🎉
+Thank you for your interest in contributing!
+
+**Language:** [🇮🇹 Italiano](CONTRIBUTING_IT.md) | **🇬🇧 English**
 
 ## How to Contribute
 
 ### Reporting Bugs
 
-If you find a bug, please open an issue with:
+Please open an issue with:
 - A clear description of the problem
 - Steps to reproduce
 - Expected vs actual behavior
@@ -19,36 +21,68 @@ Feature suggestions are welcome! Please open an issue describing:
 - Why it would be useful
 - How it might work
 
-### Submitting Code
+## Development Setup
+
+This project uses [uv](https://docs.astral.sh/uv/) for dependency management.
+
+```bash
+# Clone the repository
+git clone https://github.com/AndreaBonn/nautilus-extensions.git
+cd nautilus-extensions
+
+# Install dependencies (including dev tools)
+uv sync --all-extras
+
+# Verify everything works
+make check
+```
+
+### Available Commands
+
+```bash
+make lint       # Run ruff linter
+make format     # Auto-format code with ruff
+make test       # Run test suite
+make check      # Run lint + tests
+make install    # Install extensions to Nautilus
+make restart    # Restart Nautilus to pick up changes
+```
+
+## Submitting Code
 
 1. Fork the repository
 2. Create a new branch (`git checkout -b feature/your-feature`)
 3. Make your changes
-4. Test your changes thoroughly
-5. Commit with clear messages (`git commit -m 'Add feature X'`)
+4. Run `make check` — all lint and tests must pass
+5. Commit with clear messages following the format: `type(scope): description`
+   - Types: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `perf`
 6. Push to your fork (`git push origin feature/your-feature`)
 7. Open a Pull Request
 
 ### Code Style
 
-- Follow PEP 8 for Python code
-- Use meaningful variable and function names
-- Add comments for complex logic
-- Keep functions focused and small
-- Test your extension before submitting
+- Code is linted and formatted with [ruff](https://docs.astral.sh/ruff/) — run `make lint` before committing
+- Use type annotations on all function parameters and return types
+- Escape all GTK markup strings with `GLib.markup_escape_text()`
+- All `subprocess` calls must use list-form arguments (never `shell=True`)
+
+### Architecture Note
+
+Each Nautilus extension **must be a single `.py` file** — this is a Nautilus constraint, not a design choice. The file is copied directly to `~/.local/share/nautilus-python/extensions/`. This means some utility functions (e.g. `fmt_size`) are duplicated across extensions by necessity.
 
 ### Testing
 
-Before submitting:
-1. Test the extension with various file types and sizes
-2. Verify it works on a clean Nautilus installation
-3. Check for memory leaks with large files
-4. Ensure error handling works correctly
+Every new function or bug fix must include corresponding tests:
+
+```bash
+uv run pytest tests/ -v          # Run all tests
+uv run pytest tests/test_X.py -v # Run specific test file
+```
+
+- Tests live in `tests/` mirroring the extension structure
+- Use behavioral assertions (test what the function does, not just that it runs)
+- Name tests: `test_<function>_<scenario>_<expected_result>`
 
 ## Questions?
 
 Feel free to open an issue for any questions!
-
----
-
-**Language:** [🇮🇹 Italiano](CONTRIBUTING_IT.md) | **🇬🇧 English**

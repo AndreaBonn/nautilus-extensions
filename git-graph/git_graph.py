@@ -10,6 +10,8 @@ Dipendenze:
   pip3 install gitpython  --break-system-packages
 """
 
+from __future__ import annotations
+
 import os
 import subprocess
 import threading
@@ -36,43 +38,33 @@ BRANCH_COLORS = [
     "#F8F8F2",  # bianco
 ]
 
-HEAD_COLOR = "#FFD700"       # oro per HEAD
-MERGE_COLOR = "#FF6B9D"      # rosa per merge commits
+HEAD_COLOR = "#FFD700"  # oro per HEAD
+MERGE_COLOR = "#FF6B9D"  # rosa per merge commits
 
 
-def run_git(args, cwd):
+def run_git(args: list[str], cwd: str) -> str:
     """Esegue un comando git e restituisce l'output."""
     try:
-        result = subprocess.run(
-            ["git"] + args,
-            cwd=cwd,
-            capture_output=True,
-            text=True,
-            timeout=5
-        )
+        result = subprocess.run(["git"] + args, cwd=cwd, capture_output=True, text=True, timeout=5)
         return result.stdout.strip() if result.returncode == 0 else ""
     except Exception:
         return ""
 
 
-def get_git_log(path, max_commits=60):
+def get_git_log(path: str, max_commits: int = 60) -> tuple[list[dict] | None, dict | None]:
     """
     Recupera la storia git con grafo.
     Formato: hash|branch_refs|autore|data|messaggio
     """
     fmt = "%H|%D|%an|%ar|%s"
     raw = run_git(
-        ["log", "--all", "--decorate", f"--pretty=format:{fmt}", f"-{max_commits}"],
-        cwd=path
+        ["log", "--all", "--decorate", f"--pretty=format:{fmt}", f"-{max_commits}"], cwd=path
     )
     if not raw:
         return None, None
 
     # Ottieni il grafo ASCII per determinare le relazioni
-    run_git(
-        ["log", "--all", "--graph", "--pretty=format:%H", f"-{max_commits}"],
-        cwd=path
-    )
+    run_git(["log", "--all", "--graph", "--pretty=format:%H", f"-{max_commits}"], cwd=path)
 
     commits = []
     for line in raw.split("\n"):
@@ -94,16 +86,18 @@ def get_git_log(path, max_commits=60):
                 pass  # skip remote refs for display
             elif ref:
                 branches.append(ref)
-        commits.append({
-            "hash": h[:8],
-            "full_hash": h,
-            "refs": refs,
-            "branches": branches,
-            "author": author,
-            "date": date,
-            "message": msg[:60] + ("…" if len(msg) > 60 else ""),
-            "is_head": is_head,
-        })
+        commits.append(
+            {
+                "hash": h[:8],
+                "full_hash": h,
+                "refs": refs,
+                "branches": branches,
+                "author": author,
+                "date": date,
+                "message": msg[:60] + ("…" if len(msg) > 60 else ""),
+                "is_head": is_head,
+            }
+        )
 
     # Assegna un colore a ogni branch unico
     branch_color_map = {}
@@ -117,9 +111,9 @@ def get_git_log(path, max_commits=60):
     return commits, branch_color_map
 
 
-def hex_to_rgb(hex_color):
+def hex_to_rgb(hex_color: str) -> tuple[float, float, float]:
     h = hex_color.lstrip("#")
-    return tuple(int(h[i:i+2], 16) / 255.0 for i in (0, 2, 4))
+    return tuple(int(h[i : i + 2], 16) / 255.0 for i in (0, 2, 4))
 
 
 # ─── Widget di disegno del grafo ──────────────────────────────────────────────
@@ -313,7 +307,9 @@ class GitGraphWindow(Gtk.Window):
         self.set_child(box)
 
         # Carica dati in background
-        threading.Thread(target=self._load, args=(path, repo_name, box, spinner), daemon=True).start()
+        threading.Thread(
+            target=self._load, args=(path, repo_name, box, spinner), daemon=True
+        ).start()
 
     def _load(self, path, repo_name, box, spinner):
         commits, branch_color_map = get_git_log(path)
@@ -341,19 +337,15 @@ class GitGraphWindow(Gtk.Window):
             dot.add_css_class("branch-dot")
             r, g, b = hex_to_rgb(color)
             dot_css = Gtk.CssProvider()
-            dot_css.load_from_data(
-                f"label {{ color: {color}; font-size: 14px; }}".encode()
-            )
+            dot_css.load_from_data(f"label {{ color: {color}; font-size: 14px; }}".encode())
             Gtk.StyleContext.add_provider_for_display(
-                dot.get_display(), dot_css,
-                Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+                dot.get_display(), dot_css, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
             )
             lbl = Gtk.Label(label=branch)
             lbl_css = Gtk.CssProvider()
             lbl_css.load_from_data(b"label { font-size: 11px; color: #CDD6F4; }")
             Gtk.StyleContext.add_provider_for_display(
-                lbl.get_display(), lbl_css,
-                Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+                lbl.get_display(), lbl_css, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
             )
             legend_box.append(dot)
             legend_box.append(lbl)
@@ -377,8 +369,7 @@ class GitGraphWindow(Gtk.Window):
         css = Gtk.CssProvider()
         css.load_from_data(b"label { font-size: 10px; color: #6C7086; }")
         Gtk.StyleContext.add_provider_for_display(
-            stat.get_display(), css,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+            stat.get_display(), css, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
         box.append(stat)
 
@@ -415,7 +406,7 @@ class GitGraphExtension(GObject.GObject, Nautilus.MenuProvider):
         item = Nautilus.MenuItem(
             name="GitGraph::ShowGraph",
             label="⎇  Mostra Git Graph…",
-            tip="Visualizza la storia dei commit e dei branch Git"
+            tip="Visualizza la storia dei commit e dei branch Git",
         )
         item.connect("activate", lambda *_: self._open_window(path))
         return [item]

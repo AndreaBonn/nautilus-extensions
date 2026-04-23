@@ -350,7 +350,7 @@ class DupFinderWindow(Gtk.Window):
 # ---------------------------------------------------------------------------
 
 
-class TrovaDuplicatiExtension(GObject.GObject, Nautilus.MenuProvider):
+class DuplicateFinderExtension(GObject.GObject, Nautilus.MenuProvider):
     def _path_from_file(self, f):
         """Ricava il path locale in modo robusto, con fallback su URI."""
         # metodo diretto
