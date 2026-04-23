@@ -12,6 +12,7 @@ Dipendenze:
     sudo apt install python3-pypdf
 """
 
+import logging
 import os
 import threading
 
@@ -88,7 +89,15 @@ def get_pdf_pages(path: str) -> int:
         with open(path, "rb") as f:
             reader = pypdf.PdfReader(f, strict=False)
             return len(reader.pages)
-    except Exception:
+    except ImportError as e:
+        logging.error(
+            "pypdf non installato — impossibile leggere le pagine PDF: %s. "
+            "Installa con: sudo apt install python3-pypdf",
+            e,
+        )
+        return -1
+    except Exception as e:
+        logging.warning("Impossibile leggere le pagine di %s: %s", path, e)
         return -1
 
 

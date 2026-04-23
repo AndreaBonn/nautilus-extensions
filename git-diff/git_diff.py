@@ -11,6 +11,7 @@ Installazione:
 
 from __future__ import annotations
 
+import logging
 import os
 import subprocess
 import threading
@@ -29,7 +30,8 @@ def run_git(args: list[str], cwd: str) -> str:
     try:
         r = subprocess.run(["git"] + args, cwd=cwd, capture_output=True, text=True, timeout=10)
         return r.stdout if r.returncode == 0 else ""
-    except Exception:
+    except Exception as e:
+        logging.debug("run_git %s failed: %s", args[0] if args else "", e)
         return ""
 
 

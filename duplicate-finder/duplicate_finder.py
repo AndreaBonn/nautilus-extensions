@@ -3,6 +3,7 @@ duplicate-finder.py — Estensione Nautilus per trovare file duplicati
 """
 
 import hashlib
+import logging
 import os
 import subprocess
 import threading
@@ -56,7 +57,8 @@ def hash_of_file(path: str, chunk_size: int = 65536) -> str:
                 if not chunk:
                     break
                 h.update(chunk)
-    except (OSError, PermissionError):
+    except (OSError, PermissionError) as e:
+        logging.warning("Skipped unreadable file: %s — %s", path, e)
         return ""
     return h.hexdigest()
 
@@ -70,8 +72,8 @@ def find_duplicates(root: str, progress_cb=None) -> dict:
                 size = os.path.getsize(fpath)
                 if size > 0:
                     by_size[size].append(fpath)
-            except OSError:
-                pass
+            except OSError as e:
+                logging.debug("File skipped during scan: %s", e)
 
     candidates = [paths for paths in by_size.values() if len(paths) > 1]
     total = sum(len(g) for g in candidates)

@@ -8,6 +8,7 @@ Installazione:
 
 from __future__ import annotations
 
+import logging
 import os
 import subprocess
 import threading
@@ -34,7 +35,8 @@ def _git_root(path: str) -> str | None:
             timeout=3,
         )
         return r.stdout.strip() if r.returncode == 0 else None
-    except Exception:
+    except Exception as e:
+        logging.debug("_git_root failed for %s: %s", cwd, e)
         return None
 
 

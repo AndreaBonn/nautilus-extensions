@@ -9,6 +9,7 @@ Installazione:
     nautilus -q && nautilus
 """
 
+import logging
 import os
 import subprocess
 import threading
@@ -234,8 +235,9 @@ class ReadmeWindow(Gtk.Window):
                 if uri and not uri.startswith("file://") and uri != "about:blank":
                     decision.ignore()
                     return True
-            except Exception:
+            except Exception as e:
                 # Fail-safe: block navigation if we cannot determine the URI
+                logging.warning("Navigation policy check failed, blocking for safety: %s", e)
                 decision.ignore()
                 return True
         return False
