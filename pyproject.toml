@@ -55,7 +55,6 @@ parquet = ["pandas", "pyarrow"]
 pdf = ["pypdf"]
 readme = ["markdown"]
 all = ["pandas", "openpyxl", "pyarrow", "pypdf", "markdown"]
-dev = ["ruff", "pytest"]
 
 [tool.ruff]
 target-version = "py39"
@@ -103,5 +102,6 @@ dev = [
     "bandit>=1.7.10",
     "pip-audit>=2.7.3",
     "pytest>=8.0",
+    "pytest-cov>=7.1.0",
     "ruff>=0.15.11",
 ]

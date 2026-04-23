@@ -81,7 +81,7 @@ def find_duplicates(root: str, progress_cb=None) -> dict:
                 if size > 0:
                     by_size[size].append(fpath)
             except OSError as e:
-                logging.debug("File skipped during scan: %s", e)
+                logging.warning("File skipped during scan: %s", e)
         if file_count > MAX_SCAN_FILES:
             break
 
@@ -254,8 +254,8 @@ class DupFinderWindow(Gtk.Window):
         for paths in duplicates.values():
             try:
                 wasted += os.path.getsize(paths[0]) * (len(paths) - 1)
-            except OSError:
-                pass
+            except OSError as e:
+                logging.debug("Cannot stat %s for wasted space: %s", paths[0], e)
 
         if n_groups == 0:
             self._subtitle.set_text(f"{self._folder}  •  Nessun duplicato trovato ✓")
@@ -274,14 +274,14 @@ class DupFinderWindow(Gtk.Window):
     def _populate_store(self):
         self._store.clear()
         for digest, paths in self._duplicates.items():
-            short_md5 = digest[:8]
+            short_hash = digest[:8]
             first = True
             for p in sorted(paths):
                 try:
                     size = human_size(os.path.getsize(p))
                 except OSError:
                     size = "?"
-                self._store.append([not first, short_md5, p, size])
+                self._store.append([not first, short_hash, p, size])
                 first = False
 
     def _on_toggle(self, renderer, path_str):
@@ -324,7 +324,15 @@ class DupFinderWindow(Gtk.Window):
 
         errors = []
         trashed = set()
+        root = os.path.realpath(self._folder)
         for path in to_trash:
+            # Verify path is still under the scanned root directory
+            if not os.path.realpath(path).startswith(root + os.sep):
+                logging.warning("Skipping path outside scan root: %s", path)
+                errors.append(
+                    f"{os.path.basename(path)}: percorso fuori dalla cartella scansionata"
+                )
+                continue
             try:
                 result = subprocess.run(
                     ["gio", "trash", path], capture_output=True, text=True, timeout=30
@@ -332,8 +340,17 @@ class DupFinderWindow(Gtk.Window):
                 if result.returncode == 0:
                     trashed.add(path)
                 else:
-                    errors.append(f"{os.path.basename(path)}: {result.stderr.strip()}")
-            except Exception as e:
+                    logging.warning("gio trash failed for %s: %s", path, result.stderr.strip())
+                    errors.append(f"{os.path.basename(path)}: impossibile spostare nel cestino")
+            except subprocess.TimeoutExpired:
+                logging.warning("gio trash timed out for %s", path)
+                errors.append(f"{os.path.basename(path)}: timeout")
+            except FileNotFoundError:
+                logging.error("gio command not found — cannot trash files")
+                errors.append(f"{os.path.basename(path)}: gio non trovato")
+                break
+            except OSError as e:
+                logging.warning("gio trash failed for %s: %s", path, e)
                 errors.append(f"{os.path.basename(path)}: {e}")
 
         to_remove = []

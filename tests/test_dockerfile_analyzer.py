@@ -10,7 +10,7 @@ def _load_functions():
         Path(__file__).parent.parent / "dockerfile-analyzer" / "dockerfile_analyzer.py"
     ).read_text()
     namespace = {}
-    exec("import os, re, threading", namespace)
+    exec("import os, re, logging, threading", namespace)
     exec("from urllib.parse import unquote, urlparse", namespace)
     lines = source.split("\n")
     safe_lines = []

@@ -45,6 +45,7 @@ def _load_merger_functions():
 _ns = _load_merger_functions()
 fmt_size = _ns["fmt_size"]
 get_pdf_pages = _ns["get_pdf_pages"]
+merge_pdf_files = _ns.get("merge_pdf_files")
 
 
 # ---------------------------------------------------------------------------
@@ -274,3 +275,111 @@ class TestSuggestOutputNamePattern:
         # e.g. "file__5" → "file"
         base = _TRAILING_NUM_PATTERN.sub("", "file__5")
         assert base == "file"
+
+
+# ---------------------------------------------------------------------------
+# merge_pdf_files
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.skipif(merge_pdf_files is None, reason="merge_pdf_files not loadable")
+class TestMergePdfFiles:
+    def test_merge_two_single_page_pdfs(self, tmp_path: Path):
+        pdf_a = tmp_path / "a.pdf"
+        pdf_b = tmp_path / "b.pdf"
+        pdf_a.write_bytes(_make_minimal_pdf(num_pages=1))
+        pdf_b.write_bytes(_make_minimal_pdf(num_pages=1))
+        output = tmp_path / "merged.pdf"
+        total = merge_pdf_files([str(pdf_a), str(pdf_b)], str(output))
+        assert total == 2
+        assert output.exists()
+
+    def test_merge_preserves_total_page_count(self, tmp_path: Path):
+        pdf_a = tmp_path / "a.pdf"
+        pdf_b = tmp_path / "b.pdf"
+        pdf_a.write_bytes(_make_minimal_pdf(num_pages=2))
+        pdf_b.write_bytes(_make_minimal_pdf(num_pages=3))
+        output = tmp_path / "merged.pdf"
+        total = merge_pdf_files([str(pdf_a), str(pdf_b)], str(output))
+        assert total == 5
+
+    def test_merged_output_is_valid_pdf(self, tmp_path: Path):
+        pdf_a = tmp_path / "a.pdf"
+        pdf_b = tmp_path / "b.pdf"
+        pdf_a.write_bytes(_make_minimal_pdf(num_pages=1))
+        pdf_b.write_bytes(_make_minimal_pdf(num_pages=2))
+        output = tmp_path / "merged.pdf"
+        merge_pdf_files([str(pdf_a), str(pdf_b)], str(output))
+        assert get_pdf_pages(str(output)) == 3
+
+    def test_merge_single_file_returns_same_page_count(self, tmp_path: Path):
+        pdf = tmp_path / "single.pdf"
+        pdf.write_bytes(_make_minimal_pdf(num_pages=4))
+        output = tmp_path / "merged.pdf"
+        total = merge_pdf_files([str(pdf)], str(output))
+        assert total == 4
+
+    def test_merge_nonexistent_file_raises(self, tmp_path: Path):
+        output = tmp_path / "merged.pdf"
+        with pytest.raises(FileNotFoundError):
+            merge_pdf_files([str(tmp_path / "missing.pdf")], str(output))
+
+    def test_merge_corrupt_pdf_raises(self, tmp_path: Path):
+        corrupt = tmp_path / "bad.pdf"
+        corrupt.write_bytes(b"%PDF-1.4\ncorrupt content\n%%EOF\n")
+        output = tmp_path / "merged.pdf"
+        from pypdf.errors import PdfReadError
+
+        with pytest.raises(PdfReadError):
+            merge_pdf_files([str(corrupt)], str(output))
+
+
+# ---------------------------------------------------------------------------
+# Output path sanitization logic (mirrors _get_output_path behavior)
+# ---------------------------------------------------------------------------
+
+
+def _sanitize_output_name(raw: str) -> str:
+    """Replicate _get_output_path sanitization logic for testing."""
+    if not raw:
+        raw = "unione.pdf"
+    name = os.path.basename(raw)
+    if not name or name.startswith("."):
+        name = "unione.pdf"
+    if not name.lower().endswith(".pdf"):
+        name += ".pdf"
+    return name
+
+
+class TestOutputPathSanitization:
+    """Tests for the path traversal prevention in output filename."""
+
+    def test_path_traversal_stripped(self):
+        assert _sanitize_output_name("../../evil.pdf") == "evil.pdf"
+
+    def test_deep_path_traversal_stripped(self):
+        assert _sanitize_output_name("../../../etc/passwd") == "passwd.pdf"
+
+    def test_absolute_path_stripped(self):
+        assert _sanitize_output_name("/etc/shadow") == "shadow.pdf"
+
+    def test_dotfile_rejected(self):
+        assert _sanitize_output_name(".hidden") == "unione.pdf"
+
+    def test_empty_string_defaults(self):
+        assert _sanitize_output_name("") == "unione.pdf"
+
+    def test_normal_name_preserved(self):
+        assert _sanitize_output_name("my_document.pdf") == "my_document.pdf"
+
+    def test_pdf_extension_added_if_missing(self):
+        assert _sanitize_output_name("report") == "report.pdf"
+
+    def test_pdf_extension_case_insensitive(self):
+        assert _sanitize_output_name("file.PDF") == "file.PDF"
+
+    def test_whitespace_only_gets_extension(self):
+        # basename("   ") = "   ", which gets .pdf appended
+        # In real code, get_text().strip() handles this before calling the logic
+        result = _sanitize_output_name("   ")
+        assert result.endswith(".pdf")

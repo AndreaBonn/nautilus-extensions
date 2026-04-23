@@ -101,6 +101,28 @@ def get_pdf_pages(path: str) -> int:
         return -1
 
 
+def merge_pdf_files(paths: list[str], output_path: str) -> int:
+    """
+    Merge multiple PDF files into one.
+
+    Returns the total number of pages written, or raises on error.
+    """
+    import pypdf
+
+    writer = pypdf.PdfWriter()
+    total_pages = 0
+    for path in paths:
+        reader = pypdf.PdfReader(path, strict=False)
+        for page in reader.pages:
+            writer.add_page(page)
+        total_pages += len(reader.pages)
+
+    with open(output_path, "wb") as f:
+        writer.write(f)
+
+    return total_pages
+
+
 # --------------------------------------------------------------------------- #
 # Finestra
 # --------------------------------------------------------------------------- #
@@ -343,7 +365,7 @@ class PdfMergeWindow(Gtk.Window):
             self._store.set_value(it, 4, pages_str)
             self._pages_label.set_text(f"Totale: {totale} pagine")
         except Exception as e:
-            logging.debug("Page count update failed: %s", e)
+            logging.warning("Page count update failed: %s", e)
         return False
 
     # ------------------------------------------------------------------ #
@@ -452,23 +474,8 @@ class PdfMergeWindow(Gtk.Window):
     def _do_merge(self, paths: list, output_path: str):
         self._merging.set()
         try:
-            import pypdf
-
-            writer = pypdf.PdfWriter()
-
-            for path in paths:
-                reader = pypdf.PdfReader(path, strict=False)
-                for page in reader.pages:
-                    writer.add_page(page)
-
-            with open(output_path, "wb") as f:
-                writer.write(f)
-
-            # Conta pagine totali nel file output
-            total_pages = sum(len(pypdf.PdfReader(p, strict=False).pages) for p in paths)
-
+            total_pages = merge_pdf_files(paths, output_path)
             GLib.idle_add(self._on_merge_done, output_path, total_pages, None)
-
         except Exception as e:
             GLib.idle_add(self._on_merge_done, output_path, 0, str(e))
         finally:
@@ -490,7 +497,10 @@ class PdfMergeWindow(Gtk.Window):
             # Apri la cartella contenente il file
             import subprocess
 
-            subprocess.Popen(["xdg-open", os.path.dirname(output_path)])
+            try:
+                subprocess.Popen(["xdg-open", os.path.dirname(output_path)])
+            except OSError as e:
+                logging.warning("xdg-open failed: %s", e)
 
         return False
 

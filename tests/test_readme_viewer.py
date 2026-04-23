@@ -8,7 +8,7 @@ from pathlib import Path
 def _load_functions():
     source = (Path(__file__).parent.parent / "readme-viewer" / "readme_preview.py").read_text()
     namespace = {}
-    exec("import os, subprocess, threading", namespace)
+    exec("import os, logging, subprocess, threading", namespace)
     exec("from urllib.parse import unquote", namespace)
     lines = source.split("\n")
     safe_lines = []
@@ -129,6 +129,27 @@ class TestRenderHtml:
         assert isinstance(html, str)
         assert "<!DOCTYPE html>" in html
 
+    def test_render_markdown_heading_produces_h1(self):
+        html = render_html("# Title", "README.md")
+        assert "<h1>" in html or "<h1" in html
+
+    def test_render_markdown_bold_produces_strong(self):
+        html = render_html("**bold text**", "README.md")
+        assert "<strong>" in html or "<b>" in html
+
+    def test_render_markdown_code_block(self):
+        html = render_html("```python\nprint('hi')\n```", "README.md")
+        assert "<code>" in html or "<pre>" in html
+
+    def test_render_markdown_list(self):
+        html = render_html("- item one\n- item two", "README.md")
+        assert "<li>" in html
+
+    def test_render_non_md_file_skips_markdown(self):
+        html = render_html("# Not a heading", "notes.txt")
+        assert "<h1>" not in html
+        assert "# Not a heading" in html
+
 
 class TestSanitizeHtml:
     def test_removes_script_tags(self):
@@ -163,8 +184,20 @@ class TestSanitizeHtml:
 
     def test_case_insensitive(self):
         result = _sanitize_html("<SCRIPT>bad</SCRIPT><ScRiPt>bad</ScRiPt>")
-        assert "SCRIPT" not in result.upper() or "script" not in result.lower()
+        assert "script" not in result.lower()
 
     def test_removes_style_tag(self):
         result = _sanitize_html("<style>body { background: url('evil') }</style>")
         assert "<style" not in result
+
+    def test_removes_javascript_href(self):
+        result = _sanitize_html('<a href="javascript:alert(1)">click</a>')
+        assert "javascript:" not in result
+
+    def test_removes_javascript_href_case_insensitive(self):
+        result = _sanitize_html('<a href="JavaScript:alert(1)">click</a>')
+        assert "javascript:" not in result.lower()
+
+    def test_removes_data_uri_in_src(self):
+        result = _sanitize_html('<img src="data:text/html,<script>alert(1)</script>">')
+        assert "data:" not in result.lower() or "&#blocked;" in result

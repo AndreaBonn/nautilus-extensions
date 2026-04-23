@@ -35,8 +35,14 @@ def _git_root(path: str) -> str | None:
             timeout=3,
         )
         return r.stdout.strip() if r.returncode == 0 else None
-    except Exception as e:
-        logging.debug("_git_root failed for %s: %s", cwd, e)
+    except FileNotFoundError:
+        logging.warning("git executable not found")
+        return None
+    except subprocess.TimeoutExpired:
+        logging.warning("git rev-parse timed out for %s", cwd)
+        return None
+    except OSError as e:
+        logging.warning("_git_root failed for %s: %s", cwd, e)
         return None
 
 
@@ -59,8 +65,14 @@ def _git_info_file(filepath: str, root: str) -> tuple[str, str, str]:
             return ("", "", "")
         author, date, msg = parts
         return (author, date, msg[:60] + ("…" if len(msg) > 60 else ""))
-    except Exception as e:
-        logging.debug("_git_info_file failed for %s: %s", filepath, e)
+    except FileNotFoundError:
+        logging.warning("git executable not found")
+        return ("", "", "")
+    except subprocess.TimeoutExpired:
+        logging.warning("git log timed out for %s", filepath)
+        return ("", "", "")
+    except OSError as e:
+        logging.warning("_git_info_file failed for %s: %s", filepath, e)
         return ("", "", "")
 
 
@@ -99,8 +111,14 @@ def _git_info_dir(dirpath: str, root: str) -> tuple[str, str, str]:
             return ("", "", "")
         author, date, msg = parts
         return (author, date, msg[:60] + ("…" if len(msg) > 60 else ""))
-    except Exception as e:
-        logging.debug("_git_info_dir failed for %s: %s", dirpath, e)
+    except FileNotFoundError:
+        logging.warning("git executable not found")
+        return ("", "", "")
+    except subprocess.TimeoutExpired:
+        logging.warning("git log timed out for %s", dirpath)
+        return ("", "", "")
+    except OSError as e:
+        logging.warning("_git_info_dir failed for %s: %s", dirpath, e)
         return ("", "", "")
 
 

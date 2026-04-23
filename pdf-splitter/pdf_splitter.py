@@ -131,6 +131,8 @@ def bookmark_chunks(bookmarks, total_pages: int) -> list[tuple[int, int, str]]:
     entries = []
 
     def collect(items, depth=0):
+        if depth > 20:
+            return
         for item in items:
             if hasattr(item, "title") and hasattr(item, "page"):
                 try:
@@ -190,7 +192,6 @@ class PdfSplitWindow(Gtk.Window):
         self._path = path
         self._total_pages = 0
         self._bookmarks = []
-        self._splitting = False
 
         provider = Gtk.CssProvider()
         provider.load_from_data(CSS)
@@ -217,7 +218,12 @@ class PdfSplitWindow(Gtk.Window):
             except Exception as e:
                 logging.debug("Cannot read PDF bookmarks: %s", e)
             GLib.idle_add(self._on_pdf_loaded, total, bookmarks, None)
+        except ImportError:
+            msg = "pypdf non installato. Installa con: sudo apt install python3-pypdf"
+            logging.error(msg)
+            GLib.idle_add(self._on_pdf_loaded, 0, [], msg)
         except Exception as e:
+            logging.warning("Failed to load PDF info for %s: %s", self._path, e)
             GLib.idle_add(self._on_pdf_loaded, 0, [], str(e))
 
     def _on_pdf_loaded(self, total, bookmarks, error):
@@ -495,7 +501,6 @@ class PdfSplitWindow(Gtk.Window):
             return None
 
         page = self._notebook.get_current_page()
-        os.path.splitext(os.path.basename(self._path))[0]
 
         if page == 0:  # Intervalli
             text = self._ranges_entry.get_text().strip()
@@ -568,7 +573,7 @@ class PdfSplitWindow(Gtk.Window):
             if folder:
                 self._out_entry.set_text(folder.get_path())
         except Exception as e:
-            logging.debug("Folder selection cancelled or failed: %s", e)
+            logging.debug("Folder selection cancelled: %s", e)
 
     # ------------------------------------------------------------------ #
     # Split
@@ -630,7 +635,11 @@ class PdfSplitWindow(Gtk.Window):
 
             GLib.idle_add(self._on_split_done, created, out_folder, None)
 
+        except PermissionError as e:
+            logging.error("Permission denied writing to %s: %s", out_folder, e)
+            GLib.idle_add(self._on_split_done, [], out_folder, f"Permesso negato: {e}")
         except Exception as e:
+            logging.warning("PDF split failed for %s: %s", self._path, e)
             GLib.idle_add(self._on_split_done, [], out_folder, str(e))
 
     def _on_split_done(self, created, out_folder, error):
@@ -643,7 +652,10 @@ class PdfSplitWindow(Gtk.Window):
             import subprocess
 
             self._show_status(f"✓ Creati {len(created)} file in: {out_folder}", error=False)
-            subprocess.Popen(["xdg-open", out_folder])
+            try:
+                subprocess.Popen(["xdg-open", out_folder])
+            except OSError as e:
+                logging.warning("xdg-open failed for %s: %s", out_folder, e)
 
         return False
 

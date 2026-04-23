@@ -12,6 +12,7 @@ Dependencies:
     sudo apt install python3-openpyxl python3-pandas
 """
 
+import logging
 import os
 import threading
 
@@ -67,7 +68,8 @@ def fmt_size(size: int) -> str:
 def read_excel(path: str) -> dict:
     try:
         file_size = fmt_size(os.path.getsize(path))
-    except OSError:
+    except OSError as e:
+        logging.warning("Cannot stat Excel file %s: %s", path, e)
         file_size = "—"
 
     result = {
@@ -137,6 +139,7 @@ def read_excel(path: str) -> dict:
                     "error": None,
                 }
             except Exception as e:
+                logging.warning("Failed to load sheet '%s' from %s: %s", sheet_name, path, e)
                 sheet_data = {
                     "name": sheet_name,
                     "error": str(e),
@@ -153,7 +156,16 @@ def read_excel(path: str) -> dict:
 
             result["sheets"].append(sheet_data)
 
+    except ImportError as e:
+        logging.error("Required library missing for Excel preview: %s", e)
+        result["error"] = (
+            f"Libreria mancante: {e}. Installa con: sudo apt install python3-openpyxl python3-pandas"
+        )
+    except MemoryError:
+        logging.error("Out of memory reading %s", path)
+        result["error"] = "File troppo grande: memoria insufficiente"
     except Exception as e:
+        logging.warning("Unexpected error reading Excel file %s: %s", path, e)
         result["error"] = str(e)
 
     return result
@@ -283,14 +295,23 @@ class ExcelPreviewWindow(Gtk.Window):
         path_lbl.set_halign(Gtk.Align.START)
         bottom.append(path_lbl)
 
-        import subprocess
-
         open_btn = Gtk.Button(label="Apri con LibreOffice")
-        open_btn.connect("clicked", lambda _: subprocess.Popen(["xdg-open", self._path]))
+        open_btn.connect("clicked", self._open_editor)
         bottom.append(open_btn)
 
         self._root.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
         self._root.append(bottom)
+
+    def _open_editor(self, _btn):
+        import subprocess
+
+        if not os.path.exists(self._path):
+            logging.warning("xdg-open: file not found: %s", self._path)
+            return
+        try:
+            subprocess.Popen(["xdg-open", self._path])
+        except OSError as e:
+            logging.warning("xdg-open failed for %s: %s", self._path, e)
 
     # ------------------------------------------------------------------ #
     # Contenuto di un singolo foglio

@@ -13,6 +13,7 @@ Dependencies:
     pip install pyarrow --break-system-packages
 """
 
+import logging
 import os
 import threading
 
@@ -237,7 +238,14 @@ def read_parquet(path: str, max_rows: int) -> dict:
         # Valori nulli
         result["null_counts"] = df.isnull().sum().to_dict()
 
+    except ImportError as e:
+        logging.error("Required library missing for Parquet preview: %s", e)
+        result["error"] = f"Libreria mancante: {e}. Installa con: sudo apt install python3-pyarrow"
+    except MemoryError:
+        logging.error("Out of memory reading Parquet file: %s", path)
+        result["error"] = "File troppo grande: memoria insufficiente"
     except Exception as e:
+        logging.warning("Unexpected error reading Parquet file %s: %s", path, e)
         result["error"] = str(e)
 
     return result

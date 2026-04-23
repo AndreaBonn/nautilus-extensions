@@ -11,7 +11,7 @@ from conftest import requires_git
 def _load_functions():
     source = (Path(__file__).parent.parent / "git-diff" / "git_diff.py").read_text()
     namespace = {}
-    exec("import os, subprocess, threading", namespace)
+    exec("import os, logging, subprocess, threading", namespace)
     exec("from urllib.parse import unquote, urlparse", namespace)
     lines = source.split("\n")
     safe_lines = []

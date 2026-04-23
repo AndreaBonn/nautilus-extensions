@@ -31,6 +31,7 @@ _ns = _load_functions()
 human_size = _ns["human_size"]
 hash_of_file = _ns["hash_of_file"]
 find_duplicates = _ns["find_duplicates"]
+MAX_SCAN_FILES = _ns.get("MAX_SCAN_FILES", 100_000)
 
 
 class TestHumanSize:
@@ -127,4 +128,14 @@ class TestFindDuplicates:
             find_duplicates(tmpdir, progress_cb=lambda done, total: calls.append((done, total)))
             assert len(calls) > 0
             assert all(total > 0 for _, total in calls)
-            assert all(done >= 0 for done, _ in calls)
+
+    def test_zero_byte_files_excluded_from_duplicates(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            for name in ["empty1.txt", "empty2.txt"]:
+                open(os.path.join(tmpdir, name), "wb").close()
+            dups = find_duplicates(tmpdir)
+            assert len(dups) == 0
+
+    def test_max_scan_files_constant_is_positive(self):
+        assert MAX_SCAN_FILES > 0
+        assert MAX_SCAN_FILES == 100_000

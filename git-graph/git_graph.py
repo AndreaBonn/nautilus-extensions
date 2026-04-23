@@ -44,19 +44,25 @@ MERGE_COLOR = "#FF6B9D"  # rosa per merge commits
 
 
 def run_git(args: list[str], cwd: str) -> str:
-    """Esegue un comando git e restituisce l'output."""
+    """Run a git command and return its stdout."""
     try:
         result = subprocess.run(["git"] + args, cwd=cwd, capture_output=True, text=True, timeout=5)
         return result.stdout.strip() if result.returncode == 0 else ""
-    except Exception as e:
-        logging.debug("run_git %s failed: %s", args[0] if args else "", e)
+    except FileNotFoundError:
+        logging.warning("git executable not found")
+        return ""
+    except subprocess.TimeoutExpired:
+        logging.warning("git %s timed out for %s", args[0] if args else "?", cwd)
+        return ""
+    except OSError as e:
+        logging.warning("run_git %s failed: %s", args[0] if args else "", e)
         return ""
 
 
 def get_git_log(path: str, max_commits: int = 60) -> tuple[list[dict] | None, dict | None]:
     """
-    Recupera la storia git con grafo.
-    Formato: hash|branch_refs|autore|data|messaggio
+    Retrieve git history with graph layout.
+    Format: hash|branch_refs|author|date|message
     """
     fmt = "%H|%D|%an|%ar|%s"
     raw = run_git(
@@ -64,9 +70,6 @@ def get_git_log(path: str, max_commits: int = 60) -> tuple[list[dict] | None, di
     )
     if not raw:
         return None, None
-
-    # Ottieni il grafo ASCII per determinare le relazioni
-    run_git(["log", "--all", "--graph", "--pretty=format:%H", f"-{max_commits}"], cwd=path)
 
     commits = []
     for line in raw.split("\n"):
@@ -136,7 +139,7 @@ class GitGraphWidget(Gtk.DrawingArea):
         self.set_draw_func(self._draw)
 
     def _layout_columns(self):
-        """Assegna a ogni commit una colonna (semplice euristica)."""
+        """Assign each commit to a column (simple heuristic)."""
         free_cols = []
         self.commit_cols = []
 

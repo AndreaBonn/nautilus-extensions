@@ -13,6 +13,7 @@ Optional dependencies (recommended):
 """
 
 import csv
+import logging
 import os
 import threading
 
@@ -162,7 +163,14 @@ def read_csv_pandas(path: str, max_rows: int) -> tuple[list, list, dict, object]
             "numeric_cols": list(df_full.select_dtypes(include="number").columns),
         }
         return headers, rows, info, df_full
+    except MemoryError:
+        logging.error("Out of memory reading CSV: %s", path)
+        return [], [], {"error": "File troppo grande: memoria insufficiente"}, None
+    except OSError as e:
+        logging.error("I/O error reading %s: %s", path, e)
+        return [], [], {"error": str(e)}, None
     except Exception as e:
+        logging.warning("CSV read failed for %s: %s", path, e)
         return [], [], {"error": str(e)}, None
 
 
@@ -394,8 +402,9 @@ class CsvPreviewWindow(Gtk.Window):
         # Descriptive statistics with pandas
         try:
             desc = df[numeric_cols].describe()
-        except Exception:
-            scrolled.set_child(Gtk.Label(label="Errore nel calcolo delle statistiche."))
+        except Exception as e:
+            logging.warning("Statistics computation failed for %s: %s", self._csv_path, e)
+            scrolled.set_child(Gtk.Label(label=f"Errore nel calcolo delle statistiche: {e}"))
             return scrolled
 
         # Statistics table
@@ -520,7 +529,13 @@ class CsvPreviewWindow(Gtk.Window):
     def _open_editor(self, _btn):
         import subprocess
 
-        subprocess.Popen(["xdg-open", self._csv_path])
+        if not os.path.exists(self._csv_path):
+            logging.warning("xdg-open: file not found: %s", self._csv_path)
+            return
+        try:
+            subprocess.Popen(["xdg-open", self._csv_path])
+        except OSError as e:
+            logging.warning("xdg-open failed for %s: %s", self._csv_path, e)
 
 
 # --------------------------------------------------------------------------- #

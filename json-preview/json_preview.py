@@ -284,8 +284,10 @@ def read_jsonl_file(path: str, compressed: bool = False) -> dict:
             result["null_counts"] = df.isnull().sum().to_dict()
             if result["numeric_cols"]:
                 result["describe"] = df[result["numeric_cols"]].describe()
+        except MemoryError:
+            logging.error("Out of memory building DataFrame for %s", path)
         except Exception as e:
-            logging.debug("DataFrame analysis failed: %s", e)
+            logging.warning("DataFrame analysis failed for %s: %s", path, e)
 
     return result
 
@@ -448,14 +450,23 @@ class JsonPreviewWindow(Gtk.Window):
         path_lbl.set_halign(Gtk.Align.START)
         bottom.append(path_lbl)
 
-        import subprocess
-
         open_btn = Gtk.Button(label="Apri nell'editor")
-        open_btn.connect("clicked", lambda _: subprocess.Popen(["xdg-open", self._path]))
+        open_btn.connect("clicked", self._open_editor)
         bottom.append(open_btn)
 
         self._root.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
         self._root.append(bottom)
+
+    def _open_editor(self, _btn):
+        import subprocess
+
+        if not os.path.exists(self._path):
+            logging.warning("xdg-open: file not found: %s", self._path)
+            return
+        try:
+            subprocess.Popen(["xdg-open", self._path])
+        except OSError as e:
+            logging.warning("xdg-open failed for %s: %s", self._path, e)
 
     # ------------------------------------------------------------------ #
     # Tab Struttura ad albero
@@ -806,6 +817,7 @@ class JsonPreviewWindow(Gtk.Window):
                         formatted = formatted[:200_000] + "\n\n… (troncato per la visualizzazione)"
                     buf.set_text(formatted)
                 except Exception as e:
+                    logging.warning("JSON formatting failed: %s", e)
                     buf.set_text(f"Errore nella formattazione: {e}")
 
         scrolled.set_child(tv)

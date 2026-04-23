@@ -8,7 +8,7 @@ from pathlib import Path
 def _load_functions():
     source = (Path(__file__).parent.parent / "csv-preview" / "csv_preview.py").read_text()
     namespace = {}
-    exec("import os, csv, threading", namespace)
+    exec("import os, csv, logging, threading", namespace)
     lines = source.split("\n")
     safe_lines = []
     for line in lines:
@@ -25,7 +25,12 @@ def _load_functions():
 _ns = _load_functions()
 detect_delimiter = _ns["detect_delimiter"]
 read_csv_plain = _ns["read_csv_plain"]
+read_csv_pandas = _ns.get("read_csv_pandas")
 _fmt_size = _ns["_fmt_size"]
+
+import pytest
+
+requires_pandas = pytest.mark.skipif(read_csv_pandas is None, reason="pandas not available")
 
 
 class TestFmtSize:
@@ -189,5 +194,93 @@ class TestReadCsvPlain:
         try:
             _headers, _rows, info = read_csv_plain(path, max_rows=100)
             assert "delimiter" in info
+        finally:
+            os.unlink(path)
+
+
+@requires_pandas
+class TestReadCsvPandas:
+    def test_returns_four_tuple(self):
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
+            f.write("a,b,c\n1,2,3\n4,5,6\n")
+            path = f.name
+        try:
+            result = read_csv_pandas(path, max_rows=100)
+            assert len(result) == 4
+        finally:
+            os.unlink(path)
+
+    def test_headers_match_columns(self):
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
+            f.write("name,age,city\nAlice,30,Rome\n")
+            path = f.name
+        try:
+            headers, _rows, _info, _df = read_csv_pandas(path, max_rows=100)
+            assert headers == ["name", "age", "city"]
+        finally:
+            os.unlink(path)
+
+    def test_rows_contain_values(self):
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
+            f.write("x,y\n10,20\n30,40\n")
+            path = f.name
+        try:
+            _headers, rows, _info, _df = read_csv_pandas(path, max_rows=100)
+            assert len(rows) == 2
+            assert rows[0] == ["10", "20"]
+            assert rows[1] == ["30", "40"]
+        finally:
+            os.unlink(path)
+
+    def test_truncates_at_max_rows(self):
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
+            f.write("v\n" + "\n".join(str(i) for i in range(50)) + "\n")
+            path = f.name
+        try:
+            _headers, rows, info, _df = read_csv_pandas(path, max_rows=10)
+            assert len(rows) == 10
+            assert info["truncated"] is True
+            assert info["total_rows"] == 50
+        finally:
+            os.unlink(path)
+
+    def test_info_contains_statistics_fields(self):
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
+            f.write("a,b\n1,2\n3,\n")
+            path = f.name
+        try:
+            _headers, _rows, info, _df = read_csv_pandas(path, max_rows=100)
+            assert "null_counts" in info
+            assert "dtypes" in info
+            assert "numeric_cols" in info
+        finally:
+            os.unlink(path)
+
+    def test_null_counts_detects_missing_values(self):
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
+            f.write("a,b\n1,\n,2\n")
+            path = f.name
+        try:
+            _headers, _rows, info, _df = read_csv_pandas(path, max_rows=100)
+            assert info["null_counts"]["a"] == 1
+            assert info["null_counts"]["b"] == 1
+        finally:
+            os.unlink(path)
+
+    def test_nonexistent_file_returns_error(self):
+        headers, rows, info, df = read_csv_pandas("/nonexistent/path.csv", max_rows=100)
+        assert headers == []
+        assert rows == []
+        assert "error" in info
+        assert df is None
+
+    def test_returns_dataframe_as_fourth_element(self):
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
+            f.write("x\n1\n2\n")
+            path = f.name
+        try:
+            _headers, _rows, _info, df = read_csv_pandas(path, max_rows=100)
+            assert df is not None
+            assert len(df) == 2
         finally:
             os.unlink(path)

@@ -10,7 +10,7 @@ import openpyxl
 def _load_functions():
     source = (Path(__file__).parent.parent / "excel-preview" / "excel_preview.py").read_text()
     namespace = {}
-    exec("import os, threading", namespace)
+    exec("import os, logging, threading", namespace)
     lines = source.split("\n")
     safe_lines = []
     for line in lines:

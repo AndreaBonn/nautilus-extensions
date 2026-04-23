@@ -35,7 +35,7 @@ def _load_module_functions(module_path: Path, module_name: str, functions: list[
 
     # Build a minimal namespace with standard library modules
     namespace = {}
-    exec("import os, re, csv, hashlib, json, threading, subprocess", namespace)
+    exec("import os, re, csv, hashlib, json, logging, threading, subprocess", namespace)
     exec("from collections import defaultdict", namespace)
     exec("from urllib.parse import unquote, urlparse", namespace)
     exec("from pathlib import Path", namespace)

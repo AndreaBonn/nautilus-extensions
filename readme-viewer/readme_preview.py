@@ -11,7 +11,6 @@ Installation:
 
 import logging
 import os
-import subprocess
 import threading
 from urllib.parse import unquote
 
@@ -136,8 +135,16 @@ def _sanitize_html(html_str: str) -> str:
     import re
 
     sanitized = _get_unsafe_tag_re().sub("", html_str)
+    # Remove event handlers (onclick, onload, etc.)
     sanitized = re.sub(r"\bon\w+\s*=\s*[\"'][^\"']*[\"']", "", sanitized, flags=re.IGNORECASE)
     sanitized = re.sub(r"\bon\w+\s*=\s*\S+", "", sanitized, flags=re.IGNORECASE)
+    # Remove javascript: and data: URI schemes in href/src attributes
+    sanitized = re.sub(
+        r"""(href|src)\s*=\s*["']?\s*(javascript|data)\s*:""",
+        r"\1=&#blocked;",
+        sanitized,
+        flags=re.IGNORECASE,
+    )
     return sanitized
 
 
@@ -186,7 +193,7 @@ class ReadmeWindow(Gtk.Window):
         header.append(lbl)
 
         open_btn = Gtk.Button(label="Apri nell'editor")
-        open_btn.connect("clicked", lambda _: subprocess.Popen(["xdg-open", readme_path]))
+        open_btn.connect("clicked", self._open_editor)
         header.append(open_btn)
 
         box.append(header)
@@ -227,11 +234,23 @@ class ReadmeWindow(Gtk.Window):
         # Carica in thread separato
         threading.Thread(target=self._load, daemon=True).start()
 
+    def _open_editor(self, _btn):
+        import subprocess
+
+        if not os.path.exists(self._readme_path):
+            logging.warning("xdg-open: file not found: %s", self._readme_path)
+            return
+        try:
+            subprocess.Popen(["xdg-open", self._readme_path])
+        except OSError as e:
+            logging.warning("xdg-open failed for %s: %s", self._readme_path, e)
+
     def _load(self):
         try:
             with open(self._readme_path, encoding="utf-8", errors="replace") as f:
                 content = f.read()
         except OSError as e:
+            logging.error("Failed to read README %s: %s", self._readme_path, e)
             content = f"Errore nella lettura del file:\n{e}"
 
         filename = os.path.basename(self._readme_path)

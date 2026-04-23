@@ -11,8 +11,10 @@ Installation:
 Dependencies: Python stdlib only
 """
 
+import logging
 import os
 import re
+import subprocess
 import threading
 from urllib.parse import unquote, urlparse
 
@@ -530,14 +532,21 @@ class DockerfileWindow(Gtk.Window):
         path_lbl.set_halign(Gtk.Align.START)
         bottom.append(path_lbl)
 
-        import subprocess
-
         open_btn = Gtk.Button(label="Apri nell'editor")
-        open_btn.connect("clicked", lambda _: subprocess.Popen(["xdg-open", self._path]))
+        open_btn.connect("clicked", self._open_editor)
         bottom.append(open_btn)
 
         self._root.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
         self._root.append(bottom)
+
+    def _open_editor(self, _btn):
+        if not os.path.exists(self._path):
+            logging.warning("xdg-open: file not found: %s", self._path)
+            return
+        try:
+            subprocess.Popen(["xdg-open", self._path])
+        except OSError as e:
+            logging.warning("xdg-open failed for %s: %s", self._path, e)
 
     def _stat(self, box, title, value):
         sb = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
