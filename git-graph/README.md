@@ -1,12 +1,12 @@
-# ⎇ Git Graph - Nautilus Extension
+# Git Graph - Nautilus Extension
 
-**Language:** [🇮🇹 Italiano](README_IT.md) | **🇬🇧 English**
+**Language:** [Italiano](README_IT.md) | **English**
 
 ---
 
 Nautilus extension that displays the Git commit graph with branches, merges, and a colored legend in an interactive graphical window.
 
-## 🎯 Features
+## Features
 
 - **Visual commit graph** drawn with Cairo on GTK 4 DrawingArea
 - **Branch color palette** — each branch has a distinct color from the palette
@@ -18,7 +18,7 @@ Nautilus extension that displays the Git commit graph with branches, merges, and
 - **Status bar** with commit and branch count
 - **Async loading** with a spinner during loading
 
-## 🚀 Installation
+## Installation
 
 ### Step 1: Install nautilus-python
 
@@ -47,7 +47,7 @@ nautilus -q
 
 **Note:** This extension requires no additional dependencies (only `git` installed on the system).
 
-## 📖 How to use
+## How to use
 
 1. Open Nautilus and navigate to a folder inside a Git repository
 2. **Right-click** on the folder background
@@ -62,7 +62,7 @@ nautilus -q
 
 You can also right-click on a **folder** to open the graph for the contained repository.
 
-## 🔧 Configuration
+## Configuration
 
 You can customize the extension by editing the constants in the `git_graph.py` file:
 
@@ -81,7 +81,7 @@ NODE_R = 7     # Commit node radius
 LEFT_PAD = 16  # Left padding
 ```
 
-## 🔍 Technical details
+## Technical details
 
 - **Nautilus version:** 43+ (GNOME 43+) with GTK 4
 - **API:** `MenuProvider`
@@ -89,7 +89,7 @@ LEFT_PAD = 16  # Left padding
 - **Threads:** Git data loading happens in a separate thread to avoid blocking the interface
 - **Layout:** Column assignment heuristic based on active branches to avoid overlaps
 
-## 🗑️ Uninstallation
+## Uninstallation
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/git_graph.py

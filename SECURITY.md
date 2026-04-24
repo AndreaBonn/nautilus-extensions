@@ -1,6 +1,6 @@
 # Security Policy
 
-**Language:** [🇮🇹 Italiano](#politica-di-sicurezza) | **🇬🇧 English**
+**Language:** [Italiano](#politica-di-sicurezza) | **English**
 
 ---
 

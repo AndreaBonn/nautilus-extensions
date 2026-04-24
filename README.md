@@ -8,9 +8,9 @@
 
 </div>
 
-# 🐚 Nautilus Extensions - Complete Guide
+# Nautilus Extensions - Complete Guide
 
-**Language:** [🇮🇹 Italiano](README_IT.md) | **🇬🇧 English**
+**Language:** [Italiano](README_IT.md) | **English**
 
 ---
 
@@ -24,7 +24,7 @@ Collection of extensions for Nautilus (Ubuntu/GNOME file manager) that add advan
 </p>
 -->
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [What are Nautilus extensions](#what-are-nautilus-extensions)
 - [Available extensions](#available-extensions)
@@ -36,7 +36,7 @@ Collection of extensions for Nautilus (Ubuntu/GNOME file manager) that add advan
 
 ---
 
-## 🎯 What are Nautilus extensions
+## What are Nautilus extensions
 
 Nautilus extensions are Python scripts that add new entries to the menu that appears when you right-click on a file or folder. These extensions allow you to:
 
@@ -49,9 +49,9 @@ Nautilus extensions are Python scripts that add new entries to the menu that app
 
 ---
 
-## 📦 Available extensions
+## Available extensions
 
-### 1. 📊 **CSV Preview** (`csv-preview`)
+### 1. **CSV Preview** (`csv-preview`)
 View CSV files with:
 - Formatted table of the first 100 rows
 - Descriptive statistics (with pandas)
@@ -60,9 +60,9 @@ View CSV files with:
 
 **Supported formats:** `.csv`, `.tsv`
 
-📖 **[Read the complete guide →](csv-preview/README.md)**
+**[Read the complete guide](csv-preview/README.md)**
 
-### 2. 📗 **Excel Preview** (`excel-preview`)
+### 2. **Excel Preview** (`excel-preview`)
 View Excel/LibreOffice files with:
 - All document sheets
 - Tabular data with column types
@@ -71,9 +71,9 @@ View Excel/LibreOffice files with:
 
 **Supported formats:** `.xlsx`, `.xlsm`, `.xltx`, `.xltm`, `.ods`
 
-📖 **[Read the complete guide →](excel-preview/README.md)**
+**[Read the complete guide](excel-preview/README.md)**
 
-### 3. 🗂️ **JSON Preview** (`json-preview`)
+### 3. **JSON Preview** (`json-preview`)
 View JSON and JSONL files with:
 - Navigable tree structure
 - Automatically inferred schema
@@ -83,9 +83,9 @@ View JSON and JSONL files with:
 
 **Supported formats:** `.json`, `.jsonl`, `.ndjson`, `.json.gz`, `.jsonl.gz`
 
-📖 **[Read the complete guide →](json-preview/README.md)**
+**[Read the complete guide](json-preview/README.md)**
 
-### 4. 📦 **Parquet Preview** (`parquet-preview`)
+### 4. **Parquet Preview** (`parquet-preview`)
 View Parquet files with:
 - Complete schema with data types
 - Metadata and row groups
@@ -95,9 +95,9 @@ View Parquet files with:
 
 **Supported formats:** `.parquet`
 
-📖 **[Read the complete guide →](parquet-preview/README.md)**
+**[Read the complete guide](parquet-preview/README.md)**
 
-### 5. 🔗 **Merge PDF** (`pdf-merger`)
+### 5. **Merge PDF** (`pdf-merger`)
 Merge multiple PDF files into one:
 - Multiple PDF selection
 - Reorder via drag & drop
@@ -106,9 +106,9 @@ Merge multiple PDF files into one:
 
 **Usage:** Select 2 or more PDFs → right-click → "Merge PDF"
 
-📖 **[Read the complete guide →](pdf-merger/README.md)**
+**[Read the complete guide](pdf-merger/README.md)**
 
-### 6. ✂️ **Split PDF** (`pdf-splitter`)
+### 6. **Split PDF** (`pdf-splitter`)
 Split a PDF into multiple files with 4 modes:
 - **Custom ranges** (e.g., 1-3, 5-7, 9)
 - **Every N pages** (e.g., every 5 pages)
@@ -117,9 +117,9 @@ Split a PDF into multiple files with 4 modes:
 
 **Usage:** Right-click on PDF → "Split PDF"
 
-📖 **[Read the complete guide →](pdf-splitter/README.md)**
+**[Read the complete guide](pdf-splitter/README.md)**
 
-### 7. 🐳 **Analyze Dockerfile** (`dockerfile-analyzer`)
+### 7. **Analyze Dockerfile** (`dockerfile-analyzer`)
 Analyze Dockerfiles with:
 - Structure and instructions
 - Multi-stage builds
@@ -129,20 +129,20 @@ Analyze Dockerfiles with:
 
 **Usage:** Right-click on Dockerfile → "Analyze Dockerfile"
 
-📖 **[Read the complete guide →](dockerfile-analyzer/README.md)**
+**[Read the complete guide](dockerfile-analyzer/README.md)**
 
-### 8. 🔍 **Find Duplicates** (`duplicate-finder`)
+### 8. **Find Duplicates** (`duplicate-finder`)
 Find duplicate files in a folder:
 - Recursive scan with SHA-256 hash
 - Grouping by identical content
 - Smart selection (keeps the first)
 - Move to trash with one click
 
-**Usage:** Right-click on folder → "🔍 Find duplicates"
+**Usage:** Right-click on folder → "Find duplicates"
 
-📖 **[Read the complete guide →](duplicate-finder/README.md)**
+**[Read the complete guide](duplicate-finder/README.md)**
 
-### 9. 📖 **View README** (`readme-viewer`)
+### 9. **View README** (`readme-viewer`)
 Show the current folder's README:
 - Markdown rendering (if available)
 - Support for README.md, README.txt, README.rst
@@ -150,9 +150,9 @@ Show the current folder's README:
 
 **Usage:** Right-click on folder background → "Show README.md"
 
-📖 **[Read the complete guide →](readme-viewer/README.md)**
+**[Read the complete guide](readme-viewer/README.md)**
 
-### 10. ⎇ **Git Blame** (`git-blame`)
+### 10. **Git Blame** (`git-blame`)
 Adds Git columns to Nautilus list view:
 - Last commit author for each file
 - Relative commit date (e.g., "3 hours ago")
@@ -161,9 +161,9 @@ Adds Git columns to Nautilus list view:
 
 **Usage:** List View (`Ctrl+2`) → right-click column headers → enable Git columns
 
-📖 **[Read the complete guide →](git-blame/README.md)**
+**[Read the complete guide](git-blame/README.md)**
 
-### 11. ⎇ **Git Diff** (`git-diff`)
+### 11. **Git Diff** (`git-diff`)
 Visual diff viewer for modified files:
 - Side-by-side view with aligned lines
 - Unified view with toggle
@@ -172,9 +172,9 @@ Visual diff viewer for modified files:
 
 **Usage:** Right-click on modified file → "⎇ Mostra Diff Git"
 
-📖 **[Read the complete guide →](git-diff/README.md)**
+**[Read the complete guide](git-diff/README.md)**
 
-### 12. ⎇ **Git Graph** (`git-graph`)
+### 12. **Git Graph** (`git-graph`)
 Visualize the Git commit graph:
 - Visual graph with nodes and Bézier curves
 - Color palette for distinct branches
@@ -183,9 +183,9 @@ Visualize the Git commit graph:
 
 **Usage:** Right-click on background → "⎇ Mostra Git Graph…"
 
-📖 **[Read the complete guide →](git-graph/README.md)**
+**[Read the complete guide](git-graph/README.md)**
 
-### 13. ⎇ **Git Status** (`git-status`)
+### 13. **Git Status** (`git-status`)
 Git status panel with automatic refresh:
 - Current branch with ahead/behind indicator
 - Staged, modified and untracked files with colored icons
@@ -194,11 +194,11 @@ Git status panel with automatic refresh:
 
 **Usage:** Right-click on background → "⎇ Stato Git…"
 
-📖 **[Read the complete guide →](git-status/README.md)**
+**[Read the complete guide](git-status/README.md)**
 
 ---
 
-## 🚀 Installation
+## Installation
 
 ### Prerequisites
 
@@ -313,7 +313,7 @@ Then reopen Nautilus normally (click the "Files" icon in the dock or press `Supe
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
 ### Verify installation
 
@@ -352,7 +352,7 @@ If the extensions don't appear:
 
 ---
 
-## 📖 Usage
+## Usage
 
 ### Preview data files (CSV, Excel, JSON, Parquet)
 
@@ -374,7 +374,7 @@ If the extensions don't appear:
    - Reorder files by dragging or using ⬆⬇ buttons
    - Remove unwanted files with ✕ button
    - Edit the output filename
-   - Click **"🔗 Merge PDF"**
+   - Click **"Merge PDF"**
 5. The merged file will be saved in the same folder as the first PDF
 
 ### Split PDF
@@ -387,7 +387,7 @@ If the extensions don't appear:
    - **One per file**: each page becomes a PDF
    - **Bookmarks**: one file per chapter
 4. Choose the output folder
-5. Click **"✂ Split PDF"**
+5. Click **"Split PDF"**
 
 ### Analyze Dockerfile
 
@@ -402,14 +402,14 @@ If the extensions don't appear:
 ### Find duplicates
 
 1. **Right-click** on a folder
-2. Select **"🔍 Find duplicates"**
+2. Select **"Find duplicates"**
 3. Wait for the scan (may take time for large folders)
 4. In the results window:
    - Files are grouped by identical content
    - The first file in each group is NOT selected (will be kept)
    - You can modify the selection manually
    - Click **"Select duplicates automatically"** to select all except the first
-   - Click **"🗑 Move to Trash"** to delete selected duplicates
+   - Click **"Move to Trash"** to delete selected duplicates
 
 ### View README
 
@@ -420,7 +420,7 @@ If the extensions don't appear:
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### Extensions don't appear in the menu
 
@@ -488,7 +488,7 @@ sudo apt install python3-markdown gir1.2-webkit2-4.1
 
 ---
 
-## 🗑️ Uninstallation
+## Uninstallation
 
 ### Remove a single extension
 
@@ -519,7 +519,7 @@ nautilus -q
 
 ---
 
-## 💡 Tips
+## Tips
 
 ### Performance
 
@@ -542,7 +542,7 @@ You can modify the `.py` files to customize:
 
 ---
 
-## 📝 Technical notes
+## Technical notes
 
 - **Nautilus version:** These extensions are designed for Nautilus 43+ (GNOME 43+) with GTK 4
 - **Python:** Requires Python 3.9 or higher
@@ -551,22 +551,21 @@ You can modify the `.py` files to customize:
 
 ---
 
-## 🤝 Contributions
+## Contributions
 
-Found a bug or want to add a feature? Feel free to:
 - Open an issue
 - Submit a pull request
 - Suggest improvements
 
 ---
 
-## 📄 License
+## License
 
 These extensions are provided "as is" without warranties. Use at your own risk.
 
 ---
 
-## ❓ Frequently Asked Questions (FAQ)
+## Frequently Asked Questions (FAQ)
 
 **Q: Can I use these extensions on other Linux distributions?**  
 A: Yes, they work on any distribution with Nautilus and nautilus-python (Fedora, Debian, Arch, etc.)
@@ -575,7 +574,7 @@ A: Yes, they work on any distribution with Nautilus and nautilus-python (Fedora,
 A: No, they are specific to Nautilus. For other file managers (Dolphin, Thunar, etc.) you need different extensions.
 
 **Q: Can I modify the code?**  
-A: Absolutely yes! The files are readable and modifiable Python scripts.
+A: Yes, the files are readable and modifiable Python scripts.
 
 **Q: Do extensions slow down Nautilus?**  
 A: No, they are loaded only when needed and heavy operations are in separate threads.
@@ -584,5 +583,3 @@ A: No, they are loaded only when needed and heavy operations are in separate thr
 A: In the same folder as the original file, or in the folder you choose in the dialog window.
 
 ---
-
-**Happy working with Nautilus! 🚀**

@@ -1,12 +1,12 @@
-# 🗂️ Anteprima JSON - Estensione Nautilus
+# Anteprima JSON - Estensione Nautilus
 
-**Lingua:** **🇮🇹 Italiano** | [🇬🇧 English](README.md)
+**Lingua:** **Italiano** | [English](README.md)
 
 ---
 
 Estensione per Nautilus che aggiunge un'anteprima avanzata per file JSON e JSONL direttamente dal menu contestuale.
 
-## 🎯 Funzionalità
+## Funzionalità
 
 - **Struttura ad albero navigabile** per esplorare JSON complessi
 - **Schema inferito automaticamente** con tipi di dato
@@ -16,7 +16,7 @@ Estensione per Nautilus che aggiunge un'anteprima avanzata per file JSON e JSONL
 - **Supporto file compressi** (.json.gz, .jsonl.gz)
 - **Visualizzazione raw** con formattazione
 
-## 📸 Cosa vedrai
+## Cosa vedrai
 
 Quando apri l'anteprima di un file JSON, vedrai una finestra con:
 
@@ -27,13 +27,13 @@ Quando apri l'anteprima di un file JSON, vedrai una finestra con:
 - Numero di elementi/righe
 
 **Tab disponibili:**
-1. **🌳 Struttura**: Albero navigabile con chiavi, tipi e valori
-2. **🗂 Schema**: Schema inferito con tipi di dato e presenza campi
-3. **📊 Dati**: Tabella con i dati (per array/JSONL)
-4. **📈 Statistiche**: Statistiche descrittive (solo con pandas e colonne numeriche)
+1. **Struttura**: Albero navigabile con chiavi, tipi e valori
+2. **Schema**: Schema inferito con tipi di dato e presenza campi
+3. **Dati**: Tabella con i dati (per array/JSONL)
+4. **Statistiche**: Statistiche descrittive (solo con pandas e colonne numeriche)
 5. **{ } Raw**: Sorgente JSON formattato
 
-## 🚀 Installazione
+## Installazione
 
 ### Passo 1: Installa nautilus-python
 
@@ -71,7 +71,7 @@ nautilus -q
 
 Riapri Nautilus normalmente.
 
-## 📖 Come usare
+## Come usare
 
 1. Apri Nautilus e naviga fino a un file JSON o JSONL
 2. **Clic destro** sul file
@@ -82,20 +82,20 @@ Riapri Nautilus normalmente.
 
 - **Espandi/Comprimi**: Clicca sulla freccia accanto a oggetti e array
 - **Colori**: Ogni tipo di dato ha un colore diverso
-  - 🟢 Verde: stringhe
-  - 🔵 Blu: numeri
-  - 🟠 Arancione: booleani
-  - 🔴 Rosso: null
-  - 🟣 Viola: oggetti e array
+  - Verde: stringhe
+  - Blu: numeri
+  - Arancione: booleani
+  - Rosso: null
+  - Viola: oggetti e array
 
 ### File JSONL
 
 Per file JSONL (una riga = un oggetto JSON):
 - La tab "Schema" mostra i campi comuni a tutti gli oggetti
-- I campi opzionali sono marcati con ⚠
+- I campi opzionali sono marcati come tali
 - La tab "Dati" mostra una tabella con le prime 100 righe
 
-## 🔧 Configurazione
+## Configurazione
 
 Puoi personalizzare l'estensione modificando le costanti nel file `json_preview.py`:
 
@@ -107,7 +107,7 @@ WINDOW_W = 1100           # Larghezza finestra
 WINDOW_H = 700            # Altezza finestra
 ```
 
-## 📋 Formati supportati
+## Formati supportati
 
 - `.json` - JSON standard
 - `.jsonl` - JSON Lines (una riga = un oggetto)
@@ -117,7 +117,7 @@ WINDOW_H = 700            # Altezza finestra
 
 L'estensione rileva automaticamente se il file è compresso analizzando i magic bytes.
 
-## 🐛 Risoluzione problemi
+## Risoluzione problemi
 
 ### L'estensione non appare nel menu
 
@@ -154,7 +154,7 @@ python3 -m json.tool file.json
 
 **Soluzione:** L'estensione limita la profondità a 8 livelli. Modifica `MAX_TREE_DEPTH` se necessario.
 
-## 💡 Suggerimenti
+## Suggerimenti
 
 ### Prestazioni
 
@@ -174,7 +174,7 @@ Per file JSONL, lo schema mostra:
 
 Nella tab "Statistiche" (solo con pandas) puoi vedere quanti valori nulli ci sono in ogni campo.
 
-## 🔍 Dettagli tecnici
+## Dettagli tecnici
 
 - **Versione Nautilus:** 43+ (GNOME 43+) con GTK 4
 - **Python:** 3.8 o superiore
@@ -182,7 +182,7 @@ Nella tab "Statistiche" (solo con pandas) puoi vedere quanti valori nulli ci son
 - **Thread:** Il caricamento del file avviene in un thread separato
 - **Compressione:** Supporto gzip trasparente
 
-## 📝 Esempio di utilizzo
+## Esempio di utilizzo
 
 ### JSON standard
 
@@ -220,12 +220,12 @@ File `events.jsonl`:
 - timestamp: string (3/3, sempre presente)
 - user: string (3/3, sempre presente)
 - action: string (3/3, sempre presente)
-- amount: number (1/3, ⚠ opzionale)
+- amount: number (1/3, opzionale)
 
 **Tab Dati:**
 Tabella con 3 righe e 4 colonne, colonna "amount" in blu.
 
-## 🗑️ Disinstallazione
+## Disinstallazione
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/json_preview.py

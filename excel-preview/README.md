@@ -1,12 +1,12 @@
-# 📗 Excel Preview - Nautilus Extension
+# Excel Preview - Nautilus Extension
 
-**Language:** [🇮🇹 Italiano](README_IT.md) | **🇬🇧 English**
+**Language:** [Italiano](README_IT.md) | **English**
 
 ---
 
 Nautilus extension that adds advanced preview for Excel and LibreOffice Calc files directly from the context menu.
 
-## 🎯 Features
+## Features
 
 - **View all sheets** in the document
 - **Formatted table** with the first 100 rows per sheet
@@ -16,7 +16,7 @@ Nautilus extension that adds advanced preview for Excel and LibreOffice Calc fil
 - **Numeric column highlighting** with blue color
 - **Multi-stage support** for documents with many sheets
 
-## 📸 What you'll see
+## What you'll see
 
 When you open an Excel file preview, you'll see a window with:
 
@@ -27,11 +27,11 @@ When you open an Excel file preview, you'll see a window with:
 - Author and last modification date
 
 **For each sheet, 3 tabs:**
-1. **📊 Data**: Table with data, headers with column type
-2. **📈 Statistics**: Descriptive statistics for numeric columns
-3. **🗂 Columns**: Detailed information about each column
+1. **Data**: Table with data, headers with column type
+2. **Statistics**: Descriptive statistics for numeric columns
+3. **Columns**: Detailed information about each column
 
-## 🚀 Installation
+## Installation
 
 ### Step 1: Install nautilus-python
 
@@ -68,7 +68,7 @@ nautilus -q
 
 Reopen Nautilus normally.
 
-## 📖 How to use
+## How to use
 
 1. Open Nautilus and navigate to an Excel or ODS file
 2. **Right-click** on the file
@@ -87,7 +87,7 @@ Reopen Nautilus normally.
 - **Sort data**: Click on a column header
 - **Open with LibreOffice**: Click the button at the bottom
 
-## 🔧 Configuration
+## Configuration
 
 You can customize the extension by modifying constants in `excel_preview.py`:
 
@@ -99,7 +99,7 @@ WINDOW_W = 1150           # Window width
 WINDOW_H = 700            # Window height
 ```
 
-## 📋 Supported formats
+## Supported formats
 
 - `.xlsx` - Excel 2007+ (Office Open XML)
 - `.xlsm` - Excel with macros
@@ -107,7 +107,7 @@ WINDOW_H = 700            # Window height
 - `.xltm` - Excel template with macros
 - `.ods` - OpenDocument Spreadsheet (LibreOffice/OpenOffice)
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Extension doesn't appear in the menu
 
@@ -154,7 +154,7 @@ Open the file with LibreOffice and save it as `.xlsx`
 
 **Solution:** Extension doesn't support protected files. Remove protection with LibreOffice.
 
-## 💡 Tips
+## Tips
 
 ### Performance
 
@@ -177,7 +177,7 @@ Numeric columns are highlighted in blue and show:
 - Descriptive statistics (mean, median, min, max, etc.)
 - Null values
 
-## 🔍 Technical details
+## Technical details
 
 - **Nautilus version:** 43+ (GNOME 43+) with GTK 4
 - **Python:** 3.8 or higher
@@ -185,7 +185,7 @@ Numeric columns are highlighted in blue and show:
 - **Threads:** File loading occurs in a separate thread to avoid blocking the interface
 - **Optimization:** All sheets are read in a single pandas call for speed
 
-## 📝 Usage example
+## Usage example
 
 Suppose we have a `budget.xlsx` file with 2 sheets:
 
@@ -217,16 +217,16 @@ Right-clicking and selecting "Excel Preview", you'll see:
 - Statistics tab: mean, min, max for "amount"
 - Columns tab: month (string), amount (int64), category (string)
 
-## 🗑️ Uninstallation
+## Uninstallation
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/excel_preview.py
 nautilus -q
 ```
 
-## 🤝 Contributions
+## Contributions
 
-Found a bug or want to improve the extension? Feel free to modify the code!
+Found a bug or want to improve the extension? Contributions are welcome.
 
 ---
 

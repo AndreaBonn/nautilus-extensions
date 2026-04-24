@@ -1,12 +1,12 @@
-# ⎇ Git Status - Estensione Nautilus
+# Git Status - Estensione Nautilus
 
-**Lingua:** **🇮🇹 Italiano** | [🇬🇧 English](README.md)
+**Lingua:** **Italiano** | [English](README.md)
 
 ---
 
 Estensione per Nautilus che aggiunge un pannello di stato Git con aggiornamento automatico dal menu contestuale.
 
-## 🎯 Funzionalità
+## Funzionalità
 
 - **Branch corrente** con indicatore ahead/behind rispetto al remote
 - **File staged** pronti per il commit
@@ -18,7 +18,7 @@ Estensione per Nautilus che aggiunge un pannello di stato Git con aggiornamento 
 - **Pulsante refresh** manuale nella barra del titolo
 - **Icone colorate** per tipo di modifica (aggiunto, modificato, eliminato)
 
-## 🚀 Installazione
+## Installazione
 
 ### Passo 1: Installa nautilus-python
 
@@ -47,11 +47,11 @@ nautilus -q
 
 **Nota:** Questa estensione non richiede dipendenze aggiuntive (solo `git` installato nel sistema).
 
-## 📖 Come usare
+## Come usare
 
 1. Apri Nautilus e naviga in una cartella all'interno di un repository Git
 2. **Clic destro** sullo sfondo della cartella
-3. Seleziona **"⎇ Stato Git…"**
+3. Seleziona **"Stato Git..."**
 4. Nella finestra vedrai:
    - **Header:** nome del branch con indicatori ↑↓ per commit ahead/behind
    - **Staged:** file pronti per il commit (verde)
@@ -62,7 +62,7 @@ nautilus -q
 
 La finestra si aggiorna automaticamente ogni 3 secondi. Puoi anche cliccare **↻** per un refresh immediato.
 
-## 🔍 Dettagli tecnici
+## Dettagli tecnici
 
 - **Versione Nautilus:** 43+ (GNOME 43+) con GTK 4
 - **API:** `MenuProvider`
@@ -70,7 +70,7 @@ La finestra si aggiorna automaticamente ogni 3 secondi. Puoi anche cliccare **�
 - **Auto-refresh:** Timer con `GLib.timeout_add()` ogni 3000ms
 - **Riuso finestra:** Se la finestra è già aperta, viene riutilizzata aggiornando il path
 
-## 🗑️ Disinstallazione
+## Disinstallazione
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/git_status.py

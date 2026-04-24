@@ -1,12 +1,12 @@
-# ⎇ Git Status - Nautilus Extension
+# Git Status - Nautilus Extension
 
-**Language:** [🇮🇹 Italiano](README_IT.md) | **🇬🇧 English**
+**Language:** [Italiano](README_IT.md) | **English**
 
 ---
 
 Nautilus extension that adds a Git status panel with automatic refresh from the context menu.
 
-## 🎯 Features
+## Features
 
 - **Current branch** with ahead/behind indicator relative to the remote
 - **Staged files** ready for commit
@@ -18,7 +18,7 @@ Nautilus extension that adds a Git status panel with automatic refresh from the 
 - **Refresh button** manual refresh in the title bar
 - **Colored icons** by change type (added, modified, deleted)
 
-## 🚀 Installation
+## Installation
 
 ### Step 1: Install nautilus-python
 
@@ -47,7 +47,7 @@ nautilus -q
 
 **Note:** This extension requires no additional dependencies (only `git` installed on the system).
 
-## 📖 How to use
+## How to use
 
 1. Open Nautilus and navigate to a folder inside a Git repository
 2. **Right-click** on the folder background
@@ -62,7 +62,7 @@ nautilus -q
 
 The window refreshes automatically every 3 seconds. You can also click **↻** for an immediate refresh.
 
-## 🔍 Technical details
+## Technical details
 
 - **Nautilus version:** 43+ (GNOME 43+) with GTK 4
 - **API:** `MenuProvider`
@@ -70,7 +70,7 @@ The window refreshes automatically every 3 seconds. You can also click **↻** f
 - **Auto-refresh:** Timer using `GLib.timeout_add()` every 3000ms
 - **Window reuse:** If the window is already open, it is reused by updating the path
 
-## 🗑️ Uninstallation
+## Uninstallation
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/git_status.py

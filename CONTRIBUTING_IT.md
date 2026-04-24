@@ -1,8 +1,6 @@
 # Contribuire alle Estensioni Nautilus
 
-Grazie per il tuo interesse nel contribuire!
-
-**Lingua:** **🇮🇹 Italiano** | [🇬🇧 English](CONTRIBUTING.md)
+**Lingua:** **Italiano** | [English](CONTRIBUTING.md)
 
 ## Come Contribuire
 
@@ -16,7 +14,7 @@ Apri una issue con:
 
 ### Suggerire Funzionalità
 
-I suggerimenti sono benvenuti! Apri una issue descrivendo:
+Apri una issue descrivendo:
 - La funzionalità che vorresti vedere
 - Perché sarebbe utile
 - Come potrebbe funzionare
@@ -86,4 +84,4 @@ uv run pytest tests/test_X.py -v # Esegui un file specifico
 
 ## Domande?
 
-Sentiti libero di aprire una issue per qualsiasi domanda!
+Apri una issue per qualsiasi domanda.

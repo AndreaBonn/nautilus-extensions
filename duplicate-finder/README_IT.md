@@ -1,12 +1,12 @@
-# 🔍 Trova Duplicati - Estensione Nautilus
+# Trova Duplicati - Estensione Nautilus
 
-**Lingua:** **🇮🇹 Italiano** | [🇬🇧 English](README.md)
+**Lingua:** **Italiano** | [English](README.md)
 
 ---
 
 Estensione per Nautilus che trova file duplicati in una cartella usando hash SHA-256.
 
-## 🎯 Funzionalità
+## Funzionalità
 
 - **Scansione ricorsiva** di tutte le sottocartelle
 - **Hash SHA-256** per identificare file identici
@@ -15,7 +15,7 @@ Estensione per Nautilus che trova file duplicati in una cartella usando hash SHA
 - **Spostamento nel cestino** con un clic
 - **Progress bar** durante la scansione
 
-## 🚀 Installazione
+## Installazione
 
 ### Passo 1: Installa nautilus-python
 
@@ -44,17 +44,17 @@ nautilus -q
 
 **Nota:** Questa estensione non richiede dipendenze aggiuntive.
 
-## 📖 Come usare
+## Come usare
 
 1. **Clic destro** su una cartella
-2. Seleziona **"🔍 Trova duplicati"**
+2. Seleziona **"Trova duplicati"**
 3. Attendi la scansione
 4. Nella finestra:
    - Seleziona i file da eliminare
    - Clicca **"Seleziona duplicati automaticamente"**
-   - Clicca **"🗑 Sposta nel Cestino"**
+   - Clicca **"Sposta nel Cestino"**
 
-## 🗑️ Disinstallazione
+## Disinstallazione
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/duplicate-finder.py

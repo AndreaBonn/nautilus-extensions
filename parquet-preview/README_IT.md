@@ -1,12 +1,12 @@
-# 📦 Anteprima Parquet - Estensione Nautilus
+# Anteprima Parquet - Estensione Nautilus
 
-**Lingua:** **🇮🇹 Italiano** | [🇬🇧 English](README.md)
+**Lingua:** **Italiano** | [English](README.md)
 
 ---
 
 Estensione per Nautilus che aggiunge un'anteprima avanzata per file Apache Parquet direttamente dal menu contestuale.
 
-## 🎯 Funzionalità
+## Funzionalità
 
 - **Schema completo** con tipi di dato PyArrow
 - **Metadati dettagliati** (row groups, compressione, codec)
@@ -16,16 +16,16 @@ Estensione per Nautilus che aggiunge un'anteprima avanzata per file Apache Parqu
 - **Evidenziazione colonne per tipo** con colori diversi
 - **Dettagli row groups** con dimensioni compresse/non compresse
 
-## 📸 Cosa vedrai
+## Cosa vedrai
 
 Quando apri l'anteprima di un file Parquet, vedrai una finestra con 4 tab:
 
-1. **📊 Dati**: Tabella con i dati, colonne colorate per tipo
-2. **🗂 Schema**: Informazioni su ogni colonna + dettagli row groups
-3. **📈 Statistiche**: Statistiche descrittive per colonne numeriche
-4. **ℹ Metadati**: Informazioni sul file (versione, codec, dimensioni)
+1. **Dati**: Tabella con i dati, colonne colorate per tipo
+2. **Schema**: Informazioni su ogni colonna + dettagli row groups
+3. **Statistiche**: Statistiche descrittive per colonne numeriche
+4. **Metadati**: Informazioni sul file (versione, codec, dimensioni)
 
-## 🚀 Installazione
+## Installazione
 
 ### Passo 1: Installa nautilus-python
 
@@ -61,14 +61,14 @@ cp parquet_preview.py ~/.local/share/nautilus-python/extensions/
 nautilus -q
 ```
 
-## 📖 Come usare
+## Come usare
 
 1. Apri Nautilus e naviga fino a un file `.parquet`
 2. **Clic destro** sul file
 3. Seleziona **"Anteprima Parquet"**
 4. Si aprirà una finestra con l'anteprima del file
 
-## 🔧 Configurazione
+## Configurazione
 
 Puoi personalizzare modificando le costanti in `parquet_preview.py`:
 
@@ -80,7 +80,7 @@ WINDOW_W = 1100           # Larghezza finestra
 WINDOW_H = 680            # Altezza finestra
 ```
 
-## 🗑️ Disinstallazione
+## Disinstallazione
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/parquet_preview.py

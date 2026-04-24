@@ -1,12 +1,12 @@
-# ⎇ Git Graph - Estensione Nautilus
+# Git Graph - Estensione Nautilus
 
-**Lingua:** **🇮🇹 Italiano** | [🇬🇧 English](README.md)
+**Lingua:** **Italiano** | [English](README.md)
 
 ---
 
 Estensione per Nautilus che visualizza il grafo dei commit Git con branch, merge e legenda colorata in una finestra grafica interattiva.
 
-## 🎯 Funzionalità
+## Funzionalità
 
 - **Grafo visuale dei commit** disegnato con Cairo su DrawingArea GTK 4
 - **Palette colori per branch** — ogni branch ha un colore distinto dalla palette
@@ -18,7 +18,7 @@ Estensione per Nautilus che visualizza il grafo dei commit Git con branch, merge
 - **Barra di stato** con conteggio commit e branch
 - **Caricamento asincrono** con spinner durante il caricamento
 
-## 🚀 Installazione
+## Installazione
 
 ### Passo 1: Installa nautilus-python
 
@@ -47,11 +47,11 @@ nautilus -q
 
 **Nota:** Questa estensione non richiede dipendenze aggiuntive (solo `git` installato nel sistema).
 
-## 📖 Come usare
+## Come usare
 
 1. Apri Nautilus e naviga in una cartella all'interno di un repository Git
 2. **Clic destro** sullo sfondo della cartella
-3. Seleziona **"⎇ Mostra Git Graph…"**
+3. Seleziona **"Mostra Git Graph..."**
 4. Nella finestra vedrai:
    - **Legenda** in alto con i branch e i rispettivi colori
    - **Grafo** con nodi commit collegati da linee/curve
@@ -62,7 +62,7 @@ nautilus -q
 
 Puoi anche fare clic destro su una **cartella** per aprire il grafo del repository contenuto.
 
-## 🔧 Configurazione
+## Configurazione
 
 Puoi personalizzare l'estensione modificando le costanti nel file `git_graph.py`:
 
@@ -81,7 +81,7 @@ NODE_R = 7     # Raggio del nodo commit
 LEFT_PAD = 16  # Padding sinistro
 ```
 
-## 🔍 Dettagli tecnici
+## Dettagli tecnici
 
 - **Versione Nautilus:** 43+ (GNOME 43+) con GTK 4
 - **API:** `MenuProvider`
@@ -89,7 +89,7 @@ LEFT_PAD = 16  # Padding sinistro
 - **Thread:** Il caricamento dei dati git avviene in un thread separato per non bloccare l'interfaccia
 - **Layout:** Euristica di assegnazione colonne basata su branch attivi per evitare sovrapposizioni
 
-## 🗑️ Disinstallazione
+## Disinstallazione
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/git_graph.py

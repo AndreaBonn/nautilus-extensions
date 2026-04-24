@@ -1,12 +1,12 @@
-# 📗 Anteprima Excel - Estensione Nautilus
+# Anteprima Excel - Estensione Nautilus
 
-**Lingua:** **🇮🇹 Italiano** | [🇬🇧 English](README.md)
+**Lingua:** **Italiano** | [English](README.md)
 
 ---
 
 Estensione per Nautilus che aggiunge un'anteprima avanzata per file Excel e LibreOffice Calc direttamente dal menu contestuale.
 
-## 🎯 Funzionalità
+## Funzionalità
 
 - **Visualizzazione di tutti i fogli** del documento
 - **Tabella formattata** con le prime 100 righe per foglio
@@ -16,7 +16,7 @@ Estensione per Nautilus che aggiunge un'anteprima avanzata per file Excel e Libr
 - **Evidenziazione colonne numeriche** con colore blu
 - **Supporto multi-stage** per documenti con molti fogli
 
-## 📸 Cosa vedrai
+## Cosa vedrai
 
 Quando apri l'anteprima di un file Excel, vedrai una finestra con:
 
@@ -27,11 +27,11 @@ Quando apri l'anteprima di un file Excel, vedrai una finestra con:
 - Autore e data ultima modifica
 
 **Per ogni foglio, 3 tab:**
-1. **📊 Dati**: Tabella con i dati, intestazioni con tipo di colonna
-2. **📈 Statistiche**: Statistiche descrittive per colonne numeriche
-3. **🗂 Colonne**: Informazioni dettagliate su ogni colonna
+1. **Dati**: Tabella con i dati, intestazioni con tipo di colonna
+2. **Statistiche**: Statistiche descrittive per colonne numeriche
+3. **Colonne**: Informazioni dettagliate su ogni colonna
 
-## 🚀 Installazione
+## Installazione
 
 ### Passo 1: Installa nautilus-python
 
@@ -68,7 +68,7 @@ nautilus -q
 
 Riapri Nautilus normalmente.
 
-## 📖 Come usare
+## Come usare
 
 1. Apri Nautilus e naviga fino a un file Excel o ODS
 2. **Clic destro** sul file
@@ -87,7 +87,7 @@ Riapri Nautilus normalmente.
 - **Ordina dati**: Clicca sull'intestazione di una colonna
 - **Apri con LibreOffice**: Clicca il pulsante in basso
 
-## 🔧 Configurazione
+## Configurazione
 
 Puoi personalizzare l'estensione modificando le costanti nel file `excel_preview.py`:
 
@@ -99,7 +99,7 @@ WINDOW_W = 1150           # Larghezza finestra
 WINDOW_H = 700            # Altezza finestra
 ```
 
-## 📋 Formati supportati
+## Formati supportati
 
 - `.xlsx` - Excel 2007+ (Office Open XML)
 - `.xlsm` - Excel con macro
@@ -107,7 +107,7 @@ WINDOW_H = 700            # Altezza finestra
 - `.xltm` - Template Excel con macro
 - `.ods` - OpenDocument Spreadsheet (LibreOffice/OpenOffice)
 
-## 🐛 Risoluzione problemi
+## Risoluzione problemi
 
 ### L'estensione non appare nel menu
 
@@ -154,7 +154,7 @@ Apri il file con LibreOffice e salvalo come `.xlsx`
 
 **Soluzione:** L'estensione non supporta file protetti. Rimuovi la protezione con LibreOffice.
 
-## 💡 Suggerimenti
+## Suggerimenti
 
 ### Prestazioni
 
@@ -177,7 +177,7 @@ Le colonne numeriche sono evidenziate in blu e mostrano:
 - Statistiche descrittive (media, mediana, min, max, ecc.)
 - Valori nulli
 
-## 🔍 Dettagli tecnici
+## Dettagli tecnici
 
 - **Versione Nautilus:** 43+ (GNOME 43+) con GTK 4
 - **Python:** 3.8 o superiore
@@ -185,7 +185,7 @@ Le colonne numeriche sono evidenziate in blu e mostrano:
 - **Thread:** Il caricamento del file avviene in un thread separato per non bloccare l'interfaccia
 - **Ottimizzazione:** Tutti i fogli vengono letti in una sola chiamata pandas per velocità
 
-## 📝 Esempio di utilizzo
+## Esempio di utilizzo
 
 Supponiamo di avere un file `budget.xlsx` con 2 fogli:
 
@@ -217,16 +217,16 @@ Facendo clic destro e selezionando "Anteprima Excel", vedrai:
 - Tab Statistiche: media, min, max per "importo"
 - Tab Colonne: mese (string), importo (int64), categoria (string)
 
-## 🗑️ Disinstallazione
+## Disinstallazione
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/excel_preview.py
 nautilus -q
 ```
 
-## 🤝 Contributi
+## Contributi
 
-Hai trovato un bug o vuoi migliorare l'estensione? Sentiti libero di modificare il codice!
+Contributi e segnalazioni bug sono benvenuti.
 
 ---
 

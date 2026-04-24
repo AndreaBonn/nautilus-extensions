@@ -1,12 +1,12 @@
-# 🐳 Analizza Dockerfile - Estensione Nautilus
+# Analizza Dockerfile - Estensione Nautilus
 
-**Lingua:** **🇮🇹 Italiano** | [🇬🇧 English](README.md)
+**Lingua:** **Italiano** | [English](README.md)
 
 ---
 
 Estensione per Nautilus che analizza Dockerfile e fornisce suggerimenti di best practice e sicurezza.
 
-## 🎯 Funzionalità
+## Funzionalità
 
 - **Analisi struttura** Dockerfile
 - **Rilevamento multi-stage builds**
@@ -15,7 +15,7 @@ Estensione per Nautilus che analizza Dockerfile e fornisce suggerimenti di best 
 - **Visualizzazione istruzioni** con syntax highlighting
 - **Metadati** (ENV, ARG, EXPOSE, VOLUME, ecc.)
 
-## 🚀 Installazione
+## Installazione
 
 ### Passo 1: Installa nautilus-python
 
@@ -44,17 +44,17 @@ nautilus -q
 
 **Nota:** Questa estensione non richiede dipendenze aggiuntive.
 
-## 📖 Come usare
+## Come usare
 
 1. **Clic destro** su un file Dockerfile
 2. Seleziona **"Analizza Dockerfile"**
 3. Esplora i 4 tab:
-   - **🐳 Overview**: immagini, porte, variabili
-   - **⚠ Best Practice**: suggerimenti di sicurezza
-   - **📋 Istruzioni**: lista completa
-   - **📄 Sorgente**: codice con colori
+   - **Overview**: immagini, porte, variabili
+   - **Best Practice**: suggerimenti di sicurezza
+   - **Istruzioni**: lista completa
+   - **Sorgente**: codice con colori
 
-## 🗑️ Disinstallazione
+## Disinstallazione
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/dockerfile_analyzer.py

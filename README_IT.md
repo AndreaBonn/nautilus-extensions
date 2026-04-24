@@ -1,6 +1,6 @@
-# 🐚 Estensioni Nautilus - Guida Completa
+# Estensioni Nautilus - Guida Completa
 
-**Lingua:** **🇮🇹 Italiano** | [🇬🇧 English](README.md)
+**Lingua:** **Italiano** | [English](README.md)
 
 ---
 
@@ -14,7 +14,7 @@ Raccolta di estensioni per Nautilus (il file manager di Ubuntu/GNOME) che aggiun
 </p>
 -->
 
-## 📋 Indice
+## Indice
 
 - [Cosa sono le estensioni Nautilus](#cosa-sono-le-estensioni-nautilus)
 - [Estensioni disponibili](#estensioni-disponibili)
@@ -26,7 +26,7 @@ Raccolta di estensioni per Nautilus (il file manager di Ubuntu/GNOME) che aggiun
 
 ---
 
-## 🎯 Cosa sono le estensioni Nautilus
+## Cosa sono le estensioni Nautilus
 
 Le estensioni Nautilus sono script Python che aggiungono nuove voci al menu che appare quando fai clic destro su un file o cartella. Queste estensioni ti permettono di:
 
@@ -39,9 +39,9 @@ Le estensioni Nautilus sono script Python che aggiungono nuove voci al menu che 
 
 ---
 
-## 📦 Estensioni disponibili
+## Estensioni disponibili
 
-### 1. 📊 **Anteprima CSV** (`csv-preview`)
+### 1. **Anteprima CSV** (`csv-preview`)
 Visualizza file CSV con:
 - Tabella formattata delle prime 100 righe
 - Statistiche descrittive (con pandas)
@@ -50,9 +50,9 @@ Visualizza file CSV con:
 
 **Formati supportati:** `.csv`, `.tsv`
 
-📖 **[Leggi la guida completa →](csv-preview/README_IT.md)**
+**[Leggi la guida completa](csv-preview/README_IT.md)**
 
-### 2. 📗 **Anteprima Excel** (`excel-preview`)
+### 2. **Anteprima Excel** (`excel-preview`)
 Visualizza file Excel/LibreOffice con:
 - Tutti i fogli del documento
 - Dati tabulari con tipi di colonna
@@ -61,9 +61,9 @@ Visualizza file Excel/LibreOffice con:
 
 **Formati supportati:** `.xlsx`, `.xlsm`, `.xltx`, `.xltm`, `.ods`
 
-📖 **[Leggi la guida completa →](excel-preview/README_IT.md)**
+**[Leggi la guida completa](excel-preview/README_IT.md)**
 
-### 3. 🗂️ **Anteprima JSON** (`json-preview`)
+### 3. **Anteprima JSON** (`json-preview`)
 Visualizza file JSON e JSONL con:
 - Struttura ad albero navigabile
 - Schema inferito automaticamente
@@ -73,9 +73,9 @@ Visualizza file JSON e JSONL con:
 
 **Formati supportati:** `.json`, `.jsonl`, `.ndjson`, `.json.gz`, `.jsonl.gz`
 
-📖 **[Leggi la guida completa →](json-preview/README_IT.md)**
+**[Leggi la guida completa](json-preview/README_IT.md)**
 
-### 4. 📦 **Anteprima Parquet** (`parquet-preview`)
+### 4. **Anteprima Parquet** (`parquet-preview`)
 Visualizza file Parquet con:
 - Schema completo con tipi di dato
 - Metadati e row groups
@@ -85,9 +85,9 @@ Visualizza file Parquet con:
 
 **Formati supportati:** `.parquet`
 
-📖 **[Leggi la guida completa →](parquet-preview/README_IT.md)**
+**[Leggi la guida completa](parquet-preview/README_IT.md)**
 
-### 5. 🔗 **Unisci PDF** (`pdf-merger`)
+### 5. **Unisci PDF** (`pdf-merger`)
 Unisce più file PDF in uno solo:
 - Selezione multipla di PDF
 - Riordino tramite drag & drop
@@ -96,9 +96,9 @@ Unisce più file PDF in uno solo:
 
 **Utilizzo:** Seleziona 2 o più PDF → clic destro → "Unisci PDF"
 
-📖 **[Leggi la guida completa →](pdf-merger/README_IT.md)**
+**[Leggi la guida completa](pdf-merger/README_IT.md)**
 
-### 6. ✂️ **Dividi PDF** (`pdf-splitter`)
+### 6. **Dividi PDF** (`pdf-splitter`)
 Divide un PDF in più file con 4 modalità:
 - **Intervalli personalizzati** (es. 1-3, 5-7, 9)
 - **Ogni N pagine** (es. ogni 5 pagine)
@@ -107,9 +107,9 @@ Divide un PDF in più file con 4 modalità:
 
 **Utilizzo:** Clic destro su PDF → "Dividi PDF"
 
-� **[Leggi la guida completa →](pdf-splitter/README_IT.md)**
+**[Leggi la guida completa](pdf-splitter/README_IT.md)**
 
-### 7. 🐳 **Analizza Dockerfile** (`dockerfile-analyzer`)
+### 7. **Analizza Dockerfile** (`dockerfile-analyzer`)
 Analizza Dockerfile con:
 - Struttura e istruzioni
 - Multi-stage builds
@@ -119,20 +119,20 @@ Analizza Dockerfile con:
 
 **Utilizzo:** Clic destro su Dockerfile → "Analizza Dockerfile"
 
-📖 **[Leggi la guida completa →](dockerfile-analyzer/README_IT.md)**
+**[Leggi la guida completa](dockerfile-analyzer/README_IT.md)**
 
-### 8. 🔍 **Trova Duplicati** (`duplicate-finder`)
+### 8. **Trova Duplicati** (`duplicate-finder`)
 Trova file duplicati in una cartella:
 - Scansione ricorsiva con hash SHA-256
 - Raggruppamento per contenuto identico
 - Selezione intelligente (mantiene il primo)
 - Spostamento nel cestino con un clic
 
-**Utilizzo:** Clic destro su cartella → "🔍 Trova duplicati"
+**Utilizzo:** Clic destro su cartella → "Trova duplicati"
 
-📖 **[Leggi la guida completa →](duplicate-finder/README_IT.md)**
+**[Leggi la guida completa](duplicate-finder/README_IT.md)**
 
-### 9. 📖 **Visualizza README** (`readme-viewer`)
+### 9. **Visualizza README** (`readme-viewer`)
 Mostra il README della cartella corrente:
 - Rendering Markdown (se disponibile)
 - Supporto README.md, README.txt, README.rst
@@ -140,9 +140,9 @@ Mostra il README della cartella corrente:
 
 **Utilizzo:** Clic destro sullo sfondo della cartella → "Mostra README.md"
 
-📖 **[Leggi la guida completa →](readme-viewer/README_IT.md)**
+**[Leggi la guida completa](readme-viewer/README_IT.md)**
 
-### 10. ⎇ **Git Blame** (`git-blame`)
+### 10. **Git Blame** (`git-blame`)
 Aggiunge colonne Git nella vista lista di Nautilus:
 - Autore dell'ultimo commit per ogni file
 - Data relativa del commit (es. "3 hours ago")
@@ -151,9 +151,9 @@ Aggiunge colonne Git nella vista lista di Nautilus:
 
 **Utilizzo:** Vista Lista (`Ctrl+2`) → clic destro intestazione colonne → spunta le colonne Git
 
-📖 **[Leggi la guida completa →](git-blame/README_IT.md)**
+**[Leggi la guida completa](git-blame/README_IT.md)**
 
-### 11. ⎇ **Git Diff** (`git-diff`)
+### 11. **Git Diff** (`git-diff`)
 Visualizza le modifiche di un file con diff visuale:
 - Vista side-by-side con righe affiancate
 - Vista unificata con toggle
@@ -162,9 +162,9 @@ Visualizza le modifiche di un file con diff visuale:
 
 **Utilizzo:** Clic destro su file modificato → "⎇ Mostra Diff Git"
 
-📖 **[Leggi la guida completa →](git-diff/README_IT.md)**
+**[Leggi la guida completa](git-diff/README_IT.md)**
 
-### 12. ⎇ **Git Graph** (`git-graph`)
+### 12. **Git Graph** (`git-graph`)
 Visualizza il grafo dei commit Git:
 - Grafo visuale con nodi e curve Bézier
 - Palette colori per branch distinti
@@ -173,9 +173,9 @@ Visualizza il grafo dei commit Git:
 
 **Utilizzo:** Clic destro sullo sfondo → "⎇ Mostra Git Graph…"
 
-📖 **[Leggi la guida completa →](git-graph/README_IT.md)**
+**[Leggi la guida completa](git-graph/README_IT.md)**
 
-### 13. ⎇ **Git Status** (`git-status`)
+### 13. **Git Status** (`git-status`)
 Pannello di stato Git con aggiornamento automatico:
 - Branch corrente con indicatore ahead/behind
 - File staged, modificati e untracked con icone colorate
@@ -184,11 +184,11 @@ Pannello di stato Git con aggiornamento automatico:
 
 **Utilizzo:** Clic destro sullo sfondo → "⎇ Stato Git…"
 
-📖 **[Leggi la guida completa →](git-status/README_IT.md)**
+**[Leggi la guida completa](git-status/README_IT.md)**
 
 ---
 
-## 🚀 Installazione
+## Installazione
 
 ### Prerequisiti
 
@@ -303,7 +303,7 @@ Poi riapri Nautilus normalmente (clicca sull'icona "File" nel dock o premi `Supe
 
 ---
 
-## ⚙️ Configurazione
+## Configurazione
 
 ### Verifica installazione
 
@@ -342,7 +342,7 @@ Se le estensioni non appaiono:
 
 ---
 
-## 📖 Utilizzo
+## Utilizzo
 
 ### Anteprima file dati (CSV, Excel, JSON, Parquet)
 
@@ -364,7 +364,7 @@ Se le estensioni non appaiono:
    - Riordina i file trascinandoli o usando i pulsanti ⬆⬇
    - Rimuovi file indesiderati con il pulsante ✕
    - Modifica il nome del file output
-   - Clicca **"🔗 Unisci PDF"**
+   - Clicca **"Unisci PDF"**
 5. Il file unito verrà salvato nella stessa cartella del primo PDF
 
 ### Dividere PDF
@@ -377,7 +377,7 @@ Se le estensioni non appaiono:
    - **Una per file**: ogni pagina diventa un PDF
    - **Segnalibri**: un file per ogni capitolo
 4. Scegli la cartella di output
-5. Clicca **"✂ Dividi PDF"**
+5. Clicca **"Dividi PDF"**
 
 ### Analizzare Dockerfile
 
@@ -392,14 +392,14 @@ Se le estensioni non appaiono:
 ### Trovare duplicati
 
 1. **Clic destro** su una cartella
-2. Seleziona **"🔍 Trova duplicati"**
+2. Seleziona **"Trova duplicati"**
 3. Attendi la scansione (può richiedere tempo per cartelle grandi)
 4. Nella finestra dei risultati:
    - I file sono raggruppati per contenuto identico
    - Il primo file di ogni gruppo NON è selezionato (verrà mantenuto)
    - Puoi modificare la selezione manualmente
    - Clicca **"Seleziona duplicati automaticamente"** per selezionare tutti tranne il primo
-   - Clicca **"🗑 Sposta nel Cestino"** per eliminare i duplicati selezionati
+   - Clicca **"Sposta nel Cestino"** per eliminare i duplicati selezionati
 
 ### Visualizzare README
 
@@ -410,7 +410,7 @@ Se le estensioni non appaiono:
 
 ---
 
-## 🔧 Risoluzione problemi
+## Risoluzione problemi
 
 ### Le estensioni non appaiono nel menu
 
@@ -478,7 +478,7 @@ sudo apt install python3-markdown gir1.2-webkit2-4.1
 
 ---
 
-## 🗑️ Disinstallazione
+## Disinstallazione
 
 ### Rimuovere una singola estensione
 
@@ -509,7 +509,7 @@ nautilus -q
 
 ---
 
-## 💡 Suggerimenti
+## Suggerimenti
 
 ### Prestazioni
 
@@ -532,7 +532,7 @@ Puoi modificare i file `.py` per personalizzare:
 
 ---
 
-## 📝 Note tecniche
+## Note tecniche
 
 - **Versione Nautilus:** Queste estensioni sono progettate per Nautilus 43+ (GNOME 43+) con GTK 4
 - **Python:** Richiede Python 3.9 o superiore
@@ -541,7 +541,7 @@ Puoi modificare i file `.py` per personalizzare:
 
 ---
 
-## ❓ Domande frequenti (FAQ)
+## Domande frequenti (FAQ)
 
 **D: Posso usare queste estensioni su altre distribuzioni Linux?**  
 R: Sì, funzionano su qualsiasi distribuzione con Nautilus e nautilus-python (Fedora, Debian, Arch, ecc.)
@@ -550,7 +550,7 @@ R: Sì, funzionano su qualsiasi distribuzione con Nautilus e nautilus-python (Fe
 R: No, sono specifiche per Nautilus. Per altri file manager (Dolphin, Thunar, ecc.) servono estensioni diverse.
 
 **D: Posso modificare il codice?**  
-R: Assolutamente sì! I file sono script Python leggibili e modificabili.
+R: Sì, i file sono script Python leggibili e modificabili.
 
 **D: Le estensioni rallentano Nautilus?**  
 R: No, vengono caricate solo quando necessario e le operazioni pesanti sono in thread separati.

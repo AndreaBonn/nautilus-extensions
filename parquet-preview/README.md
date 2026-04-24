@@ -1,12 +1,12 @@
-# 📦 Parquet Preview - Nautilus Extension
+# Parquet Preview - Nautilus Extension
 
-**Language:** [🇮🇹 Italiano](README_IT.md) | **🇬🇧 English**
+**Language:** [Italiano](README_IT.md) | **English**
 
 ---
 
 Nautilus extension that adds advanced preview for Apache Parquet files directly from the context menu.
 
-## 🎯 Features
+## Features
 
 - **Complete schema** with PyArrow data types
 - **Detailed metadata** (row groups, compression, codec)
@@ -16,7 +16,7 @@ Nautilus extension that adds advanced preview for Apache Parquet files directly 
 - **Type-based column highlighting** with different colors
 - **Row group details** with compressed/uncompressed sizes
 
-## 🚀 Installation
+## Installation
 
 ```bash
 sudo apt update
@@ -27,13 +27,13 @@ cp parquet_preview.py ~/.local/share/nautilus-python/extensions/
 nautilus -q
 ```
 
-## 📖 How to use
+## How to use
 
 1. Right-click on a `.parquet` file
 2. Select **"Parquet Preview"**
 3. Explore the tabs: Data, Schema, Statistics, Metadata
 
-## 🗑️ Uninstallation
+## Uninstallation
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/parquet_preview.py

@@ -1,12 +1,12 @@
-# 📊 CSV Preview - Nautilus Extension
+# CSV Preview - Nautilus Extension
 
-**Language:** [🇮🇹 Italiano](README_IT.md) | **🇬🇧 English**
+**Language:** [Italiano](README_IT.md) | **English**
 
 ---
 
 Nautilus extension that adds advanced preview for CSV and TSV files directly from the context menu.
 
-## 🎯 Features
+## Features
 
 - **Formatted table** with the first 100 rows of the file
 - **Automatic delimiter detection** (comma, semicolon, tab)
@@ -16,13 +16,13 @@ Nautilus extension that adds advanced preview for CSV and TSV files directly fro
 - **Column sorting** by clicking on the header
 - **Large file support** with optimized loading
 
-## 📸 What you'll see
+## What you'll see
 
 When you open a CSV file preview, you'll see a window with 3 tabs:
 
-1. **📊 Data**: Table with data, resizable and sortable columns
-2. **📈 Statistics**: Descriptive statistics for numeric columns (only with pandas)
-3. **🗂 Columns**: Information about each column (name, type, null values)
+1. **Data**: Table with data, resizable and sortable columns
+2. **Statistics**: Descriptive statistics for numeric columns (only with pandas)
+3. **Columns**: Information about each column (name, type, null values)
 
 In the top bar you'll find:
 - Total number of rows and columns
@@ -30,7 +30,7 @@ In the top bar you'll find:
 - File size
 - Warning if file was truncated (shows only first 100 rows)
 
-## 🚀 Installation
+## Installation
 
 ### Step 1: Install nautilus-python
 
@@ -68,7 +68,7 @@ nautilus -q
 
 Reopen Nautilus normally.
 
-## 📖 How to use
+## How to use
 
 1. Open Nautilus and navigate to a CSV or TSV file
 2. **Right-click** on the file
@@ -82,7 +82,7 @@ Reopen Nautilus normally.
 - **Navigate tabs**: Click on "Data", "Statistics" or "Columns"
 - **Open in editor**: Click the "Open with editor" button at the bottom
 
-## 🔧 Configuration
+## Configuration
 
 You can customize the extension by modifying constants in `csv_preview.py`:
 
@@ -94,14 +94,14 @@ WINDOW_W = 1100           # Window width
 WINDOW_H = 650            # Window height
 ```
 
-## 📋 Supported formats
+## Supported formats
 
 - `.csv` - Comma Separated Values
 - `.tsv` - Tab Separated Values
 
 The extension automatically detects the delimiter by analyzing the file content.
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Extension doesn't appear in the menu
 
@@ -138,7 +138,7 @@ sudo apt install python3-pandas
 
 **Solution:** Extension loads only the first 100 rows for speed. For huge files, consider using dedicated tools like LibreOffice Calc.
 
-## 💡 Tips
+## Tips
 
 ### Performance
 
@@ -154,14 +154,14 @@ Numeric columns are highlighted in blue and right-aligned for easier reading.
 
 In the "Statistics" tab you can see how many null (missing) values there are in each column.
 
-## 🔍 Technical details
+## Technical details
 
 - **Nautilus version:** 43+ (GNOME 43+) with GTK 4
 - **Python:** 3.8 or higher
 - **Optional dependencies:** pandas (for statistics)
 - **Threads:** File loading occurs in a separate thread to avoid blocking the interface
 
-## 📝 Usage example
+## Usage example
 
 Suppose we have a `sales.csv` file:
 
@@ -188,16 +188,16 @@ Right-clicking and selecting "CSV Preview", you'll see:
 - quantity: numeric (int64)
 - price: numeric (float64)
 
-## 🗑️ Uninstallation
+## Uninstallation
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/csv_preview.py
 nautilus -q
 ```
 
-## 🤝 Contributions
+## Contributions
 
-Found a bug or want to improve the extension? Feel free to modify the code!
+Found a bug or want to improve the extension? Contributions are welcome.
 
 ---
 

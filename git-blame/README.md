@@ -1,12 +1,12 @@
-# ⎇ Git Blame - Nautilus Extension
+# Git Blame - Nautilus Extension
 
-**Language:** [🇮🇹 Italiano](README_IT.md) | **🇬🇧 English**
+**Language:** [Italiano](README_IT.md) | **English**
 
 ---
 
 Nautilus extension that adds Git blame columns in the list view, showing the author, date, and message of the last commit for each file.
 
-## 🎯 Features
+## Features
 
 - **"Git: Author" column** — who made the last commit on the file
 - **"Git: Date" column** — when (e.g. "3 hours ago")
@@ -15,7 +15,7 @@ Nautilus extension that adds Git blame columns in the list view, showing the aut
 - **Result caching** to avoid repeated git calls
 - **Automatic detection** of whether the file is inside a git repository
 
-## 🚀 Installation
+## Installation
 
 ### Step 1: Install nautilus-python
 
@@ -44,7 +44,7 @@ nautilus -q
 
 **Note:** This extension requires no additional dependencies (only `git` installed on the system).
 
-## 📖 How to use
+## How to use
 
 1. Open Nautilus and navigate to a folder inside a Git repository
 2. Switch to **List View** with `Ctrl+2`
@@ -53,14 +53,14 @@ nautilus -q
 
 The columns will show the last commit information for each file.
 
-## 🔍 Technical details
+## Technical details
 
 - **Nautilus version:** 43+ (GNOME 43+) with GTK 4
 - **API:** `ColumnProvider` + `InfoProvider`
 - **Threads:** Git information loading happens in separate threads to avoid blocking the interface
 - **Cache:** Results are cached to avoid repeated calls to `git log`
 
-## 🗑️ Uninstallation
+## Uninstallation
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/git_blame.py

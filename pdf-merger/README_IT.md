@@ -1,22 +1,22 @@
-# 🔗 Unisci PDF - Estensione Nautilus
+# Unisci PDF - Estensione Nautilus
 
-**Lingua:** **🇮🇹 Italiano** | [🇬🇧 English](README.md)
+**Lingua:** **Italiano** | [English](README.md)
 
 ---
 
 Estensione per Nautilus che permette di unire più file PDF in uno solo con interfaccia grafica.
 
-## 🎯 Funzionalità
+## Funzionalità
 
 - **Selezione multipla** di file PDF
-- **Riordino tramite drag & drop** o pulsanti ⬆⬇
+- **Riordino tramite drag & drop** o pulsanti su/giu
 - **Rimozione file** dalla lista
 - **Anteprima numero pagine** per ogni PDF
 - **Conteggio pagine totali** del file risultante
 - **Scelta nome file output**
 - **Apertura automatica** della cartella di destinazione
 
-## 🚀 Installazione
+## Installazione
 
 ### Passo 1: Installa nautilus-python
 
@@ -49,20 +49,20 @@ cp pdf_merger.py ~/.local/share/nautilus-python/extensions/
 nautilus -q
 ```
 
-## 📖 Come usare
+## Come usare
 
 1. **Seleziona 2 o più file PDF** (tieni premuto `Ctrl` mentre clicchi)
 2. **Clic destro** sulla selezione
 3. Seleziona **"Unisci [N] PDF"**
 4. Nella finestra:
-   - Riordina i file trascinandoli o con ⬆⬇
-   - Rimuovi file con ✕
+   - Riordina i file trascinandoli o con i pulsanti su/giu
+   - Rimuovi file dalla lista
    - Modifica il nome output
-   - Clicca **"🔗 Unisci PDF"**
+   - Clicca **"Unisci PDF"**
 
 Il file unito verrà salvato nella cartella del primo PDF.
 
-## 🗑️ Disinstallazione
+## Disinstallazione
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/pdf_merger.py

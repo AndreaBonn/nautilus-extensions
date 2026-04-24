@@ -1,12 +1,12 @@
-# 🔍 Find Duplicates - Nautilus Extension
+# Find Duplicates - Nautilus Extension
 
-**Language:** [🇮🇹 Italiano](README_IT.md) | **🇬🇧 English**
+**Language:** [Italiano](README_IT.md) | **English**
 
 ---
 
 Nautilus extension that finds duplicate files in a folder using SHA-256 hash.
 
-## 🎯 Features
+## Features
 
 - **Recursive scan** of all subfolders
 - **SHA-256 hash** to identify identical files
@@ -15,7 +15,7 @@ Nautilus extension that finds duplicate files in a folder using SHA-256 hash.
 - **Move to trash** with one click
 - **Progress bar** during scan
 
-## 🚀 Installation
+## Installation
 
 ```bash
 sudo apt update
@@ -27,15 +27,15 @@ nautilus -q
 
 **Note:** This extension requires no additional dependencies.
 
-## 📖 How to use
+## How to use
 
 1. **Right-click** on a folder
-2. Select **"🔍 Find duplicates"**
+2. Select **"Find duplicates"**
 3. Wait for the scan
 4. Select files to delete
-5. Click **"🗑 Move to Trash"**
+5. Click **"Move to Trash"**
 
-## 🗑️ Uninstallation
+## Uninstallation
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/duplicate-finder.py

@@ -1,8 +1,6 @@
 # Contributing to Nautilus Extensions
 
-Thank you for your interest in contributing!
-
-**Language:** [🇮🇹 Italiano](CONTRIBUTING_IT.md) | **🇬🇧 English**
+**Language:** [Italiano](CONTRIBUTING_IT.md) | **English**
 
 ## How to Contribute
 
@@ -16,7 +14,7 @@ Please open an issue with:
 
 ### Suggesting Features
 
-Feature suggestions are welcome! Please open an issue describing:
+Open an issue describing:
 - The feature you'd like to see
 - Why it would be useful
 - How it might work
@@ -86,4 +84,4 @@ uv run pytest tests/test_X.py -v # Run specific test file
 
 ## Questions?
 
-Feel free to open an issue for any questions!
+Open an issue for any questions.

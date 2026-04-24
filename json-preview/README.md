@@ -1,12 +1,12 @@
-# 🗂️ JSON Preview - Nautilus Extension
+# JSON Preview - Nautilus Extension
 
-**Language:** [🇮🇹 Italiano](README_IT.md) | **🇬🇧 English**
+**Language:** [Italiano](README_IT.md) | **English**
 
 ---
 
 Nautilus extension that adds advanced preview for JSON and JSONL files directly from the context menu.
 
-## 🎯 Features
+## Features
 
 - **Navigable tree structure** to explore complex JSON
 - **Automatically inferred schema** with data types
@@ -16,7 +16,7 @@ Nautilus extension that adds advanced preview for JSON and JSONL files directly 
 - **Compressed file support** (.json.gz, .jsonl.gz)
 - **Raw visualization** with formatting
 
-## 🚀 Installation
+## Installation
 
 ```bash
 sudo apt update
@@ -27,17 +27,17 @@ cp json_preview.py ~/.local/share/nautilus-python/extensions/
 nautilus -q
 ```
 
-## 📖 How to use
+## How to use
 
 1. Right-click on a JSON or JSONL file
 2. Select **"JSON Preview"** or **"JSONL Preview"**
 3. Explore the tabs: Structure, Schema, Data, Statistics, Raw
 
-## 📋 Supported formats
+## Supported formats
 
 - `.json`, `.jsonl`, `.ndjson`, `.json.gz`, `.jsonl.gz`
 
-## 🗑️ Uninstallation
+## Uninstallation
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/json_preview.py

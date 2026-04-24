@@ -1,22 +1,22 @@
-# 🔗 Merge PDF - Nautilus Extension
+# Merge PDF - Nautilus Extension
 
-**Language:** [🇮🇹 Italiano](README_IT.md) | **🇬🇧 English**
+**Language:** [Italiano](README_IT.md) | **English**
 
 ---
 
 Nautilus extension that allows merging multiple PDF files into one with a graphical interface.
 
-## 🎯 Features
+## Features
 
 - **Multiple PDF selection**
-- **Reorder via drag & drop** or ⬆⬇ buttons
+- **Reorder via drag & drop** or up/down buttons
 - **Remove files** from the list
 - **Page count preview** for each PDF
 - **Total page count** of the resulting file
 - **Choose output filename**
 - **Automatic opening** of destination folder
 
-## 🚀 Installation
+## Installation
 
 ```bash
 sudo apt update
@@ -26,15 +26,15 @@ cp pdf_merger.py ~/.local/share/nautilus-python/extensions/
 nautilus -q
 ```
 
-## 📖 How to use
+## How to use
 
 1. **Select 2 or more PDF files** (hold `Ctrl` while clicking)
 2. **Right-click** on the selection
 3. Select **"Merge [N] PDFs"**
 4. Reorder, remove files, edit output name
-5. Click **"🔗 Merge PDF"**
+5. Click **"Merge PDF"**
 
-## 🗑️ Uninstallation
+## Uninstallation
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/pdf_merger.py

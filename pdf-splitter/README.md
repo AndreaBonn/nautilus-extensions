@@ -1,12 +1,12 @@
-# ✂️ Split PDF - Nautilus Extension
+# Split PDF - Nautilus Extension
 
-**Language:** [🇮🇹 Italiano](README_IT.md) | **🇬🇧 English**
+**Language:** [Italiano](README_IT.md) | **English**
 
 ---
 
 Nautilus extension that allows splitting a PDF file into multiple files with 4 different modes.
 
-## 🎯 Features
+## Features
 
 - **4 split modes:**
   1. Custom ranges (e.g., 1-3, 5-7, 9)
@@ -17,7 +17,7 @@ Nautilus extension that allows splitting a PDF file into multiple files with 4 d
 - **Choose output folder**
 - **Progress bar** during splitting
 
-## 🚀 Installation
+## Installation
 
 ```bash
 sudo apt update
@@ -27,15 +27,15 @@ cp pdf_splitter.py ~/.local/share/nautilus-python/extensions/
 nautilus -q
 ```
 
-## 📖 How to use
+## How to use
 
 1. **Right-click** on a PDF file
 2. Select **"Split PDF"**
 3. Choose a mode and configure
 4. Choose output folder
-5. Click **"✂ Split PDF"**
+5. Click **"Split PDF"**
 
-## 🗑️ Uninstallation
+## Uninstallation
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/pdf_splitter.py

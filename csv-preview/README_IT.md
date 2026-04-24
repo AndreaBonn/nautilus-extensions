@@ -1,12 +1,12 @@
-# 📊 Anteprima CSV - Estensione Nautilus
+# Anteprima CSV - Estensione Nautilus
 
-**Lingua:** **🇮🇹 Italiano** | [🇬🇧 English](README.md)
+**Lingua:** **Italiano** | [English](README.md)
 
 ---
 
 Estensione per Nautilus che aggiunge un'anteprima avanzata per file CSV e TSV direttamente dal menu contestuale.
 
-## 🎯 Funzionalità
+## Funzionalità
 
 - **Tabella formattata** con le prime 100 righe del file
 - **Rilevamento automatico del delimitatore** (virgola, punto e virgola, tab)
@@ -16,13 +16,13 @@ Estensione per Nautilus che aggiunge un'anteprima avanzata per file CSV e TSV di
 - **Ordinamento colonne** cliccando sull'intestazione
 - **Supporto file grandi** con caricamento ottimizzato
 
-## 📸 Cosa vedrai
+## Cosa vedrai
 
 Quando apri l'anteprima di un file CSV, vedrai una finestra con 3 tab:
 
-1. **📊 Dati**: Tabella con i dati, colonne ridimensionabili e ordinabili
-2. **📈 Statistiche**: Statistiche descrittive per colonne numeriche (solo con pandas)
-3. **🗂 Colonne**: Informazioni su ogni colonna (nome, tipo, valori nulli)
+1. **Dati**: Tabella con i dati, colonne ridimensionabili e ordinabili
+2. **Statistiche**: Statistiche descrittive per colonne numeriche (solo con pandas)
+3. **Colonne**: Informazioni su ogni colonna (nome, tipo, valori nulli)
 
 Nella barra superiore troverai:
 - Numero totale di righe e colonne
@@ -30,7 +30,7 @@ Nella barra superiore troverai:
 - Dimensione del file
 - Avviso se il file è stato troncato (mostra solo prime 100 righe)
 
-## 🚀 Installazione
+## Installazione
 
 ### Passo 1: Installa nautilus-python
 
@@ -68,7 +68,7 @@ nautilus -q
 
 Riapri Nautilus normalmente.
 
-## 📖 Come usare
+## Come usare
 
 1. Apri Nautilus e naviga fino a un file CSV o TSV
 2. **Clic destro** sul file
@@ -82,7 +82,7 @@ Riapri Nautilus normalmente.
 - **Naviga tra i tab**: Clicca su "Dati", "Statistiche" o "Colonne"
 - **Apri nell'editor**: Clicca il pulsante "Apri con editor" in basso
 
-## 🔧 Configurazione
+## Configurazione
 
 Puoi personalizzare l'estensione modificando le costanti nel file `csv_preview.py`:
 
@@ -94,14 +94,14 @@ WINDOW_W = 1100           # Larghezza finestra
 WINDOW_H = 650            # Altezza finestra
 ```
 
-## 📋 Formati supportati
+## Formati supportati
 
 - `.csv` - Comma Separated Values
 - `.tsv` - Tab Separated Values
 
 L'estensione rileva automaticamente il delimitatore analizzando il contenuto del file.
 
-## 🐛 Risoluzione problemi
+## Risoluzione problemi
 
 ### L'estensione non appare nel menu
 
@@ -138,7 +138,7 @@ sudo apt install python3-pandas
 
 **Soluzione:** L'estensione carica solo le prime 100 righe per velocità. Per file enormi, considera di usare strumenti dedicati come LibreOffice Calc.
 
-## 💡 Suggerimenti
+## Suggerimenti
 
 ### Prestazioni
 
@@ -154,14 +154,14 @@ Le colonne numeriche sono evidenziate in blu e allineate a destra per facilitare
 
 Nella tab "Statistiche" puoi vedere quanti valori nulli (mancanti) ci sono in ogni colonna.
 
-## 🔍 Dettagli tecnici
+## Dettagli tecnici
 
 - **Versione Nautilus:** 43+ (GNOME 43+) con GTK 4
 - **Python:** 3.8 o superiore
 - **Dipendenze opzionali:** pandas (per statistiche)
 - **Thread:** Il caricamento del file avviene in un thread separato per non bloccare l'interfaccia
 
-## 📝 Esempio di utilizzo
+## Esempio di utilizzo
 
 Supponiamo di avere un file `vendite.csv`:
 
@@ -188,7 +188,7 @@ Facendo clic destro e selezionando "Anteprima CSV", vedrai:
 - quantita: numerico (int64)
 - prezzo: numerico (float64)
 
-## 🗑️ Disinstallazione
+## Disinstallazione
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/csv_preview.py

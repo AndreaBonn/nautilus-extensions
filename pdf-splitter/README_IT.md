@@ -1,12 +1,12 @@
-# ✂️ Dividi PDF - Estensione Nautilus
+# Dividi PDF - Estensione Nautilus
 
-**Lingua:** **🇮🇹 Italiano** | [🇬🇧 English](README.md)
+**Lingua:** **Italiano** | [English](README.md)
 
 ---
 
 Estensione per Nautilus che permette di dividere un file PDF in più file con 4 modalità diverse.
 
-## 🎯 Funzionalità
+## Funzionalità
 
 - **4 modalità di divisione:**
   1. Intervalli personalizzati (es. 1-3, 5-7, 9)
@@ -17,7 +17,7 @@ Estensione per Nautilus che permette di dividere un file PDF in più file con 4 
 - **Scelta cartella output**
 - **Progress bar** durante la divisione
 
-## 🚀 Installazione
+## Installazione
 
 ### Passo 1: Installa nautilus-python
 
@@ -50,7 +50,7 @@ cp pdf_splitter.py ~/.local/share/nautilus-python/extensions/
 nautilus -q
 ```
 
-## 📖 Come usare
+## Come usare
 
 1. **Clic destro** su un file PDF
 2. Seleziona **"Dividi PDF"**
@@ -60,9 +60,9 @@ nautilus -q
    - **Una per file**: automatico
    - **Segnalibri**: automatico (se presenti)
 4. Scegli la cartella output
-5. Clicca **"✂ Dividi PDF"**
+5. Clicca **"Dividi PDF"**
 
-## 🗑️ Disinstallazione
+## Disinstallazione
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/pdf_splitter.py

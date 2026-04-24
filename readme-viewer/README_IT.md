@@ -1,19 +1,19 @@
-# 📖 Visualizza README - Estensione Nautilus
+# Visualizza README - Estensione Nautilus
 
-**Lingua:** **🇮🇹 Italiano** | [🇬🇧 English](README.md)
+**Lingua:** **Italiano** | [English](README.md)
 
 ---
 
 Estensione per Nautilus che mostra il file README della cartella corrente con rendering Markdown.
 
-## 🎯 Funzionalità
+## Funzionalità
 
 - **Rilevamento automatico** di README.md, README.txt, README.rst
 - **Rendering Markdown** (se WebKit è disponibile)
 - **Apertura rapida** nell'editor
 - **Supporto formati** multipli
 
-## 🚀 Installazione
+## Installazione
 
 ### Passo 1: Installa nautilus-python
 
@@ -47,14 +47,14 @@ cp readme_preview.py ~/.local/share/nautilus-python/extensions/
 nautilus -q
 ```
 
-## 📖 Come usare
+## Come usare
 
 1. Apri una cartella con un README
 2. **Clic destro sullo sfondo** (non su un file)
 3. Seleziona **"Mostra README.md"**
 4. Il README verrà visualizzato
 
-## 🗑️ Disinstallazione
+## Disinstallazione
 
 ```bash
 rm ~/.local/share/nautilus-python/extensions/readme_preview.py
