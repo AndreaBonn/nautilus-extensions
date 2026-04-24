@@ -307,10 +307,7 @@ class TestReadParquet:
     def test_nonexistent_file_does_not_raise(self, tmp_path):
         missing = str(tmp_path / "no_file.parquet")
 
-        try:
-            result = read_parquet(missing, max_rows=100)
-        except Exception as exc:  # noqa: BLE001
-            pytest.fail(f"read_parquet raised unexpectedly: {exc}")
+        result = read_parquet(missing, max_rows=100)
 
         assert "error" in result
 

@@ -54,8 +54,6 @@ def _load_module_functions(module_path: Path, module_name: str, functions: list[
             continue
         if stripped.startswith("gi.require_version"):
             continue
-        if stripped.startswith("from gi.repository"):
-            continue
         if stripped.startswith("class ") and "(Gtk." in stripped:
             break
         if stripped.startswith("class ") and "(GObject." in stripped:

@@ -229,14 +229,10 @@ class TestBookmarkChunks:
 # Integration: split PDF file with pypdf (mirrors _do_split core logic)
 # ---------------------------------------------------------------------------
 
+import pypdf
 import pytest
 
-try:
-    import pypdf
-
-    HAS_PYPDF = True
-except ImportError:
-    HAS_PYPDF = False
+HAS_PYPDF = True
 
 
 def _make_minimal_pdf(num_pages: int = 1) -> bytes:
@@ -367,16 +363,29 @@ class TestSplitPdfIntegration:
         content = open(created[0], "rb").read()
         assert content[:5] == b"%PDF-"
 
-    def test_path_traversal_in_title_raises(self, tmp_path):
+    def test_path_traversal_in_title_is_sanitized(self, tmp_path):
         pdf = tmp_path / "doc.pdf"
         pdf.write_bytes(_make_minimal_pdf(num_pages=2))
         out = tmp_path / "output"
         out.mkdir()
 
-        # chunk_filename sanitizes titles, so path traversal should be blocked
+        # chunk_filename sanitizes titles, so path traversal characters are stripped
         created = self._do_split(str(pdf), [(0, 0, "../../evil")], str(out))
-        # File must be inside out_folder
         from pathlib import Path
 
         for f in created:
             assert Path(f).resolve().is_relative_to(Path(out).resolve())
+
+    def test_path_traversal_bypass_raises_valueerror(self, tmp_path):
+        from unittest.mock import patch
+
+        pdf = tmp_path / "doc.pdf"
+        pdf.write_bytes(_make_minimal_pdf(num_pages=2))
+        out = tmp_path / "output"
+        out.mkdir()
+
+        with (
+            patch(f"{__name__}.chunk_filename", return_value="../../escaped.pdf"),
+            pytest.raises(ValueError, match="Path non valido"),
+        ):
+            self._do_split(str(pdf), [(0, 0)], str(out))
