@@ -35,7 +35,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - uses: astral-sh/setup-uv@e4db8464a088ece1b920f60402e813ea4de65b8f # v4
       - run: uv sync --frozen --all-extras
-      - run: uv run pytest tests/ -v --cov --cov-fail-under=70 --junitxml=test-results.xml
+      - run: uv run pytest tests/ -v --cov --cov-fail-under=70 --cov-report=json --junitxml=test-results.xml
 
       - name: Generate test badge
         if: always() && matrix.python-version == '3.12' && github.ref == 'refs/heads/main'
@@ -59,13 +59,30 @@ jobs:
               json.dump(badge, f)
           "
 
-      - name: Commit badge
+      - name: Generate coverage badge
+        if: always() && matrix.python-version == '3.12' && github.ref == 'refs/heads/main'
+        run: |
+          python3 -c "
+          import json, os
+          if not os.path.exists('coverage.json'):
+              badge = {'schemaVersion': 1, 'label': 'coverage', 'message': 'N/A', 'color': 'lightgrey'}
+          else:
+              with open('coverage.json') as f:
+                  data = json.load(f)
+              pct = round(data['totals']['percent_covered'])
+              color = 'brightgreen' if pct >= 90 else 'green' if pct >= 80 else 'yellow' if pct >= 60 else 'red'
+              badge = {'schemaVersion': 1, 'label': 'coverage', 'message': f'{pct}%', 'color': color}
+          with open('badges/coverage-badge.json', 'w') as f:
+              json.dump(badge, f)
+          "
+
+      - name: Commit badges
         if: always() && matrix.python-version == '3.12' && github.ref == 'refs/heads/main'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add badges/test-badge.json
-          git diff --cached --quiet || git commit -m "ci: update test badge [skip ci]"
+          git add badges/test-badge.json badges/coverage-badge.json
+          git diff --cached --quiet || git commit -m "ci: update badges [skip ci]"
           git push
 
   security:

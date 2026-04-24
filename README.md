@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/AndreaBonn/nautilus-extensions/actions/workflows/ci.yml/badge.svg)](https://github.com/AndreaBonn/nautilus-extensions/actions/workflows/ci.yml)
 [![Tests](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/AndreaBonn/nautilus-extensions/main/badges/test-badge.json)](https://github.com/AndreaBonn/nautilus-extensions/actions/workflows/ci.yml)
+[![Coverage](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/AndreaBonn/nautilus-extensions/main/badges/coverage-badge.json)](https://github.com/AndreaBonn/nautilus-extensions/actions/workflows/ci.yml)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Security Policy](https://img.shields.io/badge/security-policy-blueviolet.svg)](SECURITY.md)
